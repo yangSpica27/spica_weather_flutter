@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -17,7 +18,6 @@ class WeatherAnimView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return _RainView(width: width, height: height);
     switch (_weatherAnimType) {
       case WeatherAnimType.SUNNY:
         return _SunnyView(width, height);
@@ -222,14 +222,14 @@ class _RainViewState extends State<_RainView>
     ),
   );
 
-  List<RainDrop> rainDrops = [];
+  List<RainSnowDrop> rainDrops = [];
 
   final Random random = Random();
 
   @override
   void initState() {
     for (int i = 0; i < 70; i++) {
-      rainDrops.add(RainDrop(
+      rainDrops.add(RainSnowDrop(
           dx: random.nextInt(widget.width.toInt()).toDouble(),
           dy: -random.nextInt(widget.height.toInt()).toDouble(),
           maxDy: widget.height));
@@ -260,7 +260,7 @@ class _RainViewState extends State<_RainView>
   }
 }
 
-class RainDrop {
+class RainSnowDrop {
   late Offset position;
 
   double dx;
@@ -271,10 +271,14 @@ class RainDrop {
 
   late double speed;
 
-  RainDrop({required this.dx, required this.dy, required this.maxDy}) {
+  RainSnowDrop(
+      {required this.dx,
+      required this.dy,
+      required this.maxDy,
+      double seed = 10}) {
     position = Offset(dx, dy);
     double random = 0.4 + 0.12 * Random().nextDouble() * 5;
-    speed = 10 * random;
+    speed = seed * random;
   }
 
   next() {
@@ -288,7 +292,7 @@ class RainDrop {
 class _RainViewPainter extends CustomPainter {
   _RainViewPainter({required this.rainDrops});
 
-  List<RainDrop> rainDrops;
+  List<RainSnowDrop> rainDrops;
 
   final _paint = Paint()
     ..color = const Color(0x4DFFFFFF)
@@ -310,6 +314,29 @@ class _RainViewPainter extends CustomPainter {
   }
 }
 
+class _SnowViewPainter extends CustomPainter {
+  _SnowViewPainter({required this.snowDrops});
+
+  List<RainSnowDrop> snowDrops;
+
+  final _paint = Paint()
+    ..color = const Color(0x4DFFFFFF)
+    ..strokeWidth = 12.w
+    ..strokeCap = StrokeCap.round
+    ..style = PaintingStyle.fill;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawPoints(
+        PointMode.points, snowDrops.map((e) => e.position).toList(), _paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _SnowViewPainter oldDelegate) {
+    return true;
+  }
+}
+
 /// 天气动画视图[雪]
 class _SnowView extends StatefulWidget {
   const _SnowView({required this.width, required this.height});
@@ -322,10 +349,56 @@ class _SnowView extends StatefulWidget {
   State<_SnowView> createState() => _SnowViewState();
 }
 
-class _SnowViewState extends State<_SnowView> {
+class _SnowViewState extends State<_SnowView>
+    with SingleTickerProviderStateMixin {
+  late AnimationController animController = AnimationController(
+    duration: const Duration(milliseconds: 1500),
+    vsync: this,
+  )..repeat(reverse: true);
+
+  late final anim = Tween<double>(begin: 0, end: 1).animate(
+    CurvedAnimation(
+      parent: animController,
+      curve: Curves.ease,
+    ),
+  );
+
+  List<RainSnowDrop> snowDrops = [];
+
+  final Random random = Random();
+
+  @override
+  void initState() {
+    for (int i = 0; i < 70; i++) {
+      snowDrops.add(RainSnowDrop(
+          dx: random.nextInt(widget.width.toInt()).toDouble(),
+          dy: -random.nextInt(widget.height.toInt()).toDouble(),
+          maxDy: widget.height,
+          seed: 2.5));
+    }
+    anim.addListener(() {
+      for (var element in snowDrops) {
+        element.next();
+      }
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animController.dispose();
+    snowDrops.clear();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return AnimatedBuilder(
+        animation: anim,
+        builder: (context, _) => CustomPaint(
+              painter: _SnowViewPainter(snowDrops: snowDrops),
+              size: Size(widget.width, widget.height),
+            ));
   }
 }
 
@@ -341,13 +414,134 @@ class _FogView extends StatefulWidget {
   State<_FogView> createState() => _FogViewState();
 }
 
-class _FogViewState extends State<_FogView> {
+class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
+  final path1 = Path();
 
-  
+  final path2 = Path();
+
+  final path3 = Path();
+
+  late AnimationController controller1 = AnimationController(
+    duration: const Duration(milliseconds: 3500),
+    vsync: this,
+  )..repeat(reverse: true);
+
+  late AnimationController controller2 = AnimationController(
+    duration: const Duration(milliseconds: 5500),
+    vsync: this,
+  )..repeat(reverse: true);
+
+  late AnimationController controller3 = AnimationController(
+    duration: const Duration(milliseconds: 7200),
+    vsync: this,
+  )..repeat(reverse: true);
+
+  late final Animation anim1;
+
+  late final Animation anim2;
+
+  late final Animation anim3 =
+      Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+    parent: controller3,
+    curve: Curves.easeInOutBack,
+  ));
+
+  @override
+  void initState() {
+    anim1 = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: controller1,
+        curve: Curves.ease,
+      ),
+    );
+    anim2 = Tween<double>(begin: 0, end: 1).animate(CurvedAnimation(
+      parent: controller2,
+      curve: Curves.linear,
+    ));
+
+    anim2.addListener(() async {
+      path1.reset();
+      path2.reset();
+      path3.reset();
+
+      path1.moveTo(0, 0);
+      path1.lineTo(widget.width * 1, 0);
+      path1.lineTo(widget.width, widget.height / 7);
+      path1.cubicTo(
+          widget.width / 10 * 8,
+          widget.height / 7 / 10 * 15 + 24.w * anim1.value,
+          widget.width / 10 * 3,
+          widget.height / 7 / 10 * 5 + 32.w * anim2.value,
+          0.0,
+          widget.height / 7 / 10 * 4);
+
+      path2.moveTo(0, 0);
+      path2.lineTo(widget.width * 1, 0);
+      path2.lineTo(widget.width, widget.height / 6);
+      path2.cubicTo(
+          widget.width / 10 * 8,
+          widget.height / 6 / 10 * 20 + 24.w * anim2.value,
+          widget.width / 10 * 3,
+          widget.height / 6 / 10 * 5 + 40.w * anim3.value,
+          0.0,
+          widget.height / 7 / 10 * 4);
+
+      path3.moveTo(0, 0);
+      path3.lineTo(widget.width * 1, 0);
+      path3.lineTo(widget.width, widget.height / 5);
+      path3.cubicTo(
+          widget.width / 10 * 8,
+          widget.height / 6 / 10 * 25 + 24.w * anim3.value,
+          widget.width / 10 * 3,
+          widget.height / 5 / 10 * 5 + 40.w * anim1.value,
+          0.0,
+          widget.height / 7 / 10 * 4);
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller1.dispose();
+    controller2.dispose();
+    controller3.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return AnimatedBuilder(
+        animation: anim1,
+        builder: (context, _) => CustomPaint(
+              painter: _FogViewPainter(path1, path2, path3),
+              size: Size(widget.width, widget.height),
+            ));
+  }
+}
+
+class _FogViewPainter extends CustomPainter {
+  final Path path1;
+
+  final Path path2;
+
+  final Path path3;
+
+  _FogViewPainter(this.path1, this.path2, this.path3);
+
+  final _paint = Paint()
+    ..color = const Color(0x33FFFFFF)
+    ..style = PaintingStyle.fill;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawPath(path1, _paint);
+    canvas.drawPath(path2, _paint);
+    canvas.drawPath(path3, _paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
 

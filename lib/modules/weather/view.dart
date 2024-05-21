@@ -97,7 +97,7 @@ class _WeatherPageState extends State<WeatherPage>
                                 SizedBox(
                                   height: 12.w,
                                 ),
-                                SunriseCard(weather: element.weather!),
+                                AirDescCard(weather: element.weather!),
                                 SizedBox(
                                   height: 12.w,
                                 ),
