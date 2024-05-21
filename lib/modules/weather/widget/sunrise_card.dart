@@ -54,7 +54,7 @@ class AirDescCard extends StatelessWidget {
 class _RightDescWidget extends StatelessWidget {
   final WeatherResult weather;
 
-  const _RightDescWidget({super.key, required this.weather});
+  const _RightDescWidget({required this.weather});
 
   @override
   Widget build(BuildContext context) {
