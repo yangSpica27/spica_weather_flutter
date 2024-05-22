@@ -20,9 +20,6 @@ class ApiProvider {
       ));
   }
 
-
-
-
   Future<Response> fetchWeather(String lonlat) {
     return dio
         .get(Api.API_FETCH_WEATHER, queryParameters: {'location': lonlat});

@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
 
-
 class WeatherResultTypeConverter
     extends TypeConverter<WeatherResult?, String?> {
   const WeatherResultTypeConverter();

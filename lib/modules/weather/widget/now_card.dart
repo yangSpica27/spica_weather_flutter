@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
@@ -22,14 +21,16 @@ class NowCard extends StatelessWidget {
         children: [
           SizedBox(
             height: 310.w,
-            child: WeatherAnimView(weather.todayWeather?.iconId
-                    ?.getWeatherType()
-                    .getWeatherAnimType() ??
-                WeatherAnimType.UNKNOWN,width: ScreenUtil().screenWidth - 32.w,height: 310.w),
+            child: WeatherAnimView(
+                weather.todayWeather?.iconId
+                        ?.getWeatherType()
+                        .getWeatherAnimType() ??
+                    WeatherAnimType.UNKNOWN,
+                width: ScreenUtil().screenWidth - 32.w,
+                height: 310.w),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                left: 20.w, right: 20.w, bottom: 20.w),
+            padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,

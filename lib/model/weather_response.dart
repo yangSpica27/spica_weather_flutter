@@ -32,14 +32,13 @@ class WeatherResult {
   Air? air;
   String? descriptionForToday;
 
-
   int? _upperLimit;
 
   int? _lowerLimit;
 
   // 获取最高温度[一周内]
   int upperLimit() {
-    if(_upperLimit!=null){
+    if (_upperLimit != null) {
       return _upperLimit!;
     }
     if (dailyWeather == null) {
@@ -56,7 +55,7 @@ class WeatherResult {
 
   // 获取最低温度[一周内]
   int lowerLimit() {
-    if(_lowerLimit!=null){
+    if (_lowerLimit != null) {
       return _lowerLimit!;
     }
     if (dailyWeather == null) {
@@ -70,7 +69,6 @@ class WeatherResult {
     }
     return _lowerLimit = min;
   }
-
 
   WeatherResult(
       {this.todayWeather,
@@ -239,8 +237,6 @@ class DailyWeather {
       this.vis,
       this.cloud,
       this.fxTime});
-
-
 
   DailyWeather.fromJson(Map<String, dynamic> json) {
     maxTemp = json['maxTemp'];

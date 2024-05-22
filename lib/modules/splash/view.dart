@@ -23,10 +23,10 @@ class _SplashPageState extends State<SplashPage> {
           children: <Widget>[
             SizedBox(height: 20.w),
             Obx(() => Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-              child: Text(logic.state.value.tip,
-                  style: Theme.of(context).textTheme.bodyMedium),
-            )),
+                  padding: EdgeInsets.symmetric(horizontal: 20.w),
+                  child: Text(logic.state.value.tip,
+                      style: Theme.of(context).textTheme.bodyMedium),
+                )),
             const Spacer(),
             Obx(() => LinearProgressIndicator(
                   value: logic.state.value.isLoading ? null : 1,

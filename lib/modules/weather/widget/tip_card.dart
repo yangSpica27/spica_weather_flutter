@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
+
 import '../../../model/weather_response.dart';
 
 class TipCard extends StatelessWidget {
@@ -18,10 +19,9 @@ class TipCard extends StatelessWidget {
           children: <Widget>[
             Text(
               "生活指数",
-              style: Theme.of(context)
-                  .textTheme
-                  .titleMedium
-                  ?.copyWith(color: weather.todayWeather?.iconId?.getWeatherColor() ?? Colors.blue[500]),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: weather.todayWeather?.iconId?.getWeatherColor() ??
+                      Colors.blue[500]),
             ),
             SizedBox(
               height: 12.w,

@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:spica_weather_flutter/database/database.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
+
 import '../network/api_provider.dart';
 
 /// The repository class that will be used to fetch data from the API.

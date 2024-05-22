@@ -1,7 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
@@ -266,12 +265,13 @@ class _LinePainter extends CustomPainter {
 
       textPaint2.paint(
           canvas,
-          Offset(xPoints[i] - textPaint2.width / 2,
-              yPoints2[i] - ((data[i].pop ?? 0) / 100) * 50.w - textPaint2.height - 4.w));
+          Offset(
+              xPoints[i] - textPaint2.width / 2,
+              yPoints2[i] -
+                  ((data[i].pop ?? 0) / 100) * 50.w -
+                  textPaint2.height -
+                  4.w));
     }
-
-
-
 
     double scrollMax =
         itemWidth * data.length - (ScreenUtil().screenWidth - 72.w);
@@ -283,7 +283,8 @@ class _LinePainter extends CustomPainter {
     final index = min((offsetX / itemWidth).round(), data.length - 1);
 
     // 绘制游标
-    _paint.color = data[index].iconId?.getWeatherColor().withOpacity(.2)??Colors.blueAccent.withOpacity(.2);
+    _paint.color = data[index].iconId?.getWeatherColor().withOpacity(.2) ??
+        Colors.blueAccent.withOpacity(.2);
     canvas.drawRRect(
         ui.RRect.fromLTRBR(
             offsetX - itemWidth / 2 - 8.w,
@@ -292,8 +293,6 @@ class _LinePainter extends CustomPainter {
             itemHeight,
             const ui.Radius.circular(8)),
         _paint);
-
-
 
     final textPaint = TextPainter(
         text: TextSpan(

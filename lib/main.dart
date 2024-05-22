@@ -1,4 +1,3 @@
-import 'package:drift/isolate.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -27,12 +26,12 @@ class MyApp extends StatelessWidget {
         return GetMaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'SPICaWeather',
-          onInit: (){
+          onInit: () {
             AppDatabase.getInstance();
             EasyRefresh.defaultHeaderBuilder = () => const MaterialHeader();
             EasyRefresh.defaultFooterBuilder = () => const MaterialFooter();
           },
-          onDispose: (){
+          onDispose: () {
             AppDatabase.getInstance().close();
           },
           builder: EasyLoading.init(),

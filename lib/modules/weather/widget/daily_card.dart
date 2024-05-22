@@ -1,11 +1,12 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/generated/assets.dart';
+
 import '../../../model/weather_response.dart';
-import 'dart:ui' as ui;
 
 /// 天级别天气卡片
 class DailyCard extends StatelessWidget {
@@ -63,8 +64,13 @@ class DailyCard extends StatelessWidget {
         child: ExpansionTile(
           key: ValueKey(index),
           tilePadding: EdgeInsets.zero,
-          title: _titleWidget(weather.dailyWeather![index], context, index == 0,
-              weather.upperLimit(), weather.lowerLimit()),
+          title: _TitleWidget(
+            dailyWeather: weather.dailyWeather![index],
+            isHeader: index == 0,
+            upperLimit: weather.upperLimit(),
+            lowerLimit: weather.lowerLimit(),
+            temp: weather.todayWeather?.temp ?? 0,
+          ),
           children: [
             SizedBox(
               height: 12.w,
@@ -76,63 +82,6 @@ class DailyCard extends StatelessWidget {
           ],
         ));
   }
-
-  /// 标题部分
-  _titleWidget(DailyWeather dailyWeather, BuildContext context, bool isHeader,
-          int upperLimit, int lowerLimit) =>
-      Row(
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          Text(
-            (DateTime.tryParse(dailyWeather.fxTime ?? '')?.weekday.toString() ??
-                    '/')
-                .toWeekString(),
-            style: context.theme.textTheme.titleMedium?.copyWith(
-                color: isHeader
-                    ? dailyWeather.iconId?.getWeatherColor() ?? Colors.blue[500]
-                    : Colors.black,
-                fontWeight: FontWeight.bold),
-          ),
-          SizedBox(
-            width: 12.w,
-          ),
-          Image.asset(
-            dailyWeather.iconId?.getWeatherType().getIconAssetString() ??
-                Assets.assetsIcSun,
-            width: 28.w,
-          ),
-          SizedBox(
-            width: 12.w,
-          ),
-          Text(
-            "${dailyWeather.minTemp?.toString()}℃" ?? '',
-            style: context.theme.textTheme.titleMedium,
-          ),
-          SizedBox(
-            width: 12.w,
-          ),
-          Expanded(
-            flex: 1,
-            child: IntrinsicHeight(
-                child: CustomPaint(
-              painter: _LinePainter(
-                maxTemp: dailyWeather.maxTemp ?? 0,
-                minTemp: dailyWeather.minTemp ?? 0,
-                currentTemp: isHeader ? weather.todayWeather?.temp : null,
-                upperLimit: upperLimit,
-                lowerLimit: lowerLimit,
-              ),
-            )),
-          ),
-          SizedBox(
-            width: 12.w,
-          ),
-          Text(
-            "${dailyWeather.maxTemp?.toString()}℃" ?? '',
-            style: context.theme.textTheme.titleMedium,
-          ),
-        ],
-      );
 
   /// 详细部分
   _detailWidget(BuildContext context, DailyWeather dailyWeather) => Container(
@@ -205,20 +154,28 @@ class _LinePainter extends CustomPainter {
   // 上限温度
   int upperLimit;
 
+  // 当前温度
   int? currentTemp;
 
   int get diff => upperLimit - lowerLimit;
 
+  // 这天的最高气温
   int maxTemp;
 
+  // 这天的最低气温
   int minTemp;
 
+  // 渐变色
   ui.Gradient? gradient;
+
+  // 动画的进度
+  double progress;
 
   _LinePainter(
       {required this.lowerLimit,
       required this.upperLimit,
       this.currentTemp,
+      this.progress = 1,
       required this.maxTemp,
       required this.minTemp}) {}
 
@@ -235,7 +192,6 @@ class _LinePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-
     // 根据一周内的最高最低气温生产渐变色
     if (gradient == null) {
       final Color startColor;
@@ -317,5 +273,125 @@ extension WeekStringExt on String {
       default:
         return "未知";
     }
+  }
+}
+
+class _TitleWidget extends StatefulWidget {
+  const _TitleWidget(
+      {super.key,
+      required this.temp,
+      required this.dailyWeather,
+      required this.isHeader,
+      required this.upperLimit,
+      required this.lowerLimit});
+
+  final DailyWeather dailyWeather;
+
+  final int temp;
+
+  final bool isHeader;
+
+  final int upperLimit;
+
+  final int lowerLimit;
+
+  @override
+  State<_TitleWidget> createState() => _TitleWidgetState();
+}
+
+class _TitleWidgetState extends State<_TitleWidget>
+    with SingleTickerProviderStateMixin {
+  AnimationController? animationController;
+
+  Animation<double>? animation;
+
+  @override
+  void initState() {
+    if (widget.isHeader) {
+      animationController = AnimationController(
+          vsync: this, duration: const Duration(milliseconds: 2000));
+      animation = Tween<double>(begin: 0, end: 1).animate(animationController!);
+      animationController?.forward();
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      children: <Widget>[
+        Text(
+          (DateTime.tryParse(widget.dailyWeather.fxTime ?? '')
+                      ?.weekday
+                      .toString() ??
+                  '/')
+              .toWeekString(),
+          style: context.theme.textTheme.titleMedium?.copyWith(
+              color: widget.isHeader
+                  ? widget.dailyWeather.iconId?.getWeatherColor() ??
+                      Colors.blue[500]
+                  : Colors.black,
+              fontWeight: FontWeight.bold),
+        ),
+        SizedBox(
+          width: 12.w,
+        ),
+        Image.asset(
+          widget.dailyWeather.iconId?.getWeatherType().getIconAssetString() ??
+              Assets.assetsIcSun,
+          width: 28.w,
+        ),
+        SizedBox(
+          width: 12.w,
+        ),
+        Text(
+          "${widget.dailyWeather.minTemp?.toString()}℃" ?? '',
+          style: context.theme.textTheme.titleMedium,
+        ),
+        SizedBox(
+          width: 12.w,
+        ),
+        Expanded(
+          flex: 1,
+          child: IntrinsicHeight(
+              child: animation != null
+                  ? AnimatedBuilder(
+                      animation: animation!,
+                      builder: (c, w) => CustomPaint(
+                            painter: _LinePainter(
+                              maxTemp: widget.dailyWeather.maxTemp ?? 0,
+                              minTemp: widget.dailyWeather.minTemp ?? 0,
+                              currentTemp: widget.isHeader ? widget.temp : null,
+                              upperLimit: widget.upperLimit,
+                              lowerLimit: widget.lowerLimit,
+                              progress: animation!.value,
+                            ),
+                          ))
+                  : CustomPaint(
+                      painter: _LinePainter(
+                        maxTemp: widget.dailyWeather.maxTemp ?? 0,
+                        minTemp: widget.dailyWeather.minTemp ?? 0,
+                        currentTemp: widget.isHeader ? widget.temp : null,
+                        upperLimit: widget.upperLimit,
+                        lowerLimit: widget.lowerLimit,
+                      ),
+                    )),
+        ),
+        SizedBox(
+          width: 12.w,
+        ),
+        Text(
+          "${widget.dailyWeather.maxTemp?.toString()}℃" ?? '',
+          style: context.theme.textTheme.titleMedium,
+        ),
+      ],
+    );
   }
 }

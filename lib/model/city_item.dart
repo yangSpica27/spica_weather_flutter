@@ -40,7 +40,11 @@ class CityItem {
   String? lat;
   String? weather;
 
-  CityItem({required this.name, required this.log,required this.lat,required this.weather});
+  CityItem(
+      {required this.name,
+      required this.log,
+      required this.lat,
+      required this.weather});
 
   CityItem.fromJson(Map<String, dynamic> json) {
     name = json['name'];
@@ -57,8 +61,6 @@ class CityItem {
     data['weather'] = this.weather;
     return data;
   }
-
-
 
   @override
   String toString() {

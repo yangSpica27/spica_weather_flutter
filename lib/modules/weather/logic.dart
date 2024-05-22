@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:spica_weather_flutter/database/database.dart';
 import 'package:spica_weather_flutter/repository/api_repository.dart';
 
-
 class WeatherLogic extends GetxController {
   final data = <CityData>[].obs;
 

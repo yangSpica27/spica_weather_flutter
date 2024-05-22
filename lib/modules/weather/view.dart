@@ -2,10 +2,10 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/air_desc_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
-import 'package:spica_weather_flutter/modules/weather/widget/sunrise_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 
@@ -66,7 +66,8 @@ class _WeatherPageState extends State<WeatherPage>
             children: [
               Center(
                 child: Obx(() => TabPageSelector(
-                      controller: tabController..animateTo(logic.pageIndex.value),
+                      controller: tabController
+                        ..animateTo(logic.pageIndex.value),
                       color: const Color(0x21000000),
                       selectedColor: Colors.black87,
                     )),

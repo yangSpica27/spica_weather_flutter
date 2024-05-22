@@ -1,16 +1,45 @@
 import 'dart:math';
+import 'dart:ui' as ui;
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'dart:ui' as ui;
-import 'package:spica_weather_flutter/model/weather_response.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
+import 'package:spica_weather_flutter/model/weather_response.dart';
 
-class AirDescCard extends StatelessWidget {
+class AirDescCard extends StatefulWidget {
   final WeatherResult weather;
 
   const AirDescCard({super.key, required this.weather});
+
+  @override
+  State<AirDescCard> createState() => _AirDescCardState();
+}
+
+class _AirDescCardState extends State<AirDescCard>
+    with TickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 2500),
+    vsync: this,
+  );
+
+  late final enterProgressAnim = Tween<double>(begin: 0, end: 1).animate(
+    CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ),
+  );
+
+  @override
+  void initState() {
+    super.initState();
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +52,7 @@ class AirDescCard extends StatelessWidget {
           Text(
             "空气质量",
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: weather.todayWeather?.iconId?.getWeatherColor() ??
+                color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
                     Colors.blue[500]),
           ),
           SizedBox(
@@ -32,17 +61,21 @@ class AirDescCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
-              CustomPaint(
-                size: Size(100.w, 100.w),
-                painter: _AirProgressPainter(
-                    centerText: "空气质量", air: weather.air?.aqi?.toDouble() ?? 0),
-              ),
+              AnimatedBuilder(
+                  animation: enterProgressAnim,
+                  builder: (BuildContext context, Widget? child) => CustomPaint(
+                        size: Size(110.w, 110.w),
+                        painter: _AirProgressPainter(
+                            centerText: "污染指数",
+                            air: (widget.weather.air?.aqi?.toDouble() ?? 0) *
+                                enterProgressAnim.value),
+                      )),
               const Spacer(),
               Container(
                   alignment: Alignment.center,
-                  height: 100.w,
-                  width: ScreenUtil().screenWidth / 2 - 30.w,
-                  child: _RightDescWidget(weather: weather)),
+                  height: 110.w,
+                  width: ScreenUtil().screenWidth / 2 - 40.w,
+                  child: _RightDescWidget(weather: widget.weather)),
             ],
           ),
         ],
@@ -84,13 +117,11 @@ class _RightDescWidget extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
-        Text(
-          title,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.w500, color: Colors.black87)
-        ),
+        Text(title,
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(fontWeight: FontWeight.w500, color: Colors.black87)),
         const Spacer(),
         Text(value,
             style: Theme.of(context)

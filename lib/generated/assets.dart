@@ -15,5 +15,4 @@ class Assets {
   static const String assetsIcWater = 'assets/ic_water.png';
   static const String assetsIcWave = 'assets/ic_wave.png';
   static const String assetsIcWindmill = 'assets/ic_windmill.png';
-
 }

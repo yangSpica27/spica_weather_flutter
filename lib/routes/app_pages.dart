@@ -1,5 +1,3 @@
-
-
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:spica_weather_flutter/modules/city_list/binding.dart';
 import 'package:spica_weather_flutter/modules/city_list/view.dart';
