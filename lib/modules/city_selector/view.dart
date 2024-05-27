@@ -27,7 +27,9 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
       ),
       body: Column(
         children: [
-          Container(
+          Hero(tag: "search_bar",
+              transitionOnUserGestures: true,
+              child: Container(
             padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
             child: TextField(
               controller: _editorController,
@@ -51,7 +53,7 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
                 ),
               ),
             ),
-          ),
+          )),
           Expanded(
               child: Obx(() => logic.showItems.isNotEmpty
                   ? ListView.separated(

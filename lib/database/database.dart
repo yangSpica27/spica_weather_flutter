@@ -21,6 +21,8 @@ class City extends Table {
 
   TextColumn get lon => text()();
 
+  Int64Column get sort => int64()();
+
   TextColumn get weather =>
       text().map(const WeatherResultTypeConverter()).nullable()();
 

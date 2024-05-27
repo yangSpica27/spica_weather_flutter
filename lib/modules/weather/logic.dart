@@ -11,7 +11,9 @@ class WeatherLogic extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    data.bindStream(AppDatabase.getInstance().city.select().watch());
+    data.bindStream((AppDatabase.getInstance().city.select()
+          ..orderBy([(t) => OrderingTerm(expression: t.sort)]))
+        .watch());
   }
 
   loadData() {

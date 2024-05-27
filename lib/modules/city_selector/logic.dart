@@ -48,6 +48,7 @@ class CitySelectorLogic extends GetxController {
           CityCompanion.insert(
               name: showItem.name ?? "/",
               lat: showItem.lat ?? "",
+              sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
               lon: showItem.log ?? ''),
           mode: InsertMode.insertOrIgnore);
       await ApiRepository.fetchWeather();

@@ -22,6 +22,7 @@ class ApiRepository {
             name: city.name,
             lat: city.lat,
             lon: city.lon,
+            sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
             weather: Value(weatherResponse.data)));
         print("获取天气成功${weatherResponse}");
       } else {

@@ -28,7 +28,7 @@ class SplashLogic extends GetxController {
     //  载入默认值 如果没有city的情况下
     if (value == 0) {
       AppDatabase.getInstance().city.insertOne(
-          CityCompanion.insert(name: "南京", lat: "32.04", lon: "118.78"),
+          CityCompanion.insert(name: "南京", lat: "32.04", lon: "118.78", sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
           mode: InsertMode.insertOrReplace);
       state.update((val) {
         val?.tip = "${val.tip}\n请求城市数据中..";
