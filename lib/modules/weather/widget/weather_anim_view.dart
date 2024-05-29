@@ -18,6 +18,7 @@ class WeatherAnimView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // return _FogView(width: width, height: height);
     switch (_weatherAnimType) {
       case WeatherAnimType.SUNNY:
         return _SunnyView(width, height);
@@ -161,7 +162,8 @@ class _SunnyViewState extends State<_SunnyView> with TickerProviderStateMixin {
     return AnimatedBuilder(
         animation: anim1,
         builder: (context, _) => CustomPaint(
-              painter: _SunnyViewPainter(path1, path2, path3, path4),
+              painter:
+                  _SunnyViewPainter(path1, path2, path3, path4, anim3.value),
               size: Size(widget.width, widget.height),
             ));
   }
@@ -176,7 +178,10 @@ class _SunnyViewPainter extends CustomPainter {
 
   final Path path4;
 
-  _SunnyViewPainter(this.path1, this.path2, this.path3, this.path4);
+  final double progress;
+
+  _SunnyViewPainter(
+      this.path1, this.path2, this.path3, this.path4, this.progress);
 
   final _paint = Paint()
     ..color = const Color(0x33FFFFFF)
@@ -184,10 +189,15 @@ class _SunnyViewPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.translate(size.width, 0);
+    canvas.scale(progress,progress);
+    canvas.translate(-size.width,0 );
     canvas.drawPath(path1, _paint);
     canvas.drawPath(path2, _paint);
     canvas.drawPath(path3, _paint);
     canvas.drawPath(path4, _paint);
+    canvas.restore();
   }
 
   @override
@@ -436,6 +446,11 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
     vsync: this,
   )..repeat(reverse: true);
 
+  late AnimationController controller4 = AnimationController(
+    duration: const Duration(milliseconds: 600),
+    vsync: this,
+  );
+
   late final Animation anim1;
 
   late final Animation anim2;
@@ -445,6 +460,13 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
     parent: controller3,
     curve: Curves.easeInOutBack,
   ));
+
+  late final Animation anim4 =
+  Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
+    parent: controller4,
+    curve: Curves.decelerate,
+  ));
+
 
   @override
   void initState() {
@@ -497,6 +519,7 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
           0.0,
           widget.height / 7 / 10 * 4);
     });
+    controller4.forward();
     super.initState();
   }
 
@@ -505,6 +528,7 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
     controller1.dispose();
     controller2.dispose();
     controller3.dispose();
+    controller4.dispose();
     super.dispose();
   }
 
@@ -513,7 +537,7 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
     return AnimatedBuilder(
         animation: anim1,
         builder: (context, _) => CustomPaint(
-              painter: _FogViewPainter(path1, path2, path3),
+              painter: _FogViewPainter(path1, path2, path3, anim4.value),
               size: Size(widget.width, widget.height),
             ));
   }
@@ -526,7 +550,9 @@ class _FogViewPainter extends CustomPainter {
 
   final Path path3;
 
-  _FogViewPainter(this.path1, this.path2, this.path3);
+  final double progress;
+
+  _FogViewPainter(this.path1, this.path2, this.path3,this.progress);
 
   final _paint = Paint()
     ..color = const Color(0x33FFFFFF)
@@ -534,9 +560,12 @@ class _FogViewPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    canvas.save();
+    canvas.translate(0, - size.height * progress);
     canvas.drawPath(path1, _paint);
     canvas.drawPath(path2, _paint);
     canvas.drawPath(path3, _paint);
+    canvas.restore();
   }
 
   @override
