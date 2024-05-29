@@ -22,7 +22,7 @@ class _WeatherPageState extends State<WeatherPage>
     with TickerProviderStateMixin {
   final logic = Get.find<WeatherLogic>();
 
-  final PageController pageController = PageController(keepPage: true);
+  final PageController pageController = PageController(keepPage: false);
 
   late TabController tabController = TabController(length: 1, vsync: this);
 
@@ -64,6 +64,7 @@ class _WeatherPageState extends State<WeatherPage>
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
+              /// TabPageSelector指示器
               Center(
                 child: Obx(() => TabPageSelector(
                       controller: tabController
@@ -72,6 +73,8 @@ class _WeatherPageState extends State<WeatherPage>
                       selectedColor: Colors.black87,
                     )),
               ),
+
+              /// 内容区
               Expanded(
                 flex: 1,
                 child: PageView(
@@ -86,7 +89,9 @@ class _WeatherPageState extends State<WeatherPage>
                               padding: EdgeInsets.symmetric(
                                   horizontal: 20.w, vertical: 12.w),
                               children: [
-                                NowCard(weather: element.weather!),
+                                NowCard(
+                                  weather: element.weather!,
+                                ),
                                 SizedBox(
                                   height: 12.w,
                                 ),

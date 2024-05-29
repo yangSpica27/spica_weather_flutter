@@ -191,8 +191,8 @@ class _SunnyViewPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     canvas.save();
     canvas.translate(size.width, 0);
-    canvas.scale(progress,progress);
-    canvas.translate(-size.width,0 );
+    canvas.scale(progress, progress);
+    canvas.translate(-size.width, 0);
     canvas.drawPath(path1, _paint);
     canvas.drawPath(path2, _paint);
     canvas.drawPath(path3, _paint);
@@ -462,11 +462,10 @@ class _FogViewState extends State<_FogView> with TickerProviderStateMixin {
   ));
 
   late final Animation anim4 =
-  Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
+      Tween<double>(begin: 1, end: 0).animate(CurvedAnimation(
     parent: controller4,
     curve: Curves.decelerate,
   ));
-
 
   @override
   void initState() {
@@ -552,7 +551,7 @@ class _FogViewPainter extends CustomPainter {
 
   final double progress;
 
-  _FogViewPainter(this.path1, this.path2, this.path3,this.progress);
+  _FogViewPainter(this.path1, this.path2, this.path3, this.progress);
 
   final _paint = Paint()
     ..color = const Color(0x33FFFFFF)
@@ -561,7 +560,7 @@ class _FogViewPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.save();
-    canvas.translate(0, - size.height * progress);
+    canvas.translate(0, -size.height * progress);
     canvas.drawPath(path1, _paint);
     canvas.drawPath(path2, _paint);
     canvas.drawPath(path3, _paint);

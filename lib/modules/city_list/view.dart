@@ -52,7 +52,7 @@ class _CityListPageState extends State<CityListPage> {
                         final double animValue =
                             Curves.easeInOut.transform(animation.value);
                         return Transform.scale(
-                          scale: 1 + .1 * animValue,
+                          scale: 1 + .05 * animValue,
                           child: widget,
                         );
                       });
@@ -104,8 +104,7 @@ class _CityListPageState extends State<CityListPage> {
             ],
           ),
         ),
-      )
-  );
+      ));
 
   _itemCity(BuildContext context, CityData item) => Dismissible(
         direction: DismissDirection.endToStart,
@@ -136,23 +135,38 @@ class _CityListPageState extends State<CityListPage> {
                       item.weather?.todayWeather?.iconId?.getWeatherColor() ??
                           Colors.blue[500],
                   borderRadius: const BorderRadius.all(Radius.circular(8))),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: context.theme.textTheme.headlineMedium
-                        ?.copyWith(color: Colors.white),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text(item.weather?.todayWeather?.weatherName ?? "暂无天气信息",
-                      style: context.theme.textTheme.headlineSmall
-                          ?.copyWith(color: Colors.white)),
-                ],
-              ),
+              child: Row(mainAxisSize: MainAxisSize.max, children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: context.theme.textTheme.headlineMedium?.copyWith(
+                          color: Colors.white,
+                          fontSize: 20.sp,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                        "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
+                        style: context.theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
+                  style: context.theme.textTheme.headlineLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 38.sp),
+                ),
+              ]),
             )),
       );
 
@@ -203,10 +217,14 @@ class _ShakeContentState extends State<_ShakeContent>
 
   @override
   Widget build(BuildContext context) {
-    if(widget.needShake) {
-      _controller.repeat(reverse: true);
+    if (widget.needShake) {
+      if (!_controller.isAnimating) {
+        _controller.repeat(reverse: true);
+      }
     } else {
-      _controller.stop();
+      if (_controller.isAnimating) {
+        _controller.stop();
+      }
     }
     return AnimatedBuilder(
         animation: _shakeAnim,
