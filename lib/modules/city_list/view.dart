@@ -20,6 +20,8 @@ class CityListPage extends StatefulWidget {
 class _CityListPageState extends State<CityListPage> {
   final logic = Get.find<CityListLogic>();
 
+  final scrollerController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,6 +37,7 @@ class _CityListPageState extends State<CityListPage> {
           Expanded(
             flex: 1,
             child: Obx(() => ReorderableListView.builder(
+                scrollController: scrollerController,
                 onReorder: (oldIndex, newIndex) async {
                   await logic.reorderCity(oldIndex, newIndex);
                 },
@@ -59,7 +62,7 @@ class _CityListPageState extends State<CityListPage> {
                 },
                 physics: const BouncingScrollPhysics(),
                 itemBuilder: (context, index) =>
-                    _itemCity(context, logic.data[index]),
+                    _itemCity(context, logic.data[index], index),
                 itemCount: logic.data.length)),
           ),
           SizedBox(
@@ -106,15 +109,20 @@ class _CityListPageState extends State<CityListPage> {
         ),
       ));
 
-  _itemCity(BuildContext context, CityData item) => Dismissible(
+  _itemCity(BuildContext context, CityData item, int index) => Dismissible(
         direction: DismissDirection.endToStart,
         key: Key(item.name),
-        background: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          alignment: Alignment.centerRight,
-          child: const Icon(
-            Icons.delete,
-            color: Colors.black87,
+        background: InkWell(
+          onTap: () async {
+            Get.back(result: index);
+          },
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            alignment: Alignment.centerRight,
+            child: const Icon(
+              Icons.delete,
+              color: Colors.black87,
+            ),
           ),
         ),
         onDismissed: (direction) async {

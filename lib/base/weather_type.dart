@@ -40,9 +40,9 @@ extension WeatherTypeOnIntExtension on int {
       case WeatherType.WEATHER_HAIL:
         return const Color(0xFFE1C899);
       case WeatherType.WEATHER_THUNDER:
-        return const Color(0xFFB296BD);
+        return const Color(0xFF4A4646);
       case WeatherType.WEATHER_THUNDERSTORM:
-        return const Color(0xFFB296BD);
+        return const Color(0xFF3995E9);
     }
   }
 
