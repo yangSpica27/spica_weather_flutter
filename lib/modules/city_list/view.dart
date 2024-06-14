@@ -61,8 +61,15 @@ class _CityListPageState extends State<CityListPage> {
                       });
                 },
                 physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) =>
-                    _itemCity(context, logic.data[index], index),
+                itemBuilder: (context, index) => _ItemCity(
+                      item: logic.data[index],
+                      index: index,
+                      isSort: logic.isSort.value,
+                      onDismissed: (index) async {
+                        await logic.removeCity(logic.data[index]);
+                      },
+                      key: ValueKey(logic.data[index].name),
+                    ),
                 itemCount: logic.data.length)),
           ),
           SizedBox(
@@ -109,75 +116,6 @@ class _CityListPageState extends State<CityListPage> {
         ),
       ));
 
-  _itemCity(BuildContext context, CityData item, int index) => Dismissible(
-        direction: DismissDirection.endToStart,
-        key: Key(item.name),
-        background: InkWell(
-          onTap: () async {
-            Get.back(result: index);
-          },
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            alignment: Alignment.centerRight,
-            child: const Icon(
-              Icons.delete,
-              color: Colors.black87,
-            ),
-          ),
-        ),
-        onDismissed: (direction) async {
-          await logic.removeCity(item);
-        },
-        child: _ShakeContent(
-            needShake: logic.isSort.value,
-            child: Container(
-              margin: EdgeInsets.only(bottom: 12.w),
-              width: ScreenUtil().screenWidth - 32.w,
-              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: logic.isSort.value
-                          ? Colors.grey[500]!
-                          : Colors.transparent),
-                  color:
-                      item.weather?.todayWeather?.iconId?.getWeatherColor() ??
-                          Colors.blue[500],
-                  borderRadius: const BorderRadius.all(Radius.circular(8))),
-              child: Row(mainAxisSize: MainAxisSize.max, children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      item.name,
-                      style: context.theme.textTheme.headlineMedium?.copyWith(
-                          color: Colors.white,
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.w500),
-                    ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                        "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
-                        style: context.theme.textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.w400)),
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
-                  style: context.theme.textTheme.headlineLarge?.copyWith(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      fontSize: 38.sp),
-                ),
-              ]),
-            )),
-      );
-
   @override
   void dispose() {
     Get.delete<CityListLogic>();
@@ -186,8 +124,7 @@ class _CityListPageState extends State<CityListPage> {
 }
 
 class _ShakeContent extends StatefulWidget {
-  const _ShakeContent(
-      {super.key, required this.needShake, required this.child});
+  const _ShakeContent({required this.needShake, required this.child});
 
   final bool needShake;
 
@@ -240,5 +177,89 @@ class _ShakeContentState extends State<_ShakeContent>
               angle: widget.needShake ? (_shakeAnim.value * pi / 180) : 0,
               child: widget.child,
             ));
+  }
+}
+
+class _ItemCity extends StatelessWidget {
+  const _ItemCity(
+      {super.key,
+      required this.index,
+      required this.item,
+      this.onDismissed,
+      required this.isSort});
+
+  final CityData item;
+  final int index;
+
+  final Function? onDismissed;
+  final bool isSort;
+
+  @override
+  Widget build(BuildContext context) {
+    return Dismissible(
+      direction: DismissDirection.endToStart,
+      key: ValueKey(item.hashCode),
+      background: InkWell(
+        onTap: () async {
+          Get.back(result: index);
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          alignment: Alignment.centerRight,
+          child: const Icon(
+            Icons.delete,
+            color: Colors.black87,
+          ),
+        ),
+      ),
+      onDismissed: (direction) async {
+        await onDismissed?.call();
+      },
+      child: _ShakeContent(
+          needShake: isSort,
+          child: Container(
+            margin: EdgeInsets.only(bottom: 12.w),
+            width: ScreenUtil().screenWidth - 32.w,
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    color: isSort ? Colors.grey[500]! : Colors.transparent),
+                color: item.weather?.todayWeather?.iconId?.getWeatherColor() ??
+                    Colors.blue[500],
+                borderRadius: const BorderRadius.all(Radius.circular(8))),
+            child: Row(mainAxisSize: MainAxisSize.max, children: [
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name,
+                    style: context.theme.textTheme.headlineMedium?.copyWith(
+                        color: Colors.white,
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w500),
+                  ),
+                  const SizedBox(
+                    height: 8,
+                  ),
+                  Text(
+                      "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
+                      style: context.theme.textTheme.headlineSmall?.copyWith(
+                          color: Colors.white,
+                          fontSize: 16.sp,
+                          fontWeight: FontWeight.w400)),
+                ],
+              ),
+              const Spacer(),
+              Text(
+                "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
+                style: context.theme.textTheme.headlineLarge?.copyWith(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w900,
+                    fontSize: 38.sp),
+              ),
+            ]),
+          )),
+    );
   }
 }

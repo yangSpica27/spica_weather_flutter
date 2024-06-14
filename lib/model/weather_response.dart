@@ -31,6 +31,7 @@ class WeatherResult {
   List<Minutely>? minutely;
   Air? air;
   String? descriptionForToday;
+  List<Warning>? warnings;
 
   int? _upperLimit;
 
@@ -77,6 +78,7 @@ class WeatherResult {
       this.lifeIndexes,
       this.minutely,
       this.air,
+      this.warnings,
       this.descriptionForToday});
 
   WeatherResult.fromJson(Map<String, dynamic> json) {
@@ -107,6 +109,12 @@ class WeatherResult {
         minutely!.add(new Minutely.fromJson(v));
       });
     }
+    if (json['warnings'] != null) {
+      warnings = <Warning>[];
+      json['warnings'].forEach((v) {
+        warnings?.add(new Warning.fromJson(v));
+      });
+    }
     air = json['air'] != null ? new Air.fromJson(json['air']) : null;
     descriptionForToday = json['descriptionForToday'];
   }
@@ -132,13 +140,46 @@ class WeatherResult {
     if (this.air != null) {
       data['air'] = this.air!.toJson();
     }
+    if (this.warnings != null) {
+      data['warnings'] = this.warnings!.map((v) => v.toJson()).toList();
+    }
     data['descriptionForToday'] = this.descriptionForToday;
     return data;
   }
 
   @override
   String toString() {
-    return 'WeatherResult{todayWeather: $todayWeather, dailyWeather: $dailyWeather, hourlyWeather: $hourlyWeather, lifeIndexes: $lifeIndexes, minutely: $minutely, air: $air, descriptionForToday: $descriptionForToday}';
+    return 'WeatherResult{todayWeather: $todayWeather,warnings:$warnings, dailyWeather: $dailyWeather, hourlyWeather: $hourlyWeather, lifeIndexes: $lifeIndexes, minutely: $minutely, air: $air, descriptionForToday: $descriptionForToday}';
+  }
+}
+
+class Warning {
+  String? sender;
+  String? title;
+  String? text;
+  String? startTime;
+
+  Warning({this.sender, this.title, this.text, this.startTime});
+
+  Warning.fromJson(Map<String, dynamic> json) {
+    sender = json['sender'];
+    title = json['title'];
+    text = json['text'];
+    startTime = json['startTime'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['sender'] = this.sender;
+    data['title'] = this.title;
+    data['text'] = this.text;
+    data['startTime'] = this.startTime;
+    return data;
+  }
+
+  @override
+  String toString() {
+    return 'Warning{sender: $sender, title: $title, text: $text, startTime: $startTime}';
   }
 }
 

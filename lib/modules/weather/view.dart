@@ -7,6 +7,7 @@ import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/warning_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 
 import 'logic.dart';
@@ -92,6 +93,15 @@ class _WeatherPageState extends State<WeatherPage>
                                 NowCard(
                                   weather: element.weather!,
                                 ),
+                                Visibility(
+                                    visible: element.weather!.warnings !=
+                                            null &&
+                                        element.weather!.warnings!.isNotEmpty,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(top: 12.w),
+                                      child: WarningCard(
+                                          weather: element.weather!),
+                                    )),
                                 SizedBox(
                                   height: 12.w,
                                 ),
