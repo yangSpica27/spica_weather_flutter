@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -39,54 +40,67 @@ class _HourlyCardState extends State<HourlyCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Padding(
-      padding: EdgeInsets.all(15.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
+      child: Padding(
+        padding: EdgeInsets.all(15.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
           Text(
-            "小时别天气信息",
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
-                    Colors.blue[500]),
-          ),
-          SizedBox(
-            height: 4.w,
-          ),
-          Text(
-            "${widget.weather.descriptionForToday}",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          SizedBox(
-            height: 12.w,
-          ),
-          widget.weather.hourlyWeather == null
-              ? _emptyWidget(context)
-              : SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  controller: _scrollController,
-                  child: CustomPaint(
-                    size: Size(
-                        60.w * (widget.weather.hourlyWeather?.length ?? 0),
-                        160.w),
-                    painter: _LinePainter(
-                        scrollX: scrollX,
-                        data: widget.weather.hourlyWeather ?? [],
-                        themeColor: widget.weather.todayWeather?.iconId
-                                ?.getWeatherColor() ??
-                            Colors.blue[500]!),
-                  ),
-                )
-        ],
+          "小时别天气信息",
+          style: Theme
+              .of(context)
+              .textTheme
+              .titleMedium
+              ?.copyWith(
+              color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
+                  Colors.blue[500]),
+        ),
+        SizedBox(
+          height: 4.w,
+        ),
+        Text(
+          "${widget.weather.descriptionForToday}",
+          style: Theme
+              .of(context)
+              .textTheme
+              .bodyMedium,
+        ),
+        SizedBox(
+          height: 12.w,
+        ),
+        widget.weather.hourlyWeather == null
+            ? _emptyWidget(context)
+            : SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            controller: _scrollController,
+            child: CustomPaint(
+                key: ValueKey(widget.weather.hourlyWeather?.hashCode),
+                size: Size(
+            60.w * (widget.weather.hourlyWeather?.length ?? 0),
+            160.w),
+        painter: _LinePainter(
+            scrollX: scrollX,
+            data: widget.weather.hourlyWeather ?? [],
+            themeColor: widget.weather.todayWeather?.iconId
+                ?.getWeatherColor() ??
+                Colors.blue[500]!),
       ),
-    ));
+    )],
+    )
+    ,
+    )
+    );
   }
 
-  _emptyWidget(BuildContext context) => Container(
+  _emptyWidget(BuildContext context) =>
+      Container(
         padding: EdgeInsets.symmetric(vertical: 10.w),
         child: Text(
           "暂无数据",
-          style: Theme.of(context).textTheme.titleMedium,
+          style: Theme
+              .of(context)
+              .textTheme
+              .titleMedium,
         ),
       );
 }
@@ -153,6 +167,7 @@ class _LinePainter extends CustomPainter {
       path.lineTo(xPoints[index], yPoints[index]);
       path2.lineTo(xPoints[index], yPoints[index]);
     });
+    path2 = _createSmoothPath(path2);
 
     yPoints2.reversed.toList().asMap().forEach((index, value) {
       path.lineTo(xPoints[xPoints.length - 1 - index], value);
@@ -199,6 +214,7 @@ class _LinePainter extends CustomPainter {
     _paint.color = themeColor;
     _paint.strokeWidth = 4.w;
     _paint.style = PaintingStyle.stroke;
+
     canvas.drawPath(path2, _paint);
     // 绘制底部天气类型
     _paint.style = PaintingStyle.fill;
@@ -309,6 +325,28 @@ class _LinePainter extends CustomPainter {
         canvas,
         Offset(offsetX - textPaint.width / 2,
             yPoints[index] - textPaint.height - 4.w));
+  }
+
+  // 生产平滑线Path
+  Path _createSmoothPath(Path originalPath) {
+    final PathMetric pathMetric = originalPath
+        .computeMetrics()
+        .first;
+    final Path smoothPath = Path();
+    const int divisions = 100;
+    for (int i = 0; i <= divisions; i++) {
+      final double x = i / divisions * pathMetric.length;
+      final Tangent? tangent = pathMetric.getTangentForOffset(x);
+      if (tangent != null) {
+        if (i == 0) {
+          smoothPath.moveTo(tangent.position.dx, tangent.position.dy);
+        } else {
+          smoothPath.lineTo(tangent.position.dx, tangent.position.dy);
+        }
+      }
+    }
+
+    return smoothPath;
   }
 
   @override
