@@ -5,6 +5,7 @@ class Assets {
   static const String assetsCity = 'assets/city.json';
   static const String assetsIcCloud = 'assets/ic_cloud.png';
   static const String assetsIcCloudy = 'assets/ic_cloudy.png';
+  static const String assetsIcDashboard = 'assets/ic_dashboard.png';
   static const String assetsIcLightRain = 'assets/ic_light_rain.png';
   static const String assetsIcRain = 'assets/ic_rain.png';
   static const String assetsIcSnow = 'assets/ic_snow.png';
@@ -15,4 +16,5 @@ class Assets {
   static const String assetsIcWater = 'assets/ic_water.png';
   static const String assetsIcWave = 'assets/ic_wave.png';
   static const String assetsIcWindmill = 'assets/ic_windmill.png';
+
 }
