@@ -36,7 +36,16 @@ class SplashLogic extends GetxController {
       state.update((val) {
         val?.tip = "${val.tip}\n有城市数据";
       });
-      await ApiRepository.fetchWeather();
+      try{
+        await ApiRepository.fetchWeather();
+      }catch(e){
+        state.update((val) {
+          val?.tip = "${val.tip}\n请求失败";
+        });
+        await Get.offAndToNamed(Routes.WEATHER);
+        return;
+      }
+
       Get.offAndToNamed(Routes.WEATHER);
       return;
     }
@@ -168,7 +177,15 @@ class SplashLogic extends GetxController {
     state.update((val) {
       val?.tip = "${val.tip}\n请求城市数据中..";
     });
-    await ApiRepository.fetchWeather();
+    try{
+      await ApiRepository.fetchWeather();
+    }catch(e){
+      state.update((val) {
+        val?.tip = "${val.tip}\n请求失败";
+      });
+      await Get.offAndToNamed(Routes.WEATHER);
+      return;
+    }
     state.update((val) {
       val?.isLoading = false;
       val?.tip = "${val.tip}\n请求成功，进入应用中..";
@@ -187,7 +204,15 @@ class SplashLogic extends GetxController {
     state.update((val) {
       val?.tip = "${val.tip}\n请求城市数据中..";
     });
-    await ApiRepository.fetchWeather();
+    try{
+      await ApiRepository.fetchWeather();
+    }catch(e){
+      state.update((val) {
+        val?.tip = "${val.tip}\n请求失败";
+      });
+      await Get.offAndToNamed(Routes.WEATHER);
+      return;
+    }
     state.update((val) {
       val?.isLoading = false;
       val?.tip = "${val.tip}\n请求成功，进入应用中..";
