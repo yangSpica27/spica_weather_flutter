@@ -65,7 +65,7 @@ class _CityListPageState extends State<CityListPage> {
                       item: logic.data[index],
                       index: index,
                       isSort: logic.isSort.value,
-                      onDismissed: (index) async {
+                      onDismissed: (DismissDirection direction) async {
                         await logic.removeCity(logic.data[index]);
                       },
                       key: ValueKey(logic.data[index].name),
@@ -191,7 +191,7 @@ class _ItemCity extends StatelessWidget {
   final CityData item;
   final int index;
 
-  final Function? onDismissed;
+  final DismissDirectionCallback? onDismissed;
   final bool isSort;
 
   @override
@@ -212,9 +212,7 @@ class _ItemCity extends StatelessWidget {
           ),
         ),
       ),
-      onDismissed: (direction) async {
-        await onDismissed?.call();
-      },
+      onDismissed: onDismissed,
       child: _ShakeContent(
           needShake: isSort,
           child: Container(
