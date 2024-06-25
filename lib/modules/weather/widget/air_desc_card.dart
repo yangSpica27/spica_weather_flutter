@@ -158,7 +158,7 @@ class _AirProgressPainter extends CustomPainter {
     if (air < 50) {
       _textPaint.color = Colors.green;
     } else if (air < 100) {
-      _textPaint.color = Colors.yellow[500]!;
+      _textPaint.color = Colors.yellow[700]!;
     } else if (air < 150) {
       _textPaint.color = Colors.orange;
     } else if (air < 200) {

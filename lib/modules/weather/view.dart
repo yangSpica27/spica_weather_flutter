@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/air_desc_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/details_card_list_widget.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
@@ -23,16 +24,15 @@ class _WeatherPageState extends State<WeatherPage>
     with TickerProviderStateMixin {
   final logic = Get.find<WeatherLogic>();
 
-  final PageController pageController = PageController(keepPage: false);
+  late final PageController pageController = PageController(keepPage: false)
+    ..addListener(() {
+      logic.pageIndex.value = pageController.page?.round() ?? 0;
+    });
 
   late TabController tabController = TabController(length: 1, vsync: this);
 
   @override
   Widget build(BuildContext context) {
-    pageController.addListener(() {
-      logic.pageIndex.value = pageController.page?.round() ?? 0;
-    });
-
     logic.data.listen((p0) {
       tabController = TabController(length: p0.length, vsync: this);
     });
@@ -103,29 +103,49 @@ class _WeatherPageState extends State<WeatherPage>
                                           weather: element.weather!),
                                     )),
                                 SizedBox(
-                                  height: 12.w,
+                                  height: 8.w,
                                 ),
                                 HourlyCard(weather: element.weather!),
                                 SizedBox(
-                                  height: 12.w,
+                                  height: 8.w,
                                 ),
                                 DailyCard(weather: element.weather!),
                                 SizedBox(
-                                  height: 12.w,
+                                  height: 8.w,
                                 ),
                                 AirDescCard(weather: element.weather!),
                                 SizedBox(
-                                  height: 12.w,
+                                  height: 8.w,
+                                ),
+                                DetailsCardListWidget(
+                                    weather: element.weather!),
+                                SizedBox(
+                                  height: 8.w,
                                 ),
                                 TipCard(weather: element.weather!),
                                 SizedBox(
-                                  height: 12.w,
+                                  height: 8.w,
                                 ),
-                                const Text(
-                                  "数据来自和风天气",
-                                  style: TextStyle(color: Colors.grey),
-                                  textAlign: TextAlign.center,
-                                ),
+                                RichText(
+                                    textAlign: TextAlign.center,
+                                    text: const TextSpan(
+                                      children: [
+                                        TextSpan(
+                                            text: "数据来源于",
+                                            style: TextStyle(
+                                                color: Colors.black87)),
+                                        TextSpan(
+                                            text: "  ",
+                                            style: TextStyle(
+                                                color: Colors.black87)),
+                                        TextSpan(
+                                          text: "和风天气",
+                                          style: TextStyle(
+                                              color: Colors.black87,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ],
+                                    )),
                                 SizedBox(
                                   height: 20.w,
                                 ),

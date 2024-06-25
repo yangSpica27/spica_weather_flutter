@@ -3,8 +3,11 @@ class Assets {
   Assets._();
 
   static const String assetsCity = 'assets/city.json';
+  static const String assetsIcBike = 'assets/ic_bike.png';
+  static const String assetsIcCar = 'assets/ic_car.png';
   static const String assetsIcCloud = 'assets/ic_cloud.png';
   static const String assetsIcCloudy = 'assets/ic_cloudy.png';
+  static const String assetsIcCoatHanger = 'assets/ic_coat_hanger.png';
   static const String assetsIcDashboard = 'assets/ic_dashboard.png';
   static const String assetsIcLightRain = 'assets/ic_light_rain.png';
   static const String assetsIcRain = 'assets/ic_rain.png';
@@ -13,6 +16,7 @@ class Assets {
   static const String assetsIcSunHat = 'assets/ic_sun_hat.png';
   static const String assetsIcTelescope = 'assets/ic_telescope.png';
   static const String assetsIcThunder = 'assets/ic_thunder.png';
+  static const String assetsIcVolleyball = 'assets/ic_volleyball.png';
   static const String assetsIcWater = 'assets/ic_water.png';
   static const String assetsIcWave = 'assets/ic_wave.png';
   static const String assetsIcWindmill = 'assets/ic_windmill.png';
