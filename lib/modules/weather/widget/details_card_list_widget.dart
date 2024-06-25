@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -54,7 +55,14 @@ class SunriseCard extends StatelessWidget {
         value: "",
         value2: "日出：$sunrise\n日落：$sunSet",
         icon: Icons.contrast_sharp,
-        rightWidget: Container());
+        needSpacer: false,
+        bottomWidget: Expanded(
+          flex: 1,
+          child: SunriseWidget(
+            startTime: sunrise ?? "",
+            endTime: sunSet ?? "",
+          ),
+        ));
   }
 }
 
@@ -117,7 +125,7 @@ class HumidnessCard extends StatelessWidget {
         value: humidness != null ? "$humidness%" : "--",
         icon: Icons.grain_outlined,
         value2: getHumidnessLevel(),
-        bottomWidget: Padding(
+        bottomWidget: Container(
           padding: EdgeInsets.only(bottom: 6.w),
           child: CustomPaint(
             painter: _LinePainter(
@@ -183,16 +191,24 @@ class UvCard extends StatelessWidget {
 class ItemWidget extends StatelessWidget {
   // 标题图标
   final IconData icon;
+
   // 标题
   final String title;
+
   // 值1
   final String value;
+
   // 值2
   final String value2;
+
   // 可选 右边自定义View
   final Widget? rightWidget;
+
   // 可选 底部自定义View
   final Widget? bottomWidget;
+
+  // 是否需要中部填充
+  final bool needSpacer;
 
   const ItemWidget(
       {super.key,
@@ -200,7 +216,8 @@ class ItemWidget extends StatelessWidget {
       required this.value,
       this.value2 = "",
       this.icon = Icons.wb_sunny_outlined,
-      this.bottomWidget,
+      this.bottomWidget = const Spacer(),
+      this.needSpacer = true,
       this.rightWidget});
 
   @override
@@ -224,6 +241,11 @@ class ItemWidget extends StatelessWidget {
                       ),
                       baseline: TextBaseline.alphabetic,
                     ),
+                    const WidgetSpan(
+                      child: SizedBox(
+                        width: 2,
+                      ),
+                    ),
                     TextSpan(
                         text: title,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -233,18 +255,18 @@ class ItemWidget extends StatelessWidget {
                   SizedBox(
                     height: 6.w,
                   ),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.black87,
-                          overflow: TextOverflow.ellipsis,
-                          fontWeight: FontWeight.w500,
+                  value == ""
+                      ? const SizedBox()
+                      : Text(
+                          value,
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.black87,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                         ),
-                  ),
-                  const Spacer(),
-                  Container(
-                    child: bottomWidget,
-                  ),
+                  needSpacer ? const Spacer() : const SizedBox(),
+                  bottomWidget == null ? const SizedBox() : bottomWidget!,
                   Text(
                     value2,
                     maxLines: 4,
@@ -329,5 +351,147 @@ class _LinePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _LinePainter oldDelegate) =>
+      currentWater != oldDelegate.currentWater;
+}
+
+/// 日出日落组件
+class SunriseWidget extends StatefulWidget {
+  const SunriseWidget({super.key, this.startTime = "", this.endTime = ""});
+
+  final String startTime;
+
+  final String endTime;
+
+  @override
+  State<SunriseWidget> createState() => _SunriseWidgetState();
+}
+
+class _SunriseWidgetState extends State<SunriseWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(seconds: 1),
+    vsync: this,
+  );
+
+  late final Animation<double> anim;
+
+  double progress = 0.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+        animation: _controller,
+        builder: (context, widget) => CustomPaint(
+              painter: _SunrisePainter(progress),
+            ));
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    try {
+      DateTime now = DateTime.now();
+      DateTime sunriseTime = DateTime.parse(
+          "${now.toIso8601String().split("T").first} ${widget.startTime}:00");
+
+      DateTime sunsetTime = DateTime.parse(
+          "${now.toIso8601String().split("T").first} ${widget.endTime}:00");
+
+      const double begin = .1;
+
+      double end = .9;
+
+      if (now.isBefore(sunriseTime)) return;
+
+      if (now.isAfter(sunsetTime)) return;
+
+      end = (now.millisecondsSinceEpoch - sunriseTime.millisecondsSinceEpoch) /
+              (sunsetTime.millisecondsSinceEpoch -
+                  sunriseTime.millisecondsSinceEpoch);
+
+
+
+      anim = Tween(begin: begin, end: end).animate(
+        CurvedAnimation(
+          parent: _controller,
+          curve: Curves.easeInOut,
+        ),
+      )..addListener(() {
+          progress = anim.value;
+        });
+      _controller.forward();
+    } catch (e) {
+      print("日出日落时间解析错误");
+      print(e);
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
+class _SunrisePainter extends CustomPainter {
+  final double progress;
+
+  _SunrisePainter(this.progress);
+
+  final Paint _paint = Paint()
+    ..color = Colors.grey[350]!
+    ..strokeWidth = 3.w
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+
+  final Paint _pointPaint = Paint()
+    ..color = Colors.grey[400]!
+    ..strokeWidth = 6.w
+    ..style = PaintingStyle.fill
+    ..strokeCap = StrokeCap.round;
+
+  final startAngle = pi / 180 * (180 + 20);
+
+  final endAngle = pi / 180 * (180 + (180 - 20));
+
+  late final sweepAngle = endAngle - startAngle;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.drawArc(Rect.fromLTRB(0, size.height / 2, size.width, size.height),
+        pi / 180 * (180 + 20), sweepAngle, false, _paint);
+
+    if (progress <= 0 || progress >= 1) return;
+
+    final double x = size.width * progress;
+
+    double y = calculateY(
+        Rect.fromLTRB(0, size.height / 2, size.width, size.height), x);
+
+    final centerY = size.height / 4 * 3;
+
+    y = centerY + (centerY - y);
+
+    _pointPaint.color = Colors.grey[350]!;
+    canvas.drawCircle(ui.Offset(x, y), 10.w, _pointPaint);
+    _pointPaint.color = Colors.grey[500]!;
+    canvas.drawCircle(ui.Offset(x, y), 6.w, _pointPaint);
+  }
+
+  //  获取Y坐标高度
+  double calculateY(Rect rect, double x) {
+    final double h = rect.center.dx;
+    final double k = rect.center.dy;
+    final double a = rect.width / 2;
+    final double b = rect.height / 2;
+    final double y = sqrt(pow(b, 2) * (1 - pow(x - h, 2) / pow(a, 2))) + k;
+
+    return y;
+  }
+
+  @override
+  bool shouldRepaint(covariant _SunrisePainter oldDelegate) =>
+      progress != oldDelegate.progress;
 }
