@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ionicons/ionicons.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/air_desc_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/details_card_list_widget.dart';
@@ -134,10 +135,9 @@ class _WeatherPageState extends State<WeatherPage>
                                             text: "数据来源于",
                                             style: TextStyle(
                                                 color: Colors.black87)),
-                                        TextSpan(
-                                            text: "  ",
-                                            style: TextStyle(
-                                                color: Colors.black87)),
+                                        WidgetSpan(child: SizedBox(width: 8,)),
+                                        WidgetSpan(child: Icon(Ionicons.cloud_circle,size: 15,),alignment: PlaceholderAlignment.middle,),
+                                        WidgetSpan(child: SizedBox(width: 2,)),
                                         TextSpan(
                                           text: "和风天气",
                                           style: TextStyle(

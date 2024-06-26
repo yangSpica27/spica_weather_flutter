@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
@@ -80,7 +81,7 @@ class FeelCard extends StatelessWidget {
       return "冷，注意保暖";
     } else if (feelTemp! < 20) {
       return "凉爽，适合户外活动";
-    } else if (feelTemp! < 28) {
+    } else if (feelTemp! < 26) {
       return "舒适，适合户外活动";
     } else if (feelTemp! < 35) {
       return "炎热，注意防暑";
@@ -96,6 +97,11 @@ class FeelCard extends StatelessWidget {
       value: feelTemp != null ? "$feelTemp℃" : "--",
       rightWidget: Container(),
       icon: Icons.settings_accessibility_outlined,
+      bottomWidget: Container(
+        padding: EdgeInsets.only(bottom: 6.w),
+        child: _BottomAnimLineWidget(
+            mode: 3, progress: max(min((feelTemp ?? 0) / 40.0, 0), 1)),
+      ),
       value2: getFeelTempDesc(),
     );
   }
@@ -127,14 +133,8 @@ class HumidnessCard extends StatelessWidget {
         value2: getHumidnessLevel(),
         bottomWidget: Container(
           padding: EdgeInsets.only(bottom: 6.w),
-          child: CustomPaint(
-            painter: _LinePainter(
-                lowerLimit: 0,
-                upperLimit: 100,
-                currentWater: humidness ?? 0,
-                progress: 1),
-            size: Size(100.w, 12.w),
-          ),
+          child: _BottomAnimLineWidget(
+              mode: 1, progress: (humidness ?? 0) / 100.0),
         ),
         rightWidget: Container());
   }
@@ -169,7 +169,7 @@ class UvCard extends StatelessWidget {
       return "对人体影响不大，可不采取防护措施";
     } else if (uv! < 8) {
       return "外出应采取防护措施，要用遮阳伞、遮阳衣帽、太阳镜等，涂擦防晒霜等";
-    } else   {
+    } else {
       return "外出应特别注意防护，中午前后宜减少外出";
     }
   }
@@ -177,12 +177,16 @@ class UvCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ItemWidget(
-      title: "紫外线",
-      icon: Icons.wb_sunny_outlined,
-      value: getUvLevel(),
-      rightWidget: Container(),
-      value2: getUvDetail(),
-    );
+        title: "紫外线",
+        icon: Icons.wb_sunny_outlined,
+        value: getUvLevel(),
+        rightWidget: Container(),
+        value2: getUvDetail(),
+        bottomWidget: Container(
+          padding: EdgeInsets.only(bottom: 6.w),
+          child: _BottomAnimLineWidget(
+              mode: 2, progress: min((uv ?? 0) / 12.0, 1.0)),
+        ));
   }
 }
 
@@ -232,13 +236,12 @@ class ItemWidget extends StatelessWidget {
                 children: <Widget>[
                   Text.rich(TextSpan(children: [
                     WidgetSpan(
-                      child: Icon(
-                        icon,
-                        size: 14.w,
-                        color: Colors.black54,
-                      ),
-                      baseline: TextBaseline.alphabetic,
-                    ),
+                        child: Icon(
+                          icon,
+                          size: 14.w,
+                          color: Colors.black54,
+                        ),
+                        alignment: PlaceholderAlignment.middle),
                     const WidgetSpan(
                       child: SizedBox(
                         width: 2,
@@ -285,8 +288,225 @@ class ItemWidget extends StatelessWidget {
   }
 }
 
+/// 底部进度组件
+class _BottomAnimLineWidget extends StatefulWidget {
+  const _BottomAnimLineWidget({required this.mode, required this.progress});
+
+  final int mode; // 模式 1:湿度 2:紫外线 3:体感温度
+
+  final double progress; // 最终进度
+
+  @override
+  State<_BottomAnimLineWidget> createState() => _BottomAnimLineWidgetState();
+}
+
+class _BottomAnimLineWidgetState extends State<_BottomAnimLineWidget>
+    with SingleTickerProviderStateMixin {
+  // 入场动画指示器
+  late final AnimationController _controller = AnimationController(
+    duration: const Duration(milliseconds: 1500),
+    vsync: this,
+  );
+
+  late final Animation<double> anim;
+
+  double currentProgress = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+    anim = Tween(begin: 0.0, end: widget.progress.toDouble()).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.decelerate,
+      ),
+    )..addListener(() {
+        currentProgress = anim.value;
+      });
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          if (widget.mode == 1) {
+            return CustomPaint(
+                size: ui.Size(0, 12.w),
+                painter: _WaterLinePainter(
+                    lowerLimit: 0,
+                    upperLimit: 100,
+                    currentWater: (currentProgress * 100).toInt(),
+                    progress: 1));
+          } else if (widget.mode == 2) {
+            return CustomPaint(
+              painter: _UvLinePainter(currentProgress),
+              size: ui.Size(0, 12.w),
+            );
+          } else if (widget.mode == 3) {
+            return CustomPaint(
+              painter: _FeelLinePainter(currentProgress),
+              size: ui.Size(0, 12.w),
+            );
+          }
+          return Container();
+        });
+  }
+}
+
+class _FeelLinePainter extends CustomPainter {
+  // 动画的进度
+  double progress;
+
+  _FeelLinePainter(this.progress);
+
+  final ui.Paint _paint = ui.Paint()
+    ..color = Colors.grey[300]!
+    ..strokeWidth = 6.w
+    ..strokeCap = StrokeCap.round;
+
+  final ui.Paint _pointPaint = ui.Paint()
+    ..color = Colors.grey[300]!
+    ..strokeWidth = 6.w
+    ..strokeCap = StrokeCap.round;
+
+  final savePaint = Paint();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    canvas.saveLayer(Offset.zero & size, savePaint);
+    // 零下到18°人体感觉温度冷的区段
+    _paint.blendMode = BlendMode.srcOver;
+    _paint.color = Colors.blue[400]!;
+    _paint.strokeCap = StrokeCap.round;
+    _paint.strokeWidth = 6.w;
+    canvas.drawLine(ui.Offset(0, size.height / 2),
+        ui.Offset(size.width * 0.45, size.height / 2), _paint);
+
+    // 18°到24°人体感觉温度舒适的区段
+    _paint.strokeCap = StrokeCap.round;
+    _paint.color = Colors.green[400]!;
+    canvas.drawLine(ui.Offset(size.width * 0.45, size.height / 2),
+        ui.Offset(size.width * 0.625, size.height / 2), _paint);
+
+    // 零下到18°人体感觉温度热的区段
+    _paint.strokeCap = StrokeCap.square;
+    _paint.color = Colors.orangeAccent[400]!;
+    canvas.drawLine(ui.Offset(size.width * 0.625, size.height / 2),
+        ui.Offset(size.width, size.height / 2), _paint);
+
+    _paint.color = Colors.transparent;
+    _paint.blendMode = BlendMode.srcIn;
+    _paint.strokeWidth = 3.w;
+    // 分割线
+    canvas.drawLine(
+        ui.Offset(size.width * 0.625 - _paint.strokeWidth, 0),
+        ui.Offset(size.width * 0.625 - _paint.strokeWidth, size.height),
+        _paint);
+
+    canvas.drawLine(ui.Offset(size.width * 0.45 - _paint.strokeWidth, 0),
+        ui.Offset(size.width * 0.45 - _paint.strokeWidth, size.height), _paint);
+    canvas.restore();
+
+    // 画点
+    if (progress < 0.45) {
+      _pointPaint.color = Colors.blue[400]!;
+    } else if (progress < 0.625) {
+      _pointPaint.color = Colors.green[400]!;
+    } else {
+      _pointPaint.color = Colors.orangeAccent[400]!;
+    }
+    // 指示器
+    canvas.drawLine(
+        ui.Offset(size.width * progress - _pointPaint.strokeWidth, 0),
+        ui.Offset(size.width * progress - _pointPaint.strokeWidth, size.height),
+        _pointPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _FeelLinePainter oldDelegate) =>
+      oldDelegate.progress != progress;
+}
+
+class _UvLinePainter extends CustomPainter {
+  // 动画的进度
+  double progress;
+
+  _UvLinePainter(this.progress);
+
+  // 渐变色
+  ui.Gradient? gradient;
+
+  // 线条paint
+  final Paint _paint = Paint()
+    ..color = Colors.grey[300]!
+    ..strokeWidth = 6.w
+    ..strokeCap = StrokeCap.round;
+
+  final Paint _pointPaint = Paint()
+    ..color = Colors.white
+    ..strokeWidth = 2.w
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    gradient ??= ui.Gradient.linear(
+        Offset(0, size.height / 2), Offset(size.width, size.height / 2), [
+      Colors.green[400]!,
+      Colors.yellow[500]!,
+      Colors.orangeAccent[200]!,
+      Colors.red[400]!,
+      Colors.purple[400]!
+    ], [
+      0.15,
+      0.3,
+      0.6,
+      0.85,
+      1
+    ]);
+
+    _paint.shader = gradient;
+    canvas.drawLine(ui.Offset(0, size.height / 2),
+        ui.Offset(size.width, size.height / 2), _paint);
+
+    _paint.blendMode = BlendMode.srcOver;
+
+    _pointPaint.color = Colors.white;
+    _pointPaint.style = PaintingStyle.fill;
+    canvas.drawCircle(
+        ui.Offset(size.width * progress, size.height / 2), 6.w, _pointPaint);
+
+    if (progress <= 0.15) {
+      _pointPaint.color = Colors.green[400]!;
+    } else if (progress <= 0.3) {
+      _pointPaint.color = Colors.yellow[500]!;
+    } else if (progress <= 0.6) {
+      _pointPaint.color = Colors.orangeAccent[200]!;
+    } else if (progress <= 0.85) {
+      _pointPaint.color = Colors.red[400]!;
+    } else {
+      _pointPaint.color = Colors.purple[400]!;
+    }
+    _pointPaint.style = PaintingStyle.fill;
+    canvas.drawCircle(
+        ui.Offset(size.width * progress, size.height / 2), 4.w, _pointPaint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _UvLinePainter oldDelegate) =>
+      progress != oldDelegate.progress;
+}
+
 /// 湿度渐变色条Painter
-class _LinePainter extends CustomPainter {
+class _WaterLinePainter extends CustomPainter {
   // 下限湿度
   int lowerLimit;
 
@@ -304,18 +524,18 @@ class _LinePainter extends CustomPainter {
   // 动画的进度
   double progress;
 
-  _LinePainter(
+  _WaterLinePainter(
       {required this.lowerLimit,
       required this.upperLimit,
       this.currentWater,
-      this.progress = 1}) {}
+      this.progress = 1});
 
   final Paint _paint = Paint()
     ..color = Colors.grey[300]!
     ..strokeWidth = 6.w
     ..strokeCap = StrokeCap.round;
 
-  final Paint _pointPaint = Paint()
+  final Paint _bgPaint = Paint()
     ..color = Colors.grey[300]!
     ..strokeWidth = 6.w
     ..strokeCap = StrokeCap.round
@@ -325,31 +545,27 @@ class _LinePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     gradient ??= ui.Gradient.linear(
         Offset(0, size.height / 2), Offset(size.width, size.height / 2), [
-      Colors.blue[400]!,
-      Colors.green[400]!,
-      Colors.yellow[400]!,
-      Colors.red[400]!
+      Colors.lightBlue[100]!,
+      Colors.lightBlue[200]!,
+      Colors.lightBlue[400]!,
+      Colors.blue[400]!
     ], [
       0.25,
       0.5,
       0.75,
       1
     ]);
-
     _paint.shader = gradient;
     canvas.drawLine(ui.Offset(0, size.height / 2),
-        ui.Offset(size.width, size.height / 2), _paint);
-    _paint.shader = null;
+        ui.Offset(size.width, size.height / 2), _bgPaint);
     if (currentWater == null) return;
     double x = size.width * (currentWater! - lowerLimit) / diff;
-    _pointPaint.color = Colors.white;
-    canvas.drawCircle(Offset(x, size.height / 2), 6.w, _pointPaint);
-    _pointPaint.color = Colors.blue[200]!;
-    canvas.drawCircle(Offset(x, size.height / 2), 4.w, _pointPaint);
+    canvas.drawLine(
+        ui.Offset(0, size.height / 2), ui.Offset(x, size.height / 2), _paint);
   }
 
   @override
-  bool shouldRepaint(covariant _LinePainter oldDelegate) =>
+  bool shouldRepaint(covariant _WaterLinePainter oldDelegate) =>
       currentWater != oldDelegate.currentWater;
 }
 
@@ -406,10 +622,8 @@ class _SunriseWidgetState extends State<SunriseWidget>
       if (now.isAfter(sunsetTime)) return;
 
       end = (now.millisecondsSinceEpoch - sunriseTime.millisecondsSinceEpoch) /
-              (sunsetTime.millisecondsSinceEpoch -
-                  sunriseTime.millisecondsSinceEpoch);
-
-
+          (sunsetTime.millisecondsSinceEpoch -
+              sunriseTime.millisecondsSinceEpoch);
 
       anim = Tween(begin: begin, end: end).animate(
         CurvedAnimation(
@@ -421,8 +635,9 @@ class _SunriseWidgetState extends State<SunriseWidget>
         });
       _controller.forward();
     } catch (e) {
-      print("日出日落时间解析错误");
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -458,11 +673,16 @@ class _SunrisePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    // 轨迹弧
+    _paint.color = Colors.grey[350]!;
     canvas.drawArc(Rect.fromLTRB(0, size.height / 2, size.width, size.height),
         pi / 180 * (180 + 20), sweepAngle, false, _paint);
 
-    if (progress <= 0 || progress >= 1) return;
+    if (progress <= 0) return;
 
+    if (progress >= 1) return;
+
+    // 画点
     final double x = size.width * progress;
 
     double y = calculateY(

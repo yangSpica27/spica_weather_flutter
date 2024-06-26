@@ -64,8 +64,11 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
                             key: ValueKey(logic.showItems[index].name),
                             contentPadding:
                                 EdgeInsets.symmetric(horizontal: 22.w),
-                            onTap: () =>
-                                logic.onSelectItem(logic.showItems[index]),
+                            onTap: () {
+                              // 隐藏键盘
+                              FocusScope.of(context).requestFocus(FocusNode());
+                              logic.onSelectItem(logic.showItems[index]);
+                            },
                             title: Text(logic.showItems[index].name ?? ""),
                             subtitle: Text(
                                 "经度:${logic.showItems[index].log}°,纬度:${logic.showItems[index].lat}°"),

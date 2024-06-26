@@ -36,9 +36,9 @@ class SplashLogic extends GetxController {
       state.update((val) {
         val?.tip = "${val.tip}\n有城市数据";
       });
-      try{
+      try {
         await ApiRepository.fetchWeather();
-      }catch(e){
+      } catch (e) {
         state.update((val) {
           val?.tip = "${val.tip}\n请求失败";
         });
@@ -104,92 +104,110 @@ class SplashLogic extends GetxController {
   // 加载最近的城市
   _loadNearestCity() async {
     // 本地没有城市数据 但是有定位权限
-    state.update((val) {
-      val?.tip = "${val.tip}\n请求定位中..";
-    });
 
-    // 获取到当前定位
-    Position position = await Geolocator.getCurrentPosition();
-
-    // 转换成火星坐标
-    final gc02Loc =
-        GpsUtil.gps84_To_Gcj02(position.latitude, position.longitude);
-
-    position = Position(
-        longitude: gc02Loc[1].toDouble(),
-        latitude: gc02Loc[0].toDouble(),
-        timestamp: position.timestamp,
-        accuracy: position.accuracy,
-        altitude: position.altitude,
-        altitudeAccuracy: position.altitudeAccuracy,
-        heading: position.heading,
-        headingAccuracy: position.headingAccuracy,
-        speed: position.speed,
-        speedAccuracy: position.speedAccuracy);
-
-    if (kDebugMode) {
-      print("当前的位置${position.longitude},${position.latitude}");
-    }
-
-    state.update((val) {
-      val?.tip =
-          "${val.tip}\n请求到当前的定位数据${position.latitude},${position.longitude}";
-    });
-
-    // 所有城市
-    final cities = await CityUtils.getAllCityItem();
-
-    // 最近的城市
-    CityItem nearestCity = cities[0];
-
-    double distance =
-        nearestCity.distance(position.latitude, position.longitude);
-
-    // 最近的城市
-    for (var item in cities) {
-      double temp = item.distance(position.latitude, position.longitude);
-      if (temp < distance) {
-        if (kDebugMode) {
-          print("-----------------------------------");
-          print("更近的城市${item.log},${item.lat}");
-          print("更近的城市${item.name}距离${temp}米");
-        }
-        nearestCity = item;
-        distance = temp;
-      }
-    }
-    state.update((val) {
-      val?.tip = "${val.tip}\n请求到最近的城市${nearestCity.name}";
-    });
-    // 检查是否插入过
-    final count = await (AppDatabase.getInstance().city.count(
-        where: (tbl) => tbl.name.equals(nearestCity.name ?? ""))).getSingle();
-    if (count == 0) {
-      // 进行插入 并且请求接口
-      AppDatabase.getInstance().city.insertOne(
-          CityCompanion.insert(
-              name: nearestCity.name ?? "",
-              lat: nearestCity.lat ?? "",
-              lon: nearestCity.log ?? "",
-              sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
-          mode: InsertMode.insertOrReplace);
-    }
-    state.update((val) {
-      val?.tip = "${val.tip}\n请求城市数据中..";
-    });
-    try{
-      await ApiRepository.fetchWeather();
-    }catch(e){
+    try {
       state.update((val) {
-        val?.tip = "${val.tip}\n请求失败";
+        val?.tip = "${val.tip}\n请求定位中..";
       });
-      await Get.offAndToNamed(Routes.WEATHER);
+
+      // 获取到当前定位
+      Position position = await Geolocator.getCurrentPosition(
+          timeLimit: const Duration(seconds: 2));
+
+      state.update((val) {
+        val?.tip = "${val.tip}\n获取定位成功";
+      });
+
+      // 转换成火星坐标
+      final gc02Loc =
+          GpsUtil.gps84_To_Gcj02(position.latitude, position.longitude);
+
+      position = Position(
+          longitude: gc02Loc[1].toDouble(),
+          latitude: gc02Loc[0].toDouble(),
+          timestamp: position.timestamp,
+          accuracy: position.accuracy,
+          altitude: position.altitude,
+          altitudeAccuracy: position.altitudeAccuracy,
+          heading: position.heading,
+          headingAccuracy: position.headingAccuracy,
+          speed: position.speed,
+          speedAccuracy: position.speedAccuracy);
+
+      if (kDebugMode) {
+        print("当前的位置${position.longitude},${position.latitude}");
+      }
+
+      state.update((val) {
+        val?.tip =
+            "${val.tip}\n请求到当前的定位数据${position.latitude},${position.longitude}";
+      });
+
+      // 所有城市
+      final cities = await CityUtils.getAllCityItem();
+
+      // 最近的城市
+      CityItem nearestCity = cities[0];
+
+      double distance =
+          nearestCity.distance(position.latitude, position.longitude);
+
+      // 最近的城市
+      for (var item in cities) {
+        double temp = item.distance(position.latitude, position.longitude);
+        if (temp < distance) {
+          if (kDebugMode) {
+            print("-----------------------------------");
+            print("更近的城市${item.log},${item.lat}");
+            print("更近的城市${item.name}距离${temp}米");
+          }
+          nearestCity = item;
+          distance = temp;
+          state.update((val) {
+            val?.tip = "${val.tip}\n请求到更近的城市${nearestCity.name}距离${temp}米";
+          });
+        }
+      }
+      state.update((val) {
+        val?.tip = "${val.tip}\n请求到最近的城市${nearestCity.name}";
+      });
+      // 检查是否插入过
+      final count = await (AppDatabase.getInstance().city.count(
+          where: (tbl) => tbl.name.equals(nearestCity.name ?? ""))).getSingle();
+      if (count == 0) {
+        // 进行插入 并且请求接口
+        AppDatabase.getInstance().city.insertOne(
+            CityCompanion.insert(
+                name: nearestCity.name ?? "",
+                lat: nearestCity.lat ?? "",
+                lon: nearestCity.log ?? "",
+                sort:
+                    BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
+            mode: InsertMode.insertOrReplace);
+      }
+      state.update((val) {
+        val?.tip = "${val.tip}\n请求城市数据中..";
+      });
+      try {
+        await ApiRepository.fetchWeather();
+      } catch (e) {
+        state.update((val) {
+          val?.tip = "${val.tip}\n请求失败";
+        });
+        await Get.offAndToNamed(Routes.WEATHER);
+        return;
+      }
+      state.update((val) {
+        val?.isLoading = false;
+        val?.tip = "${val.tip}\n请求成功，进入应用中..";
+      });
+    } catch (e) {
+      state.update((val) {
+        val?.tip = "${val.tip}\n获取最近的城市失败";
+      });
+      await _loadDefaultCity();
       return;
     }
-    state.update((val) {
-      val?.isLoading = false;
-      val?.tip = "${val.tip}\n请求成功，进入应用中..";
-    });
   }
 
   // 加载默认城市
@@ -204,9 +222,9 @@ class SplashLogic extends GetxController {
     state.update((val) {
       val?.tip = "${val.tip}\n请求城市数据中..";
     });
-    try{
+    try {
       await ApiRepository.fetchWeather();
-    }catch(e){
+    } catch (e) {
       state.update((val) {
         val?.tip = "${val.tip}\n请求失败";
       });
