@@ -169,10 +169,8 @@ class UvCard extends StatelessWidget {
       return "对人体影响不大，可不采取防护措施";
     } else if (uv! < 8) {
       return "外出应采取防护措施，要用遮阳伞、遮阳衣帽、太阳镜等，涂擦防晒霜等";
-    } else if (uv! < 11) {
+    } else   {
       return "外出应特别注意防护，中午前后宜减少外出";
-    } else {
-      return "--";
     }
   }
 
