@@ -100,7 +100,8 @@ class FeelCard extends StatelessWidget {
       bottomWidget: Container(
         padding: EdgeInsets.only(bottom: 6.w),
         child: _BottomAnimLineWidget(
-            mode: 3, progress: max(min((feelTemp ?? 0) / 40.0, 0), 1)),
+            mode: 3, progress: min(max((feelTemp ?? 0) / 40.0, 0), 1)
+        ),
       ),
       value2: getFeelTempDesc(),
     );
@@ -168,7 +169,7 @@ class UvCard extends StatelessWidget {
     } else if (uv! < 6) {
       return "对人体影响不大，可不采取防护措施";
     } else if (uv! < 8) {
-      return "外出应采取防护措施，要用遮阳伞、遮阳衣帽、太阳镜等，涂擦防晒霜等";
+      return "外出应采取防护措施，要用遮阳伞、涂擦防晒霜等";
     } else {
       return "外出应特别注意防护，中午前后宜减少外出";
     }
