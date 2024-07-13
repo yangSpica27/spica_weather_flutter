@@ -23,6 +23,8 @@ class City extends Table {
 
   Int64Column get sort => int64()();
 
+  BoolColumn get isLocation => boolean()();
+
   TextColumn get weather =>
       text().map(const WeatherResultTypeConverter()).nullable()();
 
@@ -46,7 +48,22 @@ class AppDatabase extends _$AppDatabase {
   }
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration {
+    return MigrationStrategy(
+      onCreate: (Migrator m) async {
+        await m.createAll();
+      },
+      onUpgrade: (Migrator m, int from, int to) async {
+        if (from < 2) {
+          await m.deleteTable(city.actualTableName);
+          await m.createTable(city);
+        }
+      },
+    );
+  }
 }
 
 LazyDatabase _openConnection() {

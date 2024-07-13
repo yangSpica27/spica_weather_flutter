@@ -28,6 +28,15 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
   late final GeneratedColumn<BigInt> sort = GeneratedColumn<BigInt>(
       'sort', aliasedName, false,
       type: DriftSqlType.bigInt, requiredDuringInsert: true);
+  static const VerificationMeta _isLocationMeta =
+      const VerificationMeta('isLocation');
+  @override
+  late final GeneratedColumn<bool> isLocation = GeneratedColumn<bool>(
+      'is_location', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("is_location" IN (0, 1))'));
   static const VerificationMeta _weatherMeta =
       const VerificationMeta('weather');
   @override
@@ -36,7 +45,8 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
               type: DriftSqlType.string, requiredDuringInsert: false)
           .withConverter<WeatherResult?>($CityTable.$converterweather);
   @override
-  List<GeneratedColumn> get $columns => [name, lat, lon, sort, weather];
+  List<GeneratedColumn> get $columns =>
+      [name, lat, lon, sort, isLocation, weather];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -71,6 +81,14 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
     } else if (isInserting) {
       context.missing(_sortMeta);
     }
+    if (data.containsKey('is_location')) {
+      context.handle(
+          _isLocationMeta,
+          isLocation.isAcceptableOrUnknown(
+              data['is_location']!, _isLocationMeta));
+    } else if (isInserting) {
+      context.missing(_isLocationMeta);
+    }
     context.handle(_weatherMeta, const VerificationResult.success());
     return context;
   }
@@ -89,6 +107,8 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
           .read(DriftSqlType.string, data['${effectivePrefix}lon'])!,
       sort: attachedDatabase.typeMapping
           .read(DriftSqlType.bigInt, data['${effectivePrefix}sort'])!,
+      isLocation: attachedDatabase.typeMapping
+          .read(DriftSqlType.bool, data['${effectivePrefix}is_location'])!,
       weather: $CityTable.$converterweather.fromSql(attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}weather'])),
     );
@@ -108,12 +128,14 @@ class CityData extends DataClass implements Insertable<CityData> {
   final String lat;
   final String lon;
   final BigInt sort;
+  final bool isLocation;
   final WeatherResult? weather;
   const CityData(
       {required this.name,
       required this.lat,
       required this.lon,
       required this.sort,
+      required this.isLocation,
       this.weather});
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -122,6 +144,7 @@ class CityData extends DataClass implements Insertable<CityData> {
     map['lat'] = Variable<String>(lat);
     map['lon'] = Variable<String>(lon);
     map['sort'] = Variable<BigInt>(sort);
+    map['is_location'] = Variable<bool>(isLocation);
     if (!nullToAbsent || weather != null) {
       map['weather'] =
           Variable<String>($CityTable.$converterweather.toSql(weather));
@@ -135,6 +158,7 @@ class CityData extends DataClass implements Insertable<CityData> {
       lat: Value(lat),
       lon: Value(lon),
       sort: Value(sort),
+      isLocation: Value(isLocation),
       weather: weather == null && nullToAbsent
           ? const Value.absent()
           : Value(weather),
@@ -149,6 +173,7 @@ class CityData extends DataClass implements Insertable<CityData> {
       lat: serializer.fromJson<String>(json['lat']),
       lon: serializer.fromJson<String>(json['lon']),
       sort: serializer.fromJson<BigInt>(json['sort']),
+      isLocation: serializer.fromJson<bool>(json['isLocation']),
       weather: serializer.fromJson<WeatherResult?>(json['weather']),
     );
   }
@@ -160,6 +185,7 @@ class CityData extends DataClass implements Insertable<CityData> {
       'lat': serializer.toJson<String>(lat),
       'lon': serializer.toJson<String>(lon),
       'sort': serializer.toJson<BigInt>(sort),
+      'isLocation': serializer.toJson<bool>(isLocation),
       'weather': serializer.toJson<WeatherResult?>(weather),
     };
   }
@@ -169,12 +195,14 @@ class CityData extends DataClass implements Insertable<CityData> {
           String? lat,
           String? lon,
           BigInt? sort,
+          bool? isLocation,
           Value<WeatherResult?> weather = const Value.absent()}) =>
       CityData(
         name: name ?? this.name,
         lat: lat ?? this.lat,
         lon: lon ?? this.lon,
         sort: sort ?? this.sort,
+        isLocation: isLocation ?? this.isLocation,
         weather: weather.present ? weather.value : this.weather,
       );
   @override
@@ -184,13 +212,14 @@ class CityData extends DataClass implements Insertable<CityData> {
           ..write('lat: $lat, ')
           ..write('lon: $lon, ')
           ..write('sort: $sort, ')
+          ..write('isLocation: $isLocation, ')
           ..write('weather: $weather')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => Object.hash(name, lat, lon, sort, weather);
+  int get hashCode => Object.hash(name, lat, lon, sort, isLocation, weather);
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -199,6 +228,7 @@ class CityData extends DataClass implements Insertable<CityData> {
           other.lat == this.lat &&
           other.lon == this.lon &&
           other.sort == this.sort &&
+          other.isLocation == this.isLocation &&
           other.weather == this.weather);
 }
 
@@ -207,6 +237,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
   final Value<String> lat;
   final Value<String> lon;
   final Value<BigInt> sort;
+  final Value<bool> isLocation;
   final Value<WeatherResult?> weather;
   final Value<int> rowid;
   const CityCompanion({
@@ -214,6 +245,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
     this.lat = const Value.absent(),
     this.lon = const Value.absent(),
     this.sort = const Value.absent(),
+    this.isLocation = const Value.absent(),
     this.weather = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -222,17 +254,20 @@ class CityCompanion extends UpdateCompanion<CityData> {
     required String lat,
     required String lon,
     required BigInt sort,
+    required bool isLocation,
     this.weather = const Value.absent(),
     this.rowid = const Value.absent(),
   })  : name = Value(name),
         lat = Value(lat),
         lon = Value(lon),
-        sort = Value(sort);
+        sort = Value(sort),
+        isLocation = Value(isLocation);
   static Insertable<CityData> custom({
     Expression<String>? name,
     Expression<String>? lat,
     Expression<String>? lon,
     Expression<BigInt>? sort,
+    Expression<bool>? isLocation,
     Expression<String>? weather,
     Expression<int>? rowid,
   }) {
@@ -241,6 +276,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
       if (lat != null) 'lat': lat,
       if (lon != null) 'lon': lon,
       if (sort != null) 'sort': sort,
+      if (isLocation != null) 'is_location': isLocation,
       if (weather != null) 'weather': weather,
       if (rowid != null) 'rowid': rowid,
     });
@@ -251,6 +287,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
       Value<String>? lat,
       Value<String>? lon,
       Value<BigInt>? sort,
+      Value<bool>? isLocation,
       Value<WeatherResult?>? weather,
       Value<int>? rowid}) {
     return CityCompanion(
@@ -258,6 +295,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
       lat: lat ?? this.lat,
       lon: lon ?? this.lon,
       sort: sort ?? this.sort,
+      isLocation: isLocation ?? this.isLocation,
       weather: weather ?? this.weather,
       rowid: rowid ?? this.rowid,
     );
@@ -278,6 +316,9 @@ class CityCompanion extends UpdateCompanion<CityData> {
     if (sort.present) {
       map['sort'] = Variable<BigInt>(sort.value);
     }
+    if (isLocation.present) {
+      map['is_location'] = Variable<bool>(isLocation.value);
+    }
     if (weather.present) {
       map['weather'] =
           Variable<String>($CityTable.$converterweather.toSql(weather.value));
@@ -295,6 +336,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
           ..write('lat: $lat, ')
           ..write('lon: $lon, ')
           ..write('sort: $sort, ')
+          ..write('isLocation: $isLocation, ')
           ..write('weather: $weather, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -318,6 +360,7 @@ typedef $$CityTableInsertCompanionBuilder = CityCompanion Function({
   required String lat,
   required String lon,
   required BigInt sort,
+  required bool isLocation,
   Value<WeatherResult?> weather,
   Value<int> rowid,
 });
@@ -326,6 +369,7 @@ typedef $$CityTableUpdateCompanionBuilder = CityCompanion Function({
   Value<String> lat,
   Value<String> lon,
   Value<BigInt> sort,
+  Value<bool> isLocation,
   Value<WeatherResult?> weather,
   Value<int> rowid,
 });
@@ -353,6 +397,7 @@ class $$CityTableTableManager extends RootTableManager<
             Value<String> lat = const Value.absent(),
             Value<String> lon = const Value.absent(),
             Value<BigInt> sort = const Value.absent(),
+            Value<bool> isLocation = const Value.absent(),
             Value<WeatherResult?> weather = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -361,6 +406,7 @@ class $$CityTableTableManager extends RootTableManager<
             lat: lat,
             lon: lon,
             sort: sort,
+            isLocation: isLocation,
             weather: weather,
             rowid: rowid,
           ),
@@ -369,6 +415,7 @@ class $$CityTableTableManager extends RootTableManager<
             required String lat,
             required String lon,
             required BigInt sort,
+            required bool isLocation,
             Value<WeatherResult?> weather = const Value.absent(),
             Value<int> rowid = const Value.absent(),
           }) =>
@@ -377,6 +424,7 @@ class $$CityTableTableManager extends RootTableManager<
             lat: lat,
             lon: lon,
             sort: sort,
+            isLocation: isLocation,
             weather: weather,
             rowid: rowid,
           ),
@@ -418,6 +466,11 @@ class $$CityTableFilterComposer
       builder: (column, joinBuilders) =>
           ColumnFilters(column, joinBuilders: joinBuilders));
 
+  ColumnFilters<bool> get isLocation => $state.composableBuilder(
+      column: $state.table.isLocation,
+      builder: (column, joinBuilders) =>
+          ColumnFilters(column, joinBuilders: joinBuilders));
+
   ColumnWithTypeConverterFilters<WeatherResult?, WeatherResult, String>
       get weather => $state.composableBuilder(
           column: $state.table.weather,
@@ -446,6 +499,11 @@ class $$CityTableOrderingComposer
 
   ColumnOrderings<BigInt> get sort => $state.composableBuilder(
       column: $state.table.sort,
+      builder: (column, joinBuilders) =>
+          ColumnOrderings(column, joinBuilders: joinBuilders));
+
+  ColumnOrderings<bool> get isLocation => $state.composableBuilder(
+      column: $state.table.isLocation,
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 

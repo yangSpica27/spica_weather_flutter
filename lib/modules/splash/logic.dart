@@ -7,7 +7,6 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:spica_weather_flutter/database/database.dart';
-import 'package:spica_weather_flutter/model/city_item.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 import 'package:spica_weather_flutter/utils/city_utils.dart';
 import 'package:spica_weather_flutter/utils/gps_util.dart';
@@ -26,35 +25,18 @@ class SplashLogic extends GetxController {
 
   _loadData() async {
     state.update((val) {
-      val?.tip = "${val.tip}\n正在加载城市数据";
+      val?.appendTip("正在加载城市数据");
     });
 
-    int value = await AppDatabase.getInstance().city.count().getSingle();
-
-    if (value != 0) {
-      // 有城市数据
-      state.update((val) {
-        val?.tip = "${val.tip}\n有城市数据";
-      });
-      try {
-        await ApiRepository.fetchWeather();
-      } catch (e) {
-        state.update((val) {
-          val?.tip = "${val.tip}\n请求失败";
-        });
-        await Get.offAndToNamed(Routes.WEATHER);
-        return;
-      }
-
-      Get.offAndToNamed(Routes.WEATHER);
-      return;
-    }
+    final currentCity = await (AppDatabase.getInstance().city.select()
+          ..where((tbl) => tbl.isLocation.equals(true)))
+        .getSingleOrNull();
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       // 权限被拒绝，申请定位权限
       state.update((val) {
-        val?.tip = "${val.tip}\n尝试申请权限";
+        val?.appendTip("尝试申请权限");
       });
       showCupertinoDialog(
           context: Get.context!,
@@ -69,10 +51,13 @@ class SplashLogic extends GetxController {
                       Get.back();
                       if (permission == LocationPermission.whileInUse ||
                           permission == LocationPermission.always) {
-                        await _loadNearestCity();
+                        await _loadNearestCity(currentCity);
                       } else {
-                        await _loadDefaultCity();
+                        if (currentCity == null) {
+                          await _loadDefaultCity();
+                        }
                       }
+                      await _fetchWeatherInfo();
                       await Get.offAndToNamed(Routes.WEATHER);
                     },
                   ),
@@ -80,7 +65,10 @@ class SplashLogic extends GetxController {
                     child: const Text("取消"),
                     onPressed: () async {
                       Get.back();
-                      await _loadDefaultCity();
+                      if (currentCity == null) {
+                        await _loadDefaultCity();
+                      }
+                      await _fetchWeatherInfo();
                       await Get.offAndToNamed(Routes.WEATHER);
                     },
                   ),
@@ -89,33 +77,48 @@ class SplashLogic extends GetxController {
       return;
     }
 
+
+    if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
+      await _loadNearestCity(currentCity);
+    }
+
     if (permission == LocationPermission.deniedForever) {
       // 权限被永久拒绝
+      state.update((val) {
+        val?.appendTip("权限被拒绝");
+      });
+      if (currentCity != null) {
+        await _loadDefaultCity();
+      }
     }
 
     if (permission == LocationPermission.denied) {
       // 申请权限被拒绝
       state.update((val) {
-        val?.tip = "${val.tip}\n权限被拒绝";
+        val?.appendTip("权限被拒绝");
       });
+      if (currentCity != null) {
+        await _loadDefaultCity();
+      }
     }
+    await _fetchWeatherInfo();
+    await Get.offAndToNamed(Routes.WEATHER);
   }
 
   // 加载最近的城市
-  _loadNearestCity() async {
+  _loadNearestCity(CityData? currentCity) async {
     // 本地没有城市数据 但是有定位权限
 
     try {
       state.update((val) {
-        val?.tip = "${val.tip}\n请求定位中..";
+        val?.appendTip("正在获取定位");
       });
 
       // 获取到当前定位
-      Position position = await Geolocator.getCurrentPosition(
-          timeLimit: const Duration(seconds: 2));
+      Position position = await Geolocator.getCurrentPosition();
 
       state.update((val) {
-        val?.tip = "${val.tip}\n获取定位成功";
+        val?.appendTip("获取定位成功");
       });
 
       // 转换成火星坐标
@@ -139,101 +142,82 @@ class SplashLogic extends GetxController {
       }
 
       state.update((val) {
-        val?.tip =
-            "${val.tip}\n请求到当前的定位数据${position.latitude},${position.longitude}";
+        val?.appendTip("请求到当前的定位数据${position.latitude},${position.longitude}");
       });
 
-      // 所有城市
-      final cities = await CityUtils.getAllCityItem();
+      final city = await CityUtils.getCurrentCityItem(
+          "${position.longitude},${position.latitude}");
 
-      // 最近的城市
-      CityItem nearestCity = cities[0];
-
-      double distance =
-          nearestCity.distance(position.latitude, position.longitude);
-
-      // 最近的城市
-      for (var item in cities) {
-        double temp = item.distance(position.latitude, position.longitude);
-        if (temp < distance) {
-          if (kDebugMode) {
-            print("-----------------------------------");
-            print("更近的城市${item.log},${item.lat}");
-            print("更近的城市${item.name}距离${temp}米");
-          }
-          nearestCity = item;
-          distance = temp;
-          state.update((val) {
-            val?.tip = "${val.tip}\n请求到更近的城市${nearestCity.name}距离${temp}米";
-          });
-        }
-      }
-      state.update((val) {
-        val?.tip = "${val.tip}\n请求到最近的城市${nearestCity.name}";
-      });
-      // 检查是否插入过
-      final count = await (AppDatabase.getInstance().city.count(
-          where: (tbl) => tbl.name.equals(nearestCity.name ?? ""))).getSingle();
-      if (count == 0) {
-        // 进行插入 并且请求接口
+      if (currentCity == null || city.name != currentCity.name) {
+        state.update((val) {
+          val?.appendTip("地理逆编码获取当前位置所在城市");
+        });
+        // 删除过期的所在城市
+        await AppDatabase.getInstance()
+            .city
+            .deleteWhere((tbl) => tbl.isLocation.equals(true));
+        // 插入新的所在城市
         AppDatabase.getInstance().city.insertOne(
             CityCompanion.insert(
-                name: nearestCity.name ?? "",
-                lat: nearestCity.lat ?? "",
-                lon: nearestCity.log ?? "",
-                sort:
-                    BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
+                name: city.name ?? "",
+                lat: city.lat ?? "",
+                lon: city.log ?? "",
+                isLocation: true,
+                sort: BigInt.from(0)),
             mode: InsertMode.insertOrReplace);
-      }
-      state.update((val) {
-        val?.tip = "${val.tip}\n请求城市数据中..";
-      });
-      try {
-        await ApiRepository.fetchWeather();
-      } catch (e) {
+        currentCity = await (AppDatabase.getInstance().city.select()
+              ..where((tbl) => tbl.isLocation.equals(true)))
+            .getSingleOrNull();
+      } else {
         state.update((val) {
-          val?.tip = "${val.tip}\n请求失败";
+          val?.appendTip("城市没有变化...");
         });
-        await Get.offAndToNamed(Routes.WEATHER);
-        return;
       }
-      state.update((val) {
-        val?.isLoading = false;
-        val?.tip = "${val.tip}\n请求成功，进入应用中..";
-      });
     } catch (e) {
-      state.update((val) {
-        val?.tip = "${val.tip}\n获取最近的城市失败";
-      });
+      if (kDebugMode) {
+        print("获取最近城市信息失败：${e}");
+      }
+    }
+
+    if (currentCity == null) {
       await _loadDefaultCity();
-      return;
     }
   }
 
   // 加载默认城市
   _loadDefaultCity() async {
+    state.update((val) {
+      val?.appendTip("载入默认带入城市");
+    });
     AppDatabase.getInstance().city.insertOne(
         CityCompanion.insert(
             name: "南京",
             lat: "32.04",
+            isLocation: true,
             lon: "118.78",
             sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
         mode: InsertMode.insertOrReplace);
     state.update((val) {
-      val?.tip = "${val.tip}\n请求城市数据中..";
+      val?.appendTip("请求城市数据中..");
     });
+  }
+
+  _fetchWeatherInfo() async {
     try {
+      state.update((val) {
+        val?.appendTip("请求天气接口");
+      });
       await ApiRepository.fetchWeather();
     } catch (e) {
       state.update((val) {
-        val?.tip = "${val.tip}\n请求失败";
+        val?.appendTip("请求失败");
       });
       await Get.offAndToNamed(Routes.WEATHER);
       return;
     }
     state.update((val) {
       val?.isLoading = false;
-      val?.tip = "${val.tip}\n请求成功，进入应用中..";
+      val?.appendTip("请求成功，进入应用中..");
     });
   }
 }

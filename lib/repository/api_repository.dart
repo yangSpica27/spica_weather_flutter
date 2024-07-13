@@ -21,6 +21,7 @@ class ApiRepository {
         weatherResults.add(CityCompanion.insert(
             name: city.name,
             lat: city.lat,
+            isLocation: city.isLocation,
             lon: city.lon,
             sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
             weather: Value(weatherResponse.data)));

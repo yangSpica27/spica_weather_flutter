@@ -49,6 +49,7 @@ class CitySelectorLogic extends GetxController {
           CityCompanion.insert(
               name: showItem.name ?? "/",
               lat: showItem.lat ?? "",
+              isLocation: false,
               sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
               lon: showItem.log ?? ''),
           mode: InsertMode.insertOrIgnore);

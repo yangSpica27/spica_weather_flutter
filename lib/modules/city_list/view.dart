@@ -64,6 +64,7 @@ class _CityListPageState extends State<CityListPage> {
                 itemBuilder: (context, index) => _ItemCity(
                       item: logic.data[index],
                       index: index,
+                      isLocation: logic.data[index].isLocation,
                       isSort: logic.isSort.value,
                       onDismissed: (DismissDirection direction) async {
                         await logic.removeCity(logic.data[index]);
@@ -186,10 +187,13 @@ class _ItemCity extends StatelessWidget {
       required this.index,
       required this.item,
       this.onDismissed,
+      required this.isLocation,
       required this.isSort});
 
   final CityData item;
   final int index;
+
+  final bool isLocation;
 
   final DismissDirectionCallback? onDismissed;
   final bool isSort;
@@ -197,7 +201,8 @@ class _ItemCity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      direction: DismissDirection.endToStart,
+      direction:
+          isLocation ? DismissDirection.none : DismissDirection.startToEnd,
       key: ValueKey(item.hashCode),
       background: InkWell(
         onTap: () async {
@@ -230,13 +235,37 @@ class _ItemCity extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    item.name,
-                    style: context.theme.textTheme.headlineMedium?.copyWith(
-                        color: Colors.white,
-                        fontSize: 20.sp,
-                        fontWeight: FontWeight.w500),
-                  ),
+                  Text.rich(TextSpan(
+                    children: isLocation
+                        ? [
+                            WidgetSpan(
+                                child: Icon(
+                              Icons.location_on,
+                              color: Colors.white,
+                              size: 20.sp,
+                            )),
+                            WidgetSpan(
+                                child: SizedBox(
+                              width: 8.w,
+                            )),
+                            TextSpan(
+                                text: item.name,
+                                style: context.theme.textTheme.headlineSmall
+                                    ?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w500))
+                          ]
+                        : [
+                            TextSpan(
+                                text: item.name,
+                                style: context.theme.textTheme.headlineSmall
+                                    ?.copyWith(
+                                        color: Colors.white,
+                                        fontSize: 20.sp,
+                                        fontWeight: FontWeight.w500))
+                          ],
+                  )),
                   const SizedBox(
                     height: 8,
                   ),

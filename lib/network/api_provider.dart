@@ -12,6 +12,7 @@ class ApiProvider {
   ApiProvider._internal() {
     dio
       ..options.responseType = ResponseType.json
+      ..options.connectTimeout=const Duration(seconds: 10)
       ..interceptors.add(LogInterceptor(
         request: true,
         requestBody: true,
@@ -23,5 +24,13 @@ class ApiProvider {
   Future<Response> fetchWeather(String lonlat) {
     return dio
         .get(Api.API_FETCH_WEATHER, queryParameters: {'location': lonlat});
+  }
+
+  Future<Response> fetchCity(String lonlat) {
+    return dio.get(Api.API_FETCH_CITY, queryParameters: {
+      'key': "2a83c54e436dbb1702e9b1b2718c110b",
+      'location': lonlat,
+      'output': 'json'
+    });
   }
 }
