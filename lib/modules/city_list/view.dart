@@ -202,7 +202,7 @@ class _ItemCity extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dismissible(
       direction:
-          isLocation ? DismissDirection.none : DismissDirection.startToEnd,
+          isLocation ? DismissDirection.none : DismissDirection.endToStart,
       key: ValueKey(item.hashCode),
       background: InkWell(
         onTap: () async {

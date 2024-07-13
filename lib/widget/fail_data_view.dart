@@ -4,7 +4,7 @@ class FailDataView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;
 
-  FailDataView({super.key, required this.message, required this.onRetry});
+  const FailDataView({super.key, required this.message, required this.onRetry});
 
   @override
   Widget build(BuildContext context) {

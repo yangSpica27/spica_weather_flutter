@@ -352,7 +352,7 @@ class _TitleWidgetState extends State<_TitleWidget>
           width: 12.w,
         ),
         Text(
-          "${widget.dailyWeather.minTemp?.toString()}℃" ?? '',
+          "${widget.dailyWeather.minTemp?.toString()}℃",
           style: context.theme.textTheme.titleMedium,
         ),
         SizedBox(
@@ -388,7 +388,7 @@ class _TitleWidgetState extends State<_TitleWidget>
           width: 12.w,
         ),
         Text(
-          "${widget.dailyWeather.maxTemp?.toString()}℃" ?? '',
+          "${widget.dailyWeather.maxTemp?.toString()}℃",
           style: context.theme.textTheme.titleMedium,
         ),
       ],

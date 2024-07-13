@@ -462,7 +462,7 @@ class Air {
   double? so2;
   double? co;
   double? o3;
-  Null? fxLink;
+  Null fxLink;
 
   Air(
       {this.aqi,
