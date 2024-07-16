@@ -84,30 +84,28 @@ class DailyCard extends StatelessWidget {
   }
 
   /// 详细部分
-  _detailWidget(BuildContext context, DailyWeather dailyWeather) => Container(
-        child: GridView(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 2.5,
-                crossAxisSpacing: 10.w,
-                mainAxisSpacing: 10.w),
-            children: [
-              _detailItem(Assets.assetsIcWater, "湿度",
-                  "${dailyWeather.water?.toString()}%", context),
-              _detailItem(Assets.assetsIcLightRain, "降水量",
-                  "${dailyWeather.precip?.toString()}mm", context),
-              _detailItem(Assets.assetsIcWindmill, "风速",
-                  "${dailyWeather.dayWindSpeed?.toString()}km/h", context),
-              _detailItem(Assets.assetsIcSunHat, "紫外线强度",
-                  "${dailyWeather.uv?.toString()}", context),
-              _detailItem(Assets.assetsIcCloudy, "云层覆盖率",
-                  "${dailyWeather.cloud?.toString()}%", context),
-              _detailItem(Assets.assetsIcTelescope, "能见度",
-                  "${dailyWeather.vis?.toString()}m", context),
-            ]),
-      );
+  _detailWidget(BuildContext context, DailyWeather dailyWeather) => GridView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 2.5,
+          crossAxisSpacing: 10.w,
+          mainAxisSpacing: 10.w),
+      children: [
+        _detailItem(Assets.assetsIcWater, "湿度",
+            "${dailyWeather.water?.toString()}%", context),
+        _detailItem(Assets.assetsIcLightRain, "降水量",
+            "${dailyWeather.precip?.toString()}mm", context),
+        _detailItem(Assets.assetsIcWindmill, "风速",
+            "${dailyWeather.dayWindSpeed?.toString()}km/h", context),
+        _detailItem(Assets.assetsIcSunHat, "紫外线强度",
+            "${dailyWeather.uv?.toString()}", context),
+        _detailItem(Assets.assetsIcCloudy, "云层覆盖率",
+            "${dailyWeather.cloud?.toString()}%", context),
+        _detailItem(Assets.assetsIcTelescope, "能见度",
+            "${dailyWeather.vis?.toString()}m", context),
+      ]);
 
   _detailItem(
           String assets, String title, String value, BuildContext context) =>
@@ -177,7 +175,7 @@ class _LinePainter extends CustomPainter {
       this.currentTemp,
       this.progress = 1,
       required this.maxTemp,
-      required this.minTemp}) {}
+      required this.minTemp});
 
   final Paint _paint = Paint()
     ..color = Colors.grey[300]!
@@ -278,8 +276,7 @@ extension WeekStringExt on String {
 
 class _TitleWidget extends StatefulWidget {
   const _TitleWidget(
-      {super.key,
-      required this.temp,
+      {required this.temp,
       required this.dailyWeather,
       required this.isHeader,
       required this.upperLimit,

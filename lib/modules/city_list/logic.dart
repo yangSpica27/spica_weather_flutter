@@ -27,9 +27,6 @@ class CityListLogic extends GetxController {
 
   // 交换次序
   reorderCity(int oldIndex, int newIndex) async {
-    data.forEach((element) {
-      print("sort: ${element.sort} name: ${element.name}");
-    });
     if (newIndex > oldIndex) {
       newIndex -= 1;
     }
@@ -42,15 +39,6 @@ class CityListLogic extends GetxController {
     await AppDatabase.getInstance()
         .city
         .insertAll(data, mode: InsertMode.insertOrReplace);
-    print("--------------------------------------------");
-    data.forEach((element) {
-      print("sort: ${element.sort} name: ${element.name}");
-    });
   }
 
-  void _swap(List arr, int i, int j) {
-    Object tmp = arr[i];
-    arr[i] = arr[j];
-    arr[j] = tmp;
-  }
 }

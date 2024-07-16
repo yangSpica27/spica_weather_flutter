@@ -23,11 +23,11 @@ class ApiProvider {
 
   Future<Response> fetchWeather(String lonlat) {
     return dio
-        .get(Api.API_FETCH_WEATHER, queryParameters: {'location': lonlat});
+        .get(Api.weatherUrl, queryParameters: {'location': lonlat});
   }
 
   Future<Response> fetchCity(String lonlat) {
-    return dio.get(Api.API_FETCH_CITY, queryParameters: {
+    return dio.get(Api.reGeoUrl, queryParameters: {
       'key': "2a83c54e436dbb1702e9b1b2718c110b",
       'location': lonlat,
       'output': 'json'

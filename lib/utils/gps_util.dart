@@ -2,7 +2,7 @@ import 'dart:math';
 
 class GpsUtil {
   static const num pi = 3.1415926535897932384626;
-  static const num x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+  static const num xPi = 3.14159265358979324 * 3000.0 / 180.0;
   static const num a = 6378245.0;
   static const num ee = 0.00669342162296594323;
 
@@ -52,14 +52,11 @@ class GpsUtil {
     return false;
   }
 
-  /**
-   * 84 to 火星坐标系 (GCJ-02) World Geodetic System ==> Mars Geodetic System
-   *
-   * @param lat
-   * @param lon
-   * @return
-   */
-  static List<num> gps84_To_Gcj02(num lat, num lon) {
+  /// 84 to 火星坐标系 (GCJ-02) World Geodetic System ==> Mars Geodetic System
+  /// @param lat
+  /// @param lon
+  /// @return
+  static List<num> gps84ToGcj02(num lat, num lon) {
     if (outOfChina(lat, lon)) {
       return [lat, lon];
     }
@@ -76,76 +73,66 @@ class GpsUtil {
     return [mgLat, mgLon];
   }
 
-  /**
-   * * 火星坐标系 (GCJ-02) to 84 * * @param lon * @param lat * @return
-   */
-  static List<num> gcj02_To_Gps84(num lat, num lon) {
+  /// * 火星坐标系 (GCJ-02) to 84 * * @param lon * @param lat * @return
+  static List<num> gcj02ToGps84(num lat, num lon) {
     List<num> gps = transform(lat, lon);
     num lontitude = lon * 2 - gps[1];
     num latitude = lat * 2 - gps[0];
     return [latitude, lontitude];
   }
 
-  /**
-   * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换算法 将 GCJ-02 坐标转换成 BD-09 坐标
-   *
-   * @param lat
-   * @param lon
-   */
-  static List<num> gcj02_To_Bd09(num lat, num lon) {
+  /// 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换算法 将 GCJ-02 坐标转换成 BD-09 坐标
+  ///
+  /// @param lat
+  /// @param lon
+  static List<num> gcj02ToBd09(num lat, num lon) {
     num x = lon, y = lat;
-    num z = sqrt(x * x + y * y) + 0.00002 * sin(y * x_pi);
-    num theta = atan2(y, x) + 0.000003 * cos(x * x_pi);
+    num z = sqrt(x * x + y * y) + 0.00002 * sin(y * xPi);
+    num theta = atan2(y, x) + 0.000003 * cos(x * xPi);
     num tempLon = z * cos(theta) + 0.0065;
     num tempLat = z * sin(theta) + 0.006;
     List<num> gps = [tempLat, tempLon];
     return gps;
   }
 
-  /**
-   * * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换算法 * * 将 BD-09 坐标转换成GCJ-02 坐标
-   * @param lat
-   * @param lon
-   * @return
-   */
-  static List<num> bd09_To_Gcj02(num lat, num lon) {
+  /// * 火星坐标系 (GCJ-02) 与百度坐标系 (BD-09) 的转换算法 * * 将 BD-09 坐标转换成GCJ-02 坐标
+  /// @param lat
+  /// @param lon
+  /// @return
+  static List<num> bd09ToGcj02(num lat, num lon) {
     num x = lon - 0.0065, y = lat - 0.006;
-    num z = sqrt(x * x + y * y) - 0.00002 * sin(y * x_pi);
-    num theta = atan2(y, x) - 0.000003 * cos(x * x_pi);
+    num z = sqrt(x * x + y * y) - 0.00002 * sin(y * xPi);
+    num theta = atan2(y, x) - 0.000003 * cos(x * xPi);
     num tempLon = z * cos(theta);
     num tempLat = z * sin(theta);
     List<num> gps = [tempLat, tempLon];
     return gps;
   }
 
-  /**
-   * 将gps84转为bd09
-   *
-   * @param lat
-   * @param lon
-   * @return
-   */
-  static List<num> gps84_To_bd09(num lat, num lon) {
-    List<num> gcj02 = gps84_To_Gcj02(lat, lon);
-    List<num> bd09 = gcj02_To_Bd09(gcj02[0], gcj02[1]);
+  /// 将gps84转为bd09
+  ///
+  /// @param lat
+  /// @param lon
+  /// @return
+  static List<num> gps84ToBd09(num lat, num lon) {
+    List<num> gcj02 = gps84ToGcj02(lat, lon);
+    List<num> bd09 = gcj02ToBd09(gcj02[0], gcj02[1]);
     return bd09;
   }
 
-  static List<num> bd09_To_gps84(num lat, num lon) {
-    List<num> gcj02 = bd09_To_Gcj02(lat, lon);
-    List<num> gps84 = gcj02_To_Gps84(gcj02[0], gcj02[1]);
+  static List<num> bd09ToGps84(num lat, num lon) {
+    List<num> gcj02 = bd09ToGcj02(lat, lon);
+    List<num> gps84 = gcj02ToGps84(gcj02[0], gcj02[1]);
     //保留小数点后六位
     gps84[0] = retain6(gps84[0]);
     gps84[1] = retain6(gps84[1]);
     return gps84;
   }
 
-  /**
-   * 保留小数点后六位
-   *
-   * @param num
-   * @return
-   */
+  /// 保留小数点后六位
+  ///
+  /// @param num
+  /// @return
   static num retain6(num n) {
     return num.parse(n.toStringAsFixed(6));
   }

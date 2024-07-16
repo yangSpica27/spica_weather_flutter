@@ -25,10 +25,8 @@ class ApiRepository {
             lon: city.lon,
             sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
             weather: Value(weatherResponse.data)));
-        print("获取天气成功${weatherResponse}");
       } else {
-        print("获取天气失败${weatherResponse}");
-        throw Exception("获取天气失败${weatherResponse}");
+        throw Exception("获取天气失败$weatherResponse");
       }
     }
 

@@ -7,7 +7,7 @@ import 'package:spica_weather_flutter/generated/assets.dart';
 enum WeatherType {
   WEATHER_SUNNY,
   WEATHER_CLOUDY,
-  WEATHER_CLOUD,
+  WEATHER_OVERCAST,
   WEATHER_RAINY,
   WEATHER_SNOW,
   WEATHER_SLEET,
@@ -15,7 +15,8 @@ enum WeatherType {
   WEATHER_HAZE,
   WEATHER_HAIL,
   WEATHER_THUNDER,
-  WEATHER_THUNDERSTORM
+  WEATHER_THUNDERSTORM,
+  WEATHER_SANDSTORM,
 }
 
 extension WeatherTypeOnIntExtension on int {
@@ -25,7 +26,7 @@ extension WeatherTypeOnIntExtension on int {
         return const Color(0xFFfdbc4c);
       case WeatherType.WEATHER_CLOUDY:
         return const Color(0xFF4297e7);
-      case WeatherType.WEATHER_CLOUD:
+      case WeatherType.WEATHER_OVERCAST:
         return const Color(0xFF68baff);
       case WeatherType.WEATHER_RAINY:
         return const Color(0xFF4297e7);
@@ -38,6 +39,8 @@ extension WeatherTypeOnIntExtension on int {
       case WeatherType.WEATHER_HAZE:
         return const Color(0xFFE1C899);
       case WeatherType.WEATHER_HAIL:
+        return const Color(0xFFE1C899);
+      case WeatherType.WEATHER_SANDSTORM:
         return const Color(0xFFE1C899);
       case WeatherType.WEATHER_THUNDER:
         return const Color(0xFF4A4646);
@@ -65,7 +68,7 @@ extension WeatherTypeOnIntExtension on int {
       case 104:
       case 152:
       case 154:
-        return WeatherType.WEATHER_CLOUD;
+        return WeatherType.WEATHER_OVERCAST;
 
       case 300:
       case 301:
@@ -116,6 +119,7 @@ extension WeatherTypeOnIntExtension on int {
       case 506:
       case 507:
       case 508:
+        return WeatherType.WEATHER_HAZE;
       case 509:
       case 510:
       case 511:
@@ -142,7 +146,7 @@ extension WeatherTypeExtension on WeatherType {
         return Assets.assetsIcSun;
       case WeatherType.WEATHER_CLOUDY:
         return Assets.assetsIcCloud;
-      case WeatherType.WEATHER_CLOUD:
+      case WeatherType.WEATHER_OVERCAST:
         return Assets.assetsIcCloud;
       case WeatherType.WEATHER_RAINY:
         return Assets.assetsIcRain;
@@ -160,6 +164,8 @@ extension WeatherTypeExtension on WeatherType {
         return Assets.assetsIcThunder;
       case WeatherType.WEATHER_THUNDERSTORM:
         return Assets.assetsIcThunder;
+      case WeatherType.WEATHER_SANDSTORM:
+        return Assets.assetsIcStorm;
     }
   }
 
@@ -169,7 +175,7 @@ extension WeatherTypeExtension on WeatherType {
         return WeatherAnimType.SUNNY;
       case WeatherType.WEATHER_CLOUDY:
         return WeatherAnimType.CLOUDY;
-      case WeatherType.WEATHER_CLOUD:
+      case WeatherType.WEATHER_OVERCAST:
         return WeatherAnimType.CLOUDY;
       case WeatherType.WEATHER_RAINY:
         return WeatherAnimType.RAIN;
@@ -187,6 +193,8 @@ extension WeatherTypeExtension on WeatherType {
         return WeatherAnimType.RAIN;
       case WeatherType.WEATHER_THUNDERSTORM:
         return WeatherAnimType.RAIN;
+      case WeatherType.WEATHER_SANDSTORM:
+        return WeatherAnimType.SANDSTORM;
     }
   }
 }
@@ -199,4 +207,5 @@ enum WeatherAnimType {
   FOG, // 雾天
   HAZE, // 霾天
   UNKNOWN, // 无效果
+  SANDSTORM, // 沙尘暴
 }

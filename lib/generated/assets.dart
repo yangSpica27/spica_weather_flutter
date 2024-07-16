@@ -12,6 +12,7 @@ class Assets {
   static const String assetsIcLightRain = 'assets/ic_light_rain.png';
   static const String assetsIcRain = 'assets/ic_rain.png';
   static const String assetsIcSnow = 'assets/ic_snow.png';
+  static const String assetsIcStorm = 'assets/ic_storm.png';
   static const String assetsIcSun = 'assets/ic_sun.png';
   static const String assetsIcSunHat = 'assets/ic_sun_hat.png';
   static const String assetsIcTelescope = 'assets/ic_telescope.png';

@@ -21,13 +21,18 @@ class NowCard extends StatelessWidget {
         children: [
           SizedBox(
             height: 310.w,
-            child: WeatherAnimView(
-                weather.todayWeather?.iconId
-                        ?.getWeatherType()
-                        .getWeatherAnimType() ??
-                    WeatherAnimType.UNKNOWN,
-                width: ScreenUtil().screenWidth - 32.w,
-                height: 310.w),
+            child: ClipRRect(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(8.w),
+                  topRight: Radius.circular(8.w)),
+              child: WeatherAnimView(
+                  weather.todayWeather?.iconId
+                      ?.getWeatherType()
+                      .getWeatherAnimType() ??
+                      WeatherAnimType.UNKNOWN,
+                  width: ScreenUtil().screenWidth - 32.w,
+                  height: 310.w),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 20.w, right: 20.w, bottom: 20.w),

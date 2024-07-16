@@ -215,7 +215,7 @@ class TodayWeather {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['temp'] = this.temp;
     data['feelTemp'] = this.feelTemp;
     data['iconId'] = this.iconId;

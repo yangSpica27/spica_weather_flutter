@@ -111,11 +111,11 @@ class SplashLogic extends GetxController {
 
     try {
       state.update((val) {
-        val?.appendTip("正在获取定位");
+        val?.appendTip("正在获取定位,请稍后..");
       });
 
       // 获取到当前定位
-      Position position = await Geolocator.getCurrentPosition();
+      Position position = await Geolocator.getCurrentPosition(timeLimit: const Duration(seconds: 5));
 
       state.update((val) {
         val?.appendTip("获取定位成功");
@@ -123,7 +123,7 @@ class SplashLogic extends GetxController {
 
       // 转换成火星坐标
       final gc02Loc =
-          GpsUtil.gps84_To_Gcj02(position.latitude, position.longitude);
+          GpsUtil.gps84ToGcj02(position.latitude, position.longitude);
 
       position = Position(
           longitude: gc02Loc[1].toDouble(),
@@ -175,7 +175,7 @@ class SplashLogic extends GetxController {
       }
     } catch (e) {
       if (kDebugMode) {
-        print("获取最近城市信息失败：${e}");
+        print("获取最近城市信息失败：$e");
       }
     }
 
@@ -187,6 +187,7 @@ class SplashLogic extends GetxController {
   // 加载默认城市
   _loadDefaultCity() async {
     state.update((val) {
+      val?.appendTip("获取定位数据失败");
       val?.appendTip("载入默认带入城市");
     });
     AppDatabase.getInstance().city.insertOne(
