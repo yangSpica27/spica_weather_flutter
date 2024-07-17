@@ -119,7 +119,7 @@ extension WeatherTypeOnIntExtension on int {
       case 506:
       case 507:
       case 508:
-        return WeatherType.WEATHER_HAZE;
+        return WeatherType.WEATHER_SANDSTORM;
       case 509:
       case 510:
       case 511:
