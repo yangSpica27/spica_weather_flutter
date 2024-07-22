@@ -223,69 +223,72 @@ class _ItemCity extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.only(bottom: 12.w),
             width: ScreenUtil().screenWidth - 32.w,
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
-            decoration: BoxDecoration(
-                border: Border.all(
-                    color: isSort ? Colors.grey[500]! : Colors.transparent),
-                color: item.weather?.todayWeather?.iconId?.getWeatherColor() ??
-                    Colors.blue[500],
-                borderRadius: const BorderRadius.all(Radius.circular(8))),
-            child: Row(mainAxisSize: MainAxisSize.max, children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text.rich(TextSpan(
-                    children: isLocation
-                        ? [
-                            WidgetSpan(
-                                child: Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                              size: 20.sp,
-                            )),
-                            WidgetSpan(
-                                child: SizedBox(
-                              width: 8.w,
-                            )),
-                            TextSpan(
-                                text: item.name,
-                                style: context.theme.textTheme.headlineSmall
-                                    ?.copyWith(
-                                        color: Colors.white,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w500))
-                          ]
-                        : [
-                            TextSpan(
-                                text: item.name,
-                                style: context.theme.textTheme.headlineSmall
-                                    ?.copyWith(
-                                        color: Colors.white,
-                                        fontSize: 20.sp,
-                                        fontWeight: FontWeight.w500))
-                          ],
-                  )),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Text(
-                      "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
-                      style: context.theme.textTheme.headlineSmall?.copyWith(
-                          color: Colors.white,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w400)),
-                ],
-              ),
-              const Spacer(),
-              Text(
-                "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
-                style: context.theme.textTheme.headlineLarge?.copyWith(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w900,
-                    fontSize: 38.sp),
-              ),
-            ]),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: isSort ? Colors.grey[500]! : Colors.transparent),
+                  color:
+                      item.weather?.todayWeather?.iconId?.getWeatherColor() ??
+                          Colors.blue[500],
+                  borderRadius: const BorderRadius.all(Radius.circular(8))),
+              child: Row(mainAxisSize: MainAxisSize.max, children: [
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(TextSpan(
+                      children: isLocation
+                          ? [
+                              WidgetSpan(
+                                  child: Icon(
+                                Icons.location_on,
+                                color: Colors.white,
+                                size: 20.sp,
+                              )),
+                              WidgetSpan(
+                                  child: SizedBox(
+                                width: 8.w,
+                              )),
+                              TextSpan(
+                                  text: item.name,
+                                  style: context.theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500))
+                            ]
+                          : [
+                              TextSpan(
+                                  text: item.name,
+                                  style: context.theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500))
+                            ],
+                    )),
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    Text(
+                        "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
+                        style: context.theme.textTheme.headlineSmall?.copyWith(
+                            color: Colors.white,
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w400)),
+                  ],
+                ),
+                const Spacer(),
+                Text(
+                  "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
+                  style: context.theme.textTheme.headlineLarge?.copyWith(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 38.sp),
+                ),
+              ]),
+            ),
           )),
     );
   }

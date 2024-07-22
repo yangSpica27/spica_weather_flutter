@@ -135,9 +135,22 @@ class _WeatherPageState extends State<WeatherPage>
                                             text: "数据来源于",
                                             style: TextStyle(
                                                 color: Colors.black87)),
-                                        WidgetSpan(child: SizedBox(width: 8,)),
-                                        WidgetSpan(child: Icon(Ionicons.cloud_circle,size: 15,),alignment: PlaceholderAlignment.middle,),
-                                        WidgetSpan(child: SizedBox(width: 2,)),
+                                        WidgetSpan(
+                                            child: SizedBox(
+                                          width: 8,
+                                        )),
+                                        WidgetSpan(
+                                          child: Icon(
+                                            Ionicons.cloud_circle,
+                                            size: 15,
+                                          ),
+                                          alignment:
+                                              PlaceholderAlignment.middle,
+                                        ),
+                                        WidgetSpan(
+                                            child: SizedBox(
+                                          width: 2,
+                                        )),
                                         TextSpan(
                                           text: "和风天气",
                                           style: TextStyle(
