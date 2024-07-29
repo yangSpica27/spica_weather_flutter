@@ -142,11 +142,11 @@ class _AirProgressPainter extends CustomPainter {
     Offset(50.w, 50.w),
     [
       Colors.green,
-      Colors.yellow[500]!,
-      Colors.orange,
-      Colors.deepOrangeAccent,
-      Colors.grey[400]!,
-      Colors.grey[500]!
+      Colors.yellow[700]!,
+      Colors.orange[300]!,
+      Colors.red[200]!,
+      Colors.purpleAccent[100]!,
+      Colors.pink[300]!
     ],
     [0, .2, .4, .6, .8, 1],
     TileMode.clamp,
@@ -156,17 +156,17 @@ class _AirProgressPainter extends CustomPainter {
 
   _AirProgressPainter({required this.centerText, required this.air}) {
     if (air < 50) {
-      _textPaint.color = Colors.green;
+      _textPaint.color = Colors.green[400]!;
     } else if (air < 100) {
       _textPaint.color = Colors.yellow[700]!;
     } else if (air < 150) {
-      _textPaint.color = Colors.orange;
+      _textPaint.color = Colors.orange[300]!;
     } else if (air < 200) {
-      _textPaint.color = Colors.deepOrangeAccent;
+      _textPaint.color = Colors.red[200]!;
     } else if (air < 300) {
-      _textPaint.color = Colors.grey[400]!;
+      _textPaint.color = Colors.purpleAccent[100]!;
     } else {
-      _textPaint.color = Colors.grey[500]!;
+      _textPaint.color = Colors.pink[300]!;
     }
   }
 
@@ -203,6 +203,8 @@ class _AirProgressPainter extends CustomPainter {
         pi / 180 * sweepAngle * min(1, air / 300),
         false,
         _paint);
+
+
     canvas.restore();
 
     final textPainter = TextPainter(
@@ -227,7 +229,7 @@ class _AirProgressPainter extends CustomPainter {
                 color: _textPaint.color,
                 fontSize: 35.w,
                 letterSpacing: 1.2,
-                fontWeight: FontWeight.w600)),
+                fontWeight: FontWeight.w500)),
         textDirection: TextDirection.ltr)
       ..layout();
 
