@@ -27,33 +27,34 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
       ),
       body: Column(
         children: [
-          Hero(tag: "search_bar",
+          Hero(
+              tag: "search_bar",
               transitionOnUserGestures: true,
               child: Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
-            child: TextField(
-              controller: _editorController,
-              onChanged: logic.onSearch,
-              maxLines: 1,
-              decoration: InputDecoration(
-                hintText: '请输入城市名称',
-                filled: true,
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderSide: BorderSide.none,
-                  borderRadius: BorderRadius.circular(8.w),
+                padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
+                child: TextField(
+                  controller: _editorController,
+                  onChanged: logic.onSearch,
+                  maxLines: 1,
+                  decoration: InputDecoration(
+                    hintText: '请输入城市名称',
+                    filled: true,
+                    fillColor: Colors.grey[200],
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                      borderRadius: BorderRadius.circular(8.w),
+                    ),
+                    prefixIcon: const Icon(Icons.search),
+                    suffixIcon: IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _editorController.clear();
+                        logic.onSearch('');
+                      },
+                    ),
+                  ),
                 ),
-                prefixIcon: const Icon(Icons.search),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _editorController.clear();
-                    logic.onSearch('');
-                  },
-                ),
-              ),
-            ),
-          )),
+              )),
           Expanded(
               child: Obx(() => logic.showItems.isNotEmpty
                   ? ListView.separated(

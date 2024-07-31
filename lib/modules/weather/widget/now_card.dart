@@ -27,8 +27,8 @@ class NowCard extends StatelessWidget {
                   topRight: Radius.circular(8.w)),
               child: WeatherAnimView(
                   weather.todayWeather?.iconId
-                      ?.getWeatherType()
-                      .getWeatherAnimType() ??
+                          ?.getWeatherType()
+                          .getWeatherAnimType() ??
                       WeatherAnimType.UNKNOWN,
                   width: ScreenUtil().screenWidth - 32.w,
                   height: 310.w),

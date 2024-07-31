@@ -40,67 +40,55 @@ class _HourlyCardState extends State<HourlyCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Padding(
-        padding: EdgeInsets.all(15.w),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
+        child: Padding(
+      padding: EdgeInsets.all(15.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
           Text(
-          "小时别天气信息",
-          style: Theme
-              .of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(
-              color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
-                  Colors.blue[500]),
-        ),
-        SizedBox(
-          height: 4.w,
-        ),
-        Text(
-          "${widget.weather.descriptionForToday}",
-          style: Theme
-              .of(context)
-              .textTheme
-              .bodyMedium,
-        ),
-        SizedBox(
-          height: 12.w,
-        ),
-        widget.weather.hourlyWeather == null
-            ? _emptyWidget(context)
-            : SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            controller: _scrollController,
-            child: CustomPaint(
-                key: ValueKey(widget.weather.hourlyWeather?.hashCode),
-                size: Size(
-            60.w * (widget.weather.hourlyWeather?.length ?? 0),
-            160.w),
-        painter: _LinePainter(
-            scrollX: scrollX,
-            data: widget.weather.hourlyWeather ?? [],
-            themeColor: widget.weather.todayWeather?.iconId
-                ?.getWeatherColor() ??
-                Colors.blue[500]!),
+            "小时别天气信息",
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
+                    Colors.blue[500]),
+          ),
+          SizedBox(
+            height: 4.w,
+          ),
+          Text(
+            "${widget.weather.descriptionForToday}",
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          SizedBox(
+            height: 12.w,
+          ),
+          widget.weather.hourlyWeather == null
+              ? _emptyWidget(context)
+              : SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  controller: _scrollController,
+                  child: CustomPaint(
+                    key: ValueKey(widget.weather.hourlyWeather?.hashCode),
+                    size: Size(
+                        60.w * (widget.weather.hourlyWeather?.length ?? 0),
+                        160.w),
+                    painter: _LinePainter(
+                        scrollX: scrollX,
+                        data: widget.weather.hourlyWeather ?? [],
+                        themeColor: widget.weather.todayWeather?.iconId
+                                ?.getWeatherColor() ??
+                            Colors.blue[500]!),
+                  ),
+                )
+        ],
       ),
-    )],
-    )
-    ,
-    )
-    );
+    ));
   }
 
-  _emptyWidget(BuildContext context) =>
-      Container(
+  _emptyWidget(BuildContext context) => Container(
         padding: EdgeInsets.symmetric(vertical: 10.w),
         child: Text(
           "暂无数据",
-          style: Theme
-              .of(context)
-              .textTheme
-              .titleMedium,
+          style: Theme.of(context).textTheme.titleMedium,
         ),
       );
 }
@@ -329,9 +317,7 @@ class _LinePainter extends CustomPainter {
 
   // 生产平滑线Path
   Path _createSmoothPath(Path originalPath) {
-    final PathMetric pathMetric = originalPath
-        .computeMetrics()
-        .first;
+    final PathMetric pathMetric = originalPath.computeMetrics().first;
     final Path smoothPath = Path();
     const int divisions = 100;
     for (int i = 0; i <= divisions; i++) {

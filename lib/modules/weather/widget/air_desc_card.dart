@@ -204,7 +204,6 @@ class _AirProgressPainter extends CustomPainter {
         false,
         _paint);
 
-
     canvas.restore();
 
     final textPainter = TextPainter(

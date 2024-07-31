@@ -7,9 +7,6 @@ class Province {
   String? lat;
   List<CityItem>? children;
 
-
-
-
   Province({this.name, this.log, this.lat, this.children});
 
   Province.fromJson(Map<String, dynamic> json) {

@@ -40,5 +40,4 @@ class CityListLogic extends GetxController {
         .city
         .insertAll(data, mode: InsertMode.insertOrReplace);
   }
-
 }

@@ -100,8 +100,7 @@ class FeelCard extends StatelessWidget {
       bottomWidget: Container(
         padding: EdgeInsets.only(bottom: 6.w),
         child: _BottomAnimLineWidget(
-            mode: 3, progress: min(max((feelTemp ?? 0) / 40.0, 0), 1)
-        ),
+            mode: 3, progress: min(max((feelTemp ?? 0) / 40.0, 0), 1)),
       ),
       value2: getFeelTempDesc(),
     );

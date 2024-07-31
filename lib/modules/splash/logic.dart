@@ -77,8 +77,8 @@ class SplashLogic extends GetxController {
       return;
     }
 
-
-    if(permission == LocationPermission.always || permission == LocationPermission.whileInUse){
+    if (permission == LocationPermission.always ||
+        permission == LocationPermission.whileInUse) {
       await _loadNearestCity(currentCity);
     }
 
@@ -115,7 +115,8 @@ class SplashLogic extends GetxController {
       });
 
       // 获取到当前定位
-      Position position = await Geolocator.getCurrentPosition(timeLimit: const Duration(seconds: 5));
+      Position position = await Geolocator.getCurrentPosition(
+          timeLimit: const Duration(seconds: 5));
 
       state.update((val) {
         val?.appendTip("获取定位成功");

@@ -7,7 +7,9 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
+
   $CityTable(this.attachedDatabase, [this._alias]);
+
   static const VerificationMeta _nameMeta = const VerificationMeta('name');
   @override
   late final GeneratedColumn<String> name = GeneratedColumn<String>(
@@ -44,14 +46,18 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
       GeneratedColumn<String>('weather', aliasedName, true,
               type: DriftSqlType.string, requiredDuringInsert: false)
           .withConverter<WeatherResult?>($CityTable.$converterweather);
+
   @override
   List<GeneratedColumn> get $columns =>
       [name, lat, lon, sort, isLocation, weather];
+
   @override
   String get aliasedName => _alias ?? actualTableName;
+
   @override
   String get actualTableName => $name;
   static const String $name = 'city';
+
   @override
   VerificationContext validateIntegrity(Insertable<CityData> instance,
       {bool isInserting = false}) {
@@ -95,6 +101,7 @@ class $CityTable extends City with TableInfo<$CityTable, CityData> {
 
   @override
   Set<GeneratedColumn> get $primaryKey => {name};
+
   @override
   CityData map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
@@ -130,6 +137,7 @@ class CityData extends DataClass implements Insertable<CityData> {
   final BigInt sort;
   final bool isLocation;
   final WeatherResult? weather;
+
   const CityData(
       {required this.name,
       required this.lat,
@@ -137,6 +145,7 @@ class CityData extends DataClass implements Insertable<CityData> {
       required this.sort,
       required this.isLocation,
       this.weather});
+
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
     final map = <String, Expression>{};
@@ -177,6 +186,7 @@ class CityData extends DataClass implements Insertable<CityData> {
       weather: serializer.fromJson<WeatherResult?>(json['weather']),
     );
   }
+
   @override
   Map<String, dynamic> toJson({ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
@@ -205,6 +215,7 @@ class CityData extends DataClass implements Insertable<CityData> {
         isLocation: isLocation ?? this.isLocation,
         weather: weather.present ? weather.value : this.weather,
       );
+
   @override
   String toString() {
     return (StringBuffer('CityData(')
@@ -220,6 +231,7 @@ class CityData extends DataClass implements Insertable<CityData> {
 
   @override
   int get hashCode => Object.hash(name, lat, lon, sort, isLocation, weather);
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -240,6 +252,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
   final Value<bool> isLocation;
   final Value<WeatherResult?> weather;
   final Value<int> rowid;
+
   const CityCompanion({
     this.name = const Value.absent(),
     this.lat = const Value.absent(),
@@ -249,6 +262,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
     this.weather = const Value.absent(),
     this.rowid = const Value.absent(),
   });
+
   CityCompanion.insert({
     required String name,
     required String lat,
@@ -262,6 +276,7 @@ class CityCompanion extends UpdateCompanion<CityData> {
         lon = Value(lon),
         sort = Value(sort),
         isLocation = Value(isLocation);
+
   static Insertable<CityData> custom({
     Expression<String>? name,
     Expression<String>? lat,
@@ -346,11 +361,14 @@ class CityCompanion extends UpdateCompanion<CityData> {
 
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
+
   _$AppDatabaseManager get managers => _$AppDatabaseManager(this);
   late final $CityTable city = $CityTable(this);
+
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
+
   @override
   List<DatabaseSchemaEntity> get allSchemaEntities => [city];
 }
@@ -446,6 +464,7 @@ class $$CityTableProcessedTableManager extends ProcessedTableManager<
 class $$CityTableFilterComposer
     extends FilterComposer<_$AppDatabase, $CityTable> {
   $$CityTableFilterComposer(super.$state);
+
   ColumnFilters<String> get name => $state.composableBuilder(
       column: $state.table.name,
       builder: (column, joinBuilders) =>
@@ -482,6 +501,7 @@ class $$CityTableFilterComposer
 class $$CityTableOrderingComposer
     extends OrderingComposer<_$AppDatabase, $CityTable> {
   $$CityTableOrderingComposer(super.$state);
+
   ColumnOrderings<String> get name => $state.composableBuilder(
       column: $state.table.name,
       builder: (column, joinBuilders) =>
@@ -515,6 +535,8 @@ class $$CityTableOrderingComposer
 
 class _$AppDatabaseManager {
   final _$AppDatabase _db;
+
   _$AppDatabaseManager(this._db);
+
   $$CityTableTableManager get city => $$CityTableTableManager(_db, _db.city);
 }
