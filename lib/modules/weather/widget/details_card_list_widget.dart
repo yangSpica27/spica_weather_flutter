@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/fixed_grid_view/fixed_height_grid_view.dart';
 
 /// 补充信息
 class DetailsCardListWidget extends StatelessWidget {
@@ -14,29 +15,35 @@ class DetailsCardListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView(
+    final items = <Widget>[
+      UvCard(
+        uv: double.tryParse(weather.dailyWeather?.first.uv ?? "0xFF"),
+      ),
+      HumidnessCard(
+        humidness: weather.todayWeather?.water,
+      ),
+      FeelCard(
+        feelTemp: weather.todayWeather?.feelTemp,
+      ),
+      SunriseCard(
+        sunrise: weather.dailyWeather?.first.sunriseDate,
+        sunSet: weather.dailyWeather?.first.sunsetDate,
+      )
+    ];
+    // return Container();
+
+    return GridView.count(
       shrinkWrap: true,
+      crossAxisSpacing: 8.w,
+      childAspectRatio: 0.95,
+      mainAxisSpacing: 8.w,
+      crossAxisCount: 2,
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          childAspectRatio: 1,
-          crossAxisSpacing: 8.w,
-          mainAxisSpacing: 8.w),
-      children: [
-        UvCard(
-          uv: double.tryParse(weather.dailyWeather?.first.uv ?? "0xFF"),
-        ),
-        HumidnessCard(
-          humidness: weather.todayWeather?.water,
-        ),
-        FeelCard(
-          feelTemp: weather.todayWeather?.feelTemp,
-        ),
-        SunriseCard(
-          sunrise: weather.dailyWeather?.first.sunriseDate,
-          sunSet: weather.dailyWeather?.first.sunsetDate,
-        )
-      ],
+      children: items,
+      // itemCount: items.length,
+      // builder: (context, index) {
+      //   return items[index];
+      // },
     );
   }
 }
@@ -95,7 +102,6 @@ class FeelCard extends StatelessWidget {
     return ItemWidget(
       title: "体感温度",
       value: feelTemp != null ? "$feelTemp℃" : "--",
-      rightWidget: Container(),
       icon: Icons.settings_accessibility_outlined,
       bottomWidget: Container(
         padding: EdgeInsets.only(bottom: 6.w),
@@ -127,16 +133,16 @@ class HumidnessCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ItemWidget(
-        title: "湿度",
-        value: humidness != null ? "$humidness%" : "--",
-        icon: Icons.grain_outlined,
-        value2: getHumidnessLevel(),
-        bottomWidget: Container(
-          padding: EdgeInsets.only(bottom: 6.w),
-          child: _BottomAnimLineWidget(
-              mode: 1, progress: (humidness ?? 0) / 100.0),
-        ),
-        rightWidget: Container());
+      title: "湿度",
+      value: humidness != null ? "$humidness%" : "--",
+      icon: Icons.grain_outlined,
+      value2: getHumidnessLevel(),
+      bottomWidget: Container(
+        padding: EdgeInsets.only(bottom: 6.w),
+        child:
+            _BottomAnimLineWidget(mode: 1, progress: (humidness ?? 0) / 100.0),
+      ),
+    );
   }
 }
 
@@ -180,7 +186,6 @@ class UvCard extends StatelessWidget {
         title: "紫外线",
         icon: Icons.wb_sunny_outlined,
         value: getUvLevel(),
-        rightWidget: Container(),
         value2: getUvDetail(),
         bottomWidget: Container(
           padding: EdgeInsets.only(bottom: 6.w),
@@ -203,9 +208,6 @@ class ItemWidget extends StatelessWidget {
   // 值2
   final String value2;
 
-  // 可选 右边自定义View
-  final Widget? rightWidget;
-
   // 可选 底部自定义View
   final Widget? bottomWidget;
 
@@ -219,68 +221,60 @@ class ItemWidget extends StatelessWidget {
       this.value2 = "",
       this.icon = Icons.wb_sunny_outlined,
       this.bottomWidget = const Spacer(),
-      this.needSpacer = true,
-      this.rightWidget});
+      this.needSpacer = true});
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
         padding: EdgeInsets.all(14.w),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  Text.rich(TextSpan(children: [
-                    WidgetSpan(
-                        child: Icon(
-                          icon,
-                          size: 14.w,
-                          color: Colors.black54,
-                        ),
-                        alignment: PlaceholderAlignment.middle),
-                    const WidgetSpan(
-                      child: SizedBox(
-                        width: 2,
-                      ),
-                    ),
-                    TextSpan(
-                        text: title,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.black54,
-                            )),
-                  ])),
-                  SizedBox(
-                    height: 6.w,
+            Text.rich(TextSpan(children: [
+              WidgetSpan(
+                  child: Icon(
+                    icon,
+                    size: 14.w,
+                    color: Colors.black54,
                   ),
-                  value == ""
-                      ? const SizedBox()
-                      : Text(
-                          value,
-                          style:
-                              Theme.of(context).textTheme.titleLarge?.copyWith(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                        ),
-                  needSpacer ? const Spacer() : const SizedBox(),
-                  bottomWidget == null ? const SizedBox() : bottomWidget!,
-                  Text(
-                    value2,
-                    maxLines: 4,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black54,
-                          overflow: TextOverflow.ellipsis,
+                  alignment: PlaceholderAlignment.middle),
+              const WidgetSpan(
+                child: SizedBox(
+                  width: 2,
+                ),
+              ),
+              TextSpan(
+                  text: title,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Colors.black54,
+                      )),
+            ])),
+            SizedBox(
+              height: 6.w,
+            ),
+            value == ""
+                ? const SizedBox()
+                : Text(
+                    value,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          color: Colors.black87,
                           fontWeight: FontWeight.w500,
                         ),
-                  )
-                ],
-              ),
-            ),
-            rightWidget ?? Container()
+                  ),
+            needSpacer ? const Spacer() : const SizedBox(),
+            bottomWidget == null ? const SizedBox() : bottomWidget!,
+            Text(
+              value2,
+              maxLines: 4,
+              softWrap: true,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.black54,
+                    overflow: TextOverflow.ellipsis,
+                    fontWeight: FontWeight.w500,
+                  ),
+            )
           ],
         ),
       ),
@@ -598,6 +592,7 @@ class _SunriseWidgetState extends State<SunriseWidget>
         animation: _controller,
         builder: (context, widget) => CustomPaint(
               painter: _SunrisePainter(progress),
+              size: Size(0, 22.w),
             ));
   }
 

@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:spica_weather_flutter/database/database.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/air_desc_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/details_card_list_widget.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
-import 'package:spica_weather_flutter/modules/weather/widget/warning_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 
 import 'logic.dart';
@@ -75,7 +75,6 @@ class _WeatherPageState extends State<WeatherPage>
                       selectedColor: Colors.black87,
                     )),
               ),
-
               /// 内容区
               Expanded(
                 flex: 1,
@@ -86,84 +85,7 @@ class _WeatherPageState extends State<WeatherPage>
                           ? const Center(
                               child: CircularProgressIndicator(),
                             )
-                          : ListView(
-                              physics: physics,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 20.w, vertical: 12.w),
-                              children: [
-                                NowCard(
-                                  weather: element.weather!,
-                                ),
-                                Visibility(
-                                    visible: element.weather!.warnings !=
-                                            null &&
-                                        element.weather!.warnings!.isNotEmpty,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(top: 12.w),
-                                      child: WarningCard(
-                                          weather: element.weather!),
-                                    )),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                HourlyCard(weather: element.weather!),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                DailyCard(weather: element.weather!),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                AirDescCard(weather: element.weather!),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                DetailsCardListWidget(
-                                    weather: element.weather!),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                TipCard(weather: element.weather!),
-                                SizedBox(
-                                  height: 8.w,
-                                ),
-                                RichText(
-                                    textAlign: TextAlign.center,
-                                    text: const TextSpan(
-                                      children: [
-                                        TextSpan(
-                                            text: "数据来源于",
-                                            style: TextStyle(
-                                                color: Colors.black87)),
-                                        WidgetSpan(
-                                            child: SizedBox(
-                                          width: 8,
-                                        )),
-                                        WidgetSpan(
-                                          child: Icon(
-                                            Ionicons.cloud_circle,
-                                            size: 15,
-                                          ),
-                                          alignment:
-                                              PlaceholderAlignment.middle,
-                                        ),
-                                        WidgetSpan(
-                                            child: SizedBox(
-                                          width: 2,
-                                        )),
-                                        TextSpan(
-                                          text: "和风天气",
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                      ],
-                                    )),
-                                SizedBox(
-                                  height: 20.w,
-                                ),
-                              ],
-                            ))
+                          : InfoListWidget(data: element, physics: physics))
                       .toList(),
                 ),
               )
@@ -180,5 +102,63 @@ class _WeatherPageState extends State<WeatherPage>
     pageController.dispose();
     tabController.dispose();
     super.dispose();
+  }
+}
+
+class InfoListWidget extends StatelessWidget {
+  const InfoListWidget({super.key, required this.data, this.physics});
+
+  final CityData data;
+
+  final ScrollPhysics? physics;
+
+  @override
+  Widget build(BuildContext context) {
+    final items = [
+      NowCard(
+        weather: data.weather!,
+      ),
+      HourlyCard(weather: data.weather!),
+      DailyCard(weather: data.weather!),
+      AirDescCard(weather: data.weather!),
+      DetailsCardListWidget(weather: data.weather!),
+      TipCard(weather: data.weather!),
+      RichText(
+          textAlign: TextAlign.center,
+          text: const TextSpan(
+            children: [
+              TextSpan(text: "数据来源于", style: TextStyle(color: Colors.black87)),
+              WidgetSpan(
+                  child: SizedBox(
+                width: 8,
+              )),
+              WidgetSpan(
+                child: Icon(
+                  Ionicons.cloud_circle,
+                  size: 15,
+                ),
+                alignment: PlaceholderAlignment.middle,
+              ),
+              WidgetSpan(
+                  child: SizedBox(
+                width: 2,
+              )),
+              TextSpan(
+                text: "和风天气",
+                style: TextStyle(
+                    color: Colors.black87, fontWeight: FontWeight.bold),
+              ),
+            ],
+          )),
+    ];
+    return ListView.separated(
+        physics: physics,
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
+        itemBuilder: (context, index) => items[index],
+        separatorBuilder: (context, index) => Divider(
+              height: 8.w,
+              color: Colors.transparent,
+            ),
+        itemCount: items.length);
   }
 }

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/fixed_grid_view/fixed_height_grid_view.dart';
 
 import '../../../model/weather_response.dart';
 
+/// 生活指数卡片
 class TipCard extends StatelessWidget {
   const TipCard({super.key, required this.weather});
 
@@ -26,44 +28,63 @@ class TipCard extends StatelessWidget {
             SizedBox(
               height: 12.w,
             ),
-            GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.5,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.w),
-              children: weather.lifeIndexes
-                      ?.map((e) =>
-                          _buildItem(context, e.name ?? "", e.category ?? ""))
-                      .toList() ??
-                  [],
-            )
+            FixedHeightGridView(
+                shrinkWrap: true,
+                crossAxisCount: 2,
+                mainAxisSpacing: 10.w,
+                crossAxisSpacing: 10.w,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: weather.lifeIndexes?.length ?? 0,
+                builder: (context, index) {
+                  final item = weather.lifeIndexes![index];
+                  return _TipItemWidget(
+                      title: item.name ?? "", subtitle: item.category ?? "");
+                }
+            ),
           ],
         ),
       ),
     );
   }
+}
 
-  Widget _buildItem(BuildContext context, String title, String subtitle) =>
-      Container(
-        padding: EdgeInsets.all(8.w),
-        decoration: BoxDecoration(
-            color: const Color(0x1a4a4a4a),
-            borderRadius: BorderRadius.circular(8.w)),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              subtitle,
-              style: Theme.of(context).textTheme.bodyMedium,
-            )
-          ],
-        ),
-      );
+/// 生活指数ItemWidget
+class _TipItemWidget extends StatelessWidget {
+  const _TipItemWidget(
+      {super.key, required this.title, required this.subtitle});
+
+  final String title;
+
+  final String subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+          color: const Color(0x1a4a4a4a),
+          borderRadius: BorderRadius.circular(8.w)),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          Divider(
+            height: 6.w,
+            color: Colors.transparent,
+          ),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          )
+        ],
+      ),
+    );
+  }
 }
