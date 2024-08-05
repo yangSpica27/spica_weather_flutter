@@ -47,6 +47,7 @@ dependencies:
   get: ^4.6.6
   easy_refresh: ^3.4.0
   geolocator: ^12.0.0
+  workmanager: ^0.5.2
 
 
 dev_dependencies:

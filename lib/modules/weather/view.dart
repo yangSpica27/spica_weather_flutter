@@ -25,10 +25,7 @@ class _WeatherPageState extends State<WeatherPage>
     with TickerProviderStateMixin {
   final logic = Get.find<WeatherLogic>();
 
-  late final PageController pageController = PageController(keepPage: false)
-    ..addListener(() {
-      logic.pageIndex.value = pageController.page?.round() ?? 0;
-    });
+  late final PageController pageController = PageController(keepPage: false);
 
   late TabController tabController = TabController(length: 1, vsync: this);
 
@@ -36,6 +33,7 @@ class _WeatherPageState extends State<WeatherPage>
   Widget build(BuildContext context) {
     logic.data.listen((p0) {
       tabController = TabController(length: p0.length, vsync: this);
+      pageController.jumpToPage(0);
     });
 
     return Scaffold(
@@ -43,7 +41,8 @@ class _WeatherPageState extends State<WeatherPage>
       appBar: AppBar(
         centerTitle: true,
         title: Obx(() {
-          return Text(logic.data.isNotEmpty
+          return Text((logic.data.isNotEmpty &&
+                  logic.pageIndex.value < logic.data.length)
               ? logic.data[logic.pageIndex.value].name
               : '');
         }),
@@ -68,17 +67,22 @@ class _WeatherPageState extends State<WeatherPage>
             children: [
               /// TabPageSelector指示器
               Center(
-                child: Obx(() => TabPageSelector(
-                      controller: tabController
-                        ..animateTo(logic.pageIndex.value),
-                      color: const Color(0x21000000),
-                      selectedColor: Colors.black87,
-                    )),
-              ),
+                  child: TabPageSelector(
+                controller: tabController,
+                color: const Color(0x21000000),
+                selectedColor: Colors.black87,
+              )),
+
               /// 内容区
               Expanded(
                 flex: 1,
                 child: PageView(
+                  onPageChanged: (index) {
+                    if (index < tabController.length) {
+                      tabController.animateTo(index);
+                    }
+                    logic.pageIndex.value = index;
+                  },
                   controller: pageController,
                   children: logic.data
                       .map((element) => element.weather == null
@@ -100,7 +104,6 @@ class _WeatherPageState extends State<WeatherPage>
   void dispose() {
     Get.delete<WeatherLogic>();
     pageController.dispose();
-    tabController.dispose();
     super.dispose();
   }
 }

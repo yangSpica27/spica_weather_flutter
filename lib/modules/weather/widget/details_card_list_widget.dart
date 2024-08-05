@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
-import 'package:spica_weather_flutter/modules/weather/widget/fixed_grid_view/fixed_height_grid_view.dart';
 
 /// 补充信息
 class DetailsCardListWidget extends StatelessWidget {
