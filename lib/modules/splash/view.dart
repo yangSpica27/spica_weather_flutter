@@ -25,7 +25,7 @@ class _SplashPageState extends State<SplashPage> {
             Obx(() => Container(
                   padding: EdgeInsets.symmetric(horizontal: 20.w),
                   child: Text(logic.state.value.tip,
-                      style: Theme.of(context).textTheme.bodyMedium),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400)),
                 )),
             const Spacer(),
             Obx(() => LinearProgressIndicator(

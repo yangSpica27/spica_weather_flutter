@@ -131,11 +131,11 @@ class DailyCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
                   ),
                   Text(
                     value,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, color: Colors.grey[600]),
                   )
                 ],
               ),
@@ -335,7 +335,7 @@ class _TitleWidgetState extends State<_TitleWidget>
                   ? widget.dailyWeather.iconId?.getWeatherColor() ??
                       Colors.blue[500]
                   : Colors.black,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.w500),
         ),
         SizedBox(
           width: 12.w,
@@ -350,7 +350,7 @@ class _TitleWidgetState extends State<_TitleWidget>
         ),
         Text(
           "${widget.dailyWeather.minTemp?.toString()}℃",
-          style: context.theme.textTheme.titleMedium,
+          style: context.theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w400),
         ),
         SizedBox(
           width: 12.w,
@@ -386,7 +386,7 @@ class _TitleWidgetState extends State<_TitleWidget>
         ),
         Text(
           "${widget.dailyWeather.maxTemp?.toString()}℃",
-          style: context.theme.textTheme.titleMedium,
+          style: context.theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w400),
         ),
       ],
     );

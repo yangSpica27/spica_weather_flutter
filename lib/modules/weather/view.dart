@@ -42,7 +42,7 @@ class _WeatherPageState extends State<WeatherPage>
         centerTitle: true,
         title: Obx(() {
           return Text((logic.data.isNotEmpty &&
-                  logic.pageIndex.value < logic.data.length)
+              logic.pageIndex.value < logic.data.length)
               ? logic.data[logic.pageIndex.value].name
               : '');
         }),
