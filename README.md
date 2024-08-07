@@ -2,12 +2,11 @@
 
 ## 预览图
 
-<p align="center">
-<img src="pic/Screenshot_20240519_122240.png" width="20%"/>
-<img src="pic/Screenshot_20240519_122300.png" width="20%"/>
-<img src="pic/Screenshot_20240626_143538.png" width="20%"/>
-</p>
-
+<div style="display: flex;justify-content: flex-start">
+<img src="https://s3.bmp.ovh/imgs/2024/08/06/f2c28574f7846702.png" width="20%"/>
+<img src="https://s3.bmp.ovh/imgs/2024/08/06/8e0b8f224a994671.png" width="20%"/>
+<img src="https://s3.bmp.ovh/imgs/2024/08/06/eb46d15fe13145b2.png" width="20%"/>
+</div>
 ## 技术栈及其使用的开源库
 
 - Drift 持久化库
