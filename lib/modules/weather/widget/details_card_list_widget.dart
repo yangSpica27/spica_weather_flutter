@@ -271,7 +271,7 @@ class ItemWidget extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Colors.black54,
                     overflow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.w500,
+                    fontWeight: FontWeight.normal,
                   ),
             )
           ],

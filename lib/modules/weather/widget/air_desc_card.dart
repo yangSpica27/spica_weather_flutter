@@ -127,7 +127,7 @@ class _RightDescWidget extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
-                ?.copyWith(color: Colors.black54, fontWeight: FontWeight.w500))
+                ?.copyWith(color: Colors.black54, fontWeight: FontWeight.normal))
       ],
     );
   }

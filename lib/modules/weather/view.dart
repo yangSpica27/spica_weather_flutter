@@ -149,7 +149,7 @@ class InfoListWidget extends StatelessWidget {
               TextSpan(
                 text: "和风天气",
                 style: TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.bold),
+                    color: Colors.black87, fontWeight: FontWeight.w600),
               ),
             ],
           )),
