@@ -72,9 +72,6 @@ class DailyCard extends StatelessWidget {
             temp: weather.todayWeather?.temp ?? 0,
           ),
           children: [
-            SizedBox(
-              height: 12.w,
-            ),
             _detailWidget(context, weather.dailyWeather![index]),
             SizedBox(
               height: 12.w,
@@ -84,28 +81,42 @@ class DailyCard extends StatelessWidget {
   }
 
   /// 详细部分
-  _detailWidget(BuildContext context, DailyWeather dailyWeather) => GridView(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 2.5,
-              crossAxisSpacing: 10.w,
-              mainAxisSpacing: 10.w),
-          children: [
-            _detailItem(Assets.assetsIcWater, "湿度",
-                "${dailyWeather.water?.toString()}%", context),
-            _detailItem(Assets.assetsIcLightRain, "降水量",
-                "${dailyWeather.precip?.toString()}mm", context),
-            _detailItem(Assets.assetsIcWindmill, "风速",
-                "${dailyWeather.dayWindSpeed?.toString()}km/h", context),
-            _detailItem(Assets.assetsIcSunHat, "紫外线强度",
-                "${dailyWeather.uv?.toString()}", context),
-            _detailItem(Assets.assetsIcCloudy, "云层覆盖率",
-                "${dailyWeather.cloud?.toString()}%", context),
-            _detailItem(Assets.assetsIcTelescope, "能见度",
-                "${dailyWeather.vis?.toString()}m", context),
-          ]);
+  _detailWidget(BuildContext context, DailyWeather dailyWeather) => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+              "白天 ${dailyWeather.weatherNameDay ?? "--"} / 夜间 ${dailyWeather.weatherNameNight ?? "--"}",
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13.sp,
+                  color: Colors.grey[600])),
+          SizedBox(
+            height: 8.w,
+          ),
+          GridView(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 2.5,
+                  crossAxisSpacing: 10.w,
+                  mainAxisSpacing: 10.w),
+              children: [
+                _detailItem(Assets.assetsIcWater, "湿度",
+                    "${dailyWeather.water?.toString()}%", context),
+                _detailItem(Assets.assetsIcLightRain, "降水量",
+                    "${dailyWeather.precip?.toString()}mm", context),
+                _detailItem(Assets.assetsIcWindmill, "风速",
+                    "${dailyWeather.dayWindSpeed?.toString()}km/h", context),
+                _detailItem(Assets.assetsIcSunHat, "紫外线强度",
+                    "${dailyWeather.uv?.toString()}", context),
+                _detailItem(Assets.assetsIcCloudy, "云层覆盖率",
+                    "${dailyWeather.cloud?.toString()}%", context),
+                _detailItem(Assets.assetsIcTelescope, "能见度",
+                    "${dailyWeather.vis?.toString()}m", context),
+              ])
+        ],
+      );
 
   _detailItem(
           String assets, String title, String value, BuildContext context) =>
@@ -131,11 +142,15 @@ class DailyCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w500),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleMedium
+                        ?.copyWith(fontWeight: FontWeight.w500),
                   ),
                   Text(
                     value,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400, color: Colors.grey[600]),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w400, color: Colors.grey[600]),
                   )
                 ],
               ),
@@ -350,7 +365,8 @@ class _TitleWidgetState extends State<_TitleWidget>
         ),
         Text(
           "${widget.dailyWeather.minTemp?.toString()}℃",
-          style: context.theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w400),
+          style: context.theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.w400),
         ),
         SizedBox(
           width: 12.w,
@@ -386,7 +402,8 @@ class _TitleWidgetState extends State<_TitleWidget>
         ),
         Text(
           "${widget.dailyWeather.maxTemp?.toString()}℃",
-          style: context.theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w400),
+          style: context.theme.textTheme.titleMedium
+              ?.copyWith(fontWeight: FontWeight.w400),
         ),
       ],
     );
