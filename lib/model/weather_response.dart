@@ -450,6 +450,18 @@ class Minutely {
     data['type'] = this.type;
     return data;
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Minutely &&
+          runtimeType == other.runtimeType &&
+          fxTime == other.fxTime &&
+          precip == other.precip &&
+          type == other.type;
+
+  @override
+  int get hashCode => fxTime.hashCode ^ precip.hashCode ^ type.hashCode;
 }
 
 class Air {

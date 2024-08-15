@@ -3,12 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ionicons/ionicons.dart';
+import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/database/database.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/air_desc_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/daily_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/details_card_list_widget.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/precipitation_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 
@@ -42,7 +44,7 @@ class _WeatherPageState extends State<WeatherPage>
         centerTitle: true,
         title: Obx(() {
           return Text((logic.data.isNotEmpty &&
-              logic.pageIndex.value < logic.data.length)
+                  logic.pageIndex.value < logic.data.length)
               ? logic.data[logic.pageIndex.value].name
               : '');
         }),
@@ -154,6 +156,15 @@ class InfoListWidget extends StatelessWidget {
             ],
           )),
     ];
+
+    if (data.weather?.todayWeather?.iconId
+                ?.getWeatherType()
+                .getWeatherAnimType() ==
+            WeatherAnimType.RAIN &&
+        data.weather?.minutely != null) {
+      items.insert(1, PrecipitationCard(weather: data.weather!));
+    }
+
     return ListView.separated(
         physics: physics,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
