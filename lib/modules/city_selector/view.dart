@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
+import '../../model/city_item.dart';
 import 'logic.dart';
 
 class CitySelectorPage extends StatefulWidget {
@@ -56,32 +57,43 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
                 ),
               )),
           Expanded(
-              child: Obx(() => logic.showItems.isNotEmpty
-                  ? ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      padding: EdgeInsets.only(bottom: 20.w),
-                      controller: _scrollerController,
-                      itemBuilder: (context, index) => ListTile(
-                            key: ValueKey(logic.showItems[index].name),
-                            contentPadding:
-                                EdgeInsets.symmetric(horizontal: 22.w),
-                            onTap: () {
-                              // 隐藏键盘
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              logic.onSelectItem(logic.showItems[index]);
-                            },
-                            title: Text(logic.showItems[index].name ?? ""),
-                            subtitle: Text(
-                                "经度:${logic.showItems[index].log}°,纬度:${logic.showItems[index].lat}°"),
-                          ),
-                      separatorBuilder: (context, index) =>
-                          Divider(color: Colors.grey[200], height: 1.w),
-                      itemCount: logic.showItems.length)
+              child: Obx(() => logic.isLoadingState.value == false
+                  ? _listWidget(_scrollerController, logic.showItems)
                   : const Center(
                       child: CircularProgressIndicator(),
                     ))),
         ],
       ),
+    );
+  }
+
+  Widget _listWidget(ScrollController controller, List<CityItem> items) {
+    if (items.isEmpty) {
+      return const Center(
+        child: Text("暂无数据"),
+      );
+    }
+    return ListView.separated(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.only(bottom: 20.w),
+        controller: _scrollerController,
+        itemBuilder: (context, index) => _cityItemWidget(items[index]),
+        separatorBuilder: (context, index) =>
+            Divider(color: Colors.grey[200], height: 1.w),
+        itemCount: items.length);
+  }
+
+  Widget _cityItemWidget(CityItem item) {
+    return ListTile(
+      key: ValueKey(item.name),
+      contentPadding: EdgeInsets.symmetric(horizontal: 22.w),
+      onTap: () {
+        // 隐藏键盘
+        FocusScope.of(context).requestFocus(FocusNode());
+        logic.onSelectItem(item);
+      },
+      title: Text(item.name ?? "--"),
+      subtitle: Text("经度:${item.log}°,纬度:${item.lat}°"),
     );
   }
 

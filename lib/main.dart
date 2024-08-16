@@ -12,22 +12,22 @@ import 'routes/app_pages.dart';
 
 // 佛祖保佑，永无BUG
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Workmanager
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
-  // 定时一小时的同步任务
-  Workmanager().registerPeriodicTask(
-    "task_1",
-    "sync_weather_api_task",
-    frequency: const Duration(hours: 1),
-    initialDelay: const Duration(seconds: 20),
-    existingWorkPolicy: ExistingWorkPolicy.replace,
-    // 网络联通&&电量充足时候进行数据同步
-    constraints: Constraints(
-      networkType: NetworkType.connected,
-      requiresBatteryNotLow: true,
-    ),
-  );
+  // WidgetsFlutterBinding.ensureInitialized();
+  // // Initialize Workmanager
+  // Workmanager().initialize(callbackDispatcher, isInDebugMode: false);
+  // // 定时一小时的同步任务
+  // Workmanager().registerPeriodicTask(
+  //   "task_1",
+  //   "sync_weather_api_task",
+  //   frequency: const Duration(hours: 1),
+  //   initialDelay: const Duration(seconds: 20),
+  //   existingWorkPolicy: ExistingWorkPolicy.replace,
+  //   // 网络联通&&电量充足时候进行数据同步
+  //   constraints: Constraints(
+  //     networkType: NetworkType.connected,
+  //     requiresBatteryNotLow: true,
+  //   ),
+  // );
   runApp(const MyApp());
 }
 

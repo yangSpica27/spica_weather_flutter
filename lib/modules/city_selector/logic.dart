@@ -14,21 +14,26 @@ class CitySelectorLogic extends GetxController {
 
   final showItems = <CityItem>[].obs;
 
+  final isLoadingState = false.obs;
+
   Timer? timer;
 
   @override
   void onReady() async {
     super.onReady();
+    isLoadingState(true);
     _allCityList.addAll(await CityUtils.getAllCityItem());
     showItems.assignAll(_allCityList);
+    isLoadingState(false);
   }
 
   void onSearch(String value) async {
+    isLoadingState(true);
     if (value.isEmpty) {
       showItems.assignAll(_allCityList);
+      isLoadingState(false);
       return;
     }
-
     final list = await compute((message) {
       List<CityItem> list = [];
       for (CityItem item in message) {
@@ -39,6 +44,7 @@ class CitySelectorLogic extends GetxController {
       return list;
     }, _allCityList);
     showItems.assignAll(list);
+    isLoadingState(false);
   }
 
   onSelectItem(CityItem showItem) async {
