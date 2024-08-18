@@ -12,6 +12,7 @@ import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/precipitation_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/warning_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 
 import 'logic.dart';
@@ -156,6 +157,11 @@ class InfoListWidget extends StatelessWidget {
             ],
           )),
     ];
+
+    if (data.weather?.warnings != null &&
+        data.weather?.warnings?.isNotEmpty == true) {
+      items.insert(1, WarningCard(weather: data.weather!));
+    }
 
     if (data.weather?.todayWeather?.iconId
                 ?.getWeatherType()

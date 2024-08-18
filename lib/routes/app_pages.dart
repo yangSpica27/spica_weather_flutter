@@ -8,6 +8,9 @@ import 'package:spica_weather_flutter/modules/splash/view.dart';
 import 'package:spica_weather_flutter/modules/weather/binding.dart';
 import 'package:spica_weather_flutter/modules/weather/view.dart';
 
+import '../modules/alert_detail/binding.dart';
+import '../modules/alert_detail/view.dart';
+
 part 'app_routes.dart';
 
 class AppPages {
@@ -35,6 +38,11 @@ class AppPages {
       name: _Paths.CITY_LIST,
       page: () => const CityListPage(),
       binding: CityListBinding(),
+    ),
+    GetPage(
+      name: _Paths.ALERT_DETAIL,
+      page: () => AlertDetailPage(),
+      binding: AlertDetailBinding(),
     ),
   ];
 }

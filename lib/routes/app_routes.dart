@@ -10,6 +10,8 @@ abstract class Routes {
   static const CITY_SELECTOR = _Paths.CITY_SELECTOR;
 
   static const CITY_LIST = _Paths.CITY_LIST;
+
+  static const ALERT_DETAIL = _Paths.ALERT_DETAIL;
 }
 
 abstract class _Paths {
@@ -22,4 +24,6 @@ abstract class _Paths {
   static const CITY_SELECTOR = '/city_selector';
 
   static const CITY_LIST = '/city_list';
+
+  static const ALERT_DETAIL = '/alert_detail';
 }

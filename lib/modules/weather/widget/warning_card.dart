@@ -14,7 +14,12 @@ class WarningCard extends StatelessWidget {
       return Card(
           child: Padding(
         padding: EdgeInsets.all(15.w),
-        child: const Text("暂无预警信息"),
+        child: const Text.rich(
+          TextSpan(
+            text: '暂无预警信息',
+            style: TextStyle(fontSize: 16),
+          ),
+        ),
       ));
     }
     return Card(

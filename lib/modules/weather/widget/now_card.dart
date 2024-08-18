@@ -60,13 +60,13 @@ class NowCard extends StatelessWidget {
             text: "${weather.todayWeather?.temp ?? 0}",
             style: TextStyle(
                 fontSize: 100.sp,
-                color: Colors.white,
+                color: Colors.white.withOpacity(.9),
                 fontWeight: FontWeight.w500)),
         TextSpan(
             text: "℃",
             style: TextStyle(
                 fontSize: 50.sp,
-                color: Colors.white,
+                color: Colors.white.withOpacity(.89),
                 fontWeight: FontWeight.w400)),
       ]));
 
