@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 class HourlyCard extends StatefulWidget {
   final WeatherResult weather;
@@ -16,10 +17,19 @@ class HourlyCard extends StatefulWidget {
   State<StatefulWidget> createState() => _HourlyCardState();
 }
 
-class _HourlyCardState extends State<HourlyCard> {
+class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
   final ScrollController _scrollController = ScrollController();
 
   double scrollX = 0.0;
+
+  double enterProgress = 0.0;
+
+  final Tween<double> _progressTween = Tween(begin: 0.0, end: 1.0);
+
+  late AnimationController _progressController;
+
+  late final Animation<double> _progressAnimation = _progressTween.animate(
+      CurvedAnimation(parent: _progressController, curve: Curves.decelerate));
 
   @override
   void initState() {
@@ -29,11 +39,18 @@ class _HourlyCardState extends State<HourlyCard> {
         scrollX = _scrollController.offset;
       });
     });
+    _progressController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 800));
+    _progressController.addListener(() {
+      enterProgress = _progressAnimation.value;
+    });
+    _progressController.forward();
   }
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _progressController.dispose();
     super.dispose();
   }
 
@@ -54,10 +71,13 @@ class _HourlyCardState extends State<HourlyCard> {
           SizedBox(
             height: 4.w,
           ),
-          Text(
-            "${widget.weather.descriptionForToday}",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
+          EnterPageAnimWidget(
+              startOffset: ui.Offset(0, -4.w),
+              delay: const Duration(milliseconds: 350),
+              child: Text(
+                "${widget.weather.descriptionForToday}",
+                style: Theme.of(context).textTheme.bodyMedium,
+              )),
           SizedBox(
             height: 12.w,
           ),
@@ -66,18 +86,21 @@ class _HourlyCardState extends State<HourlyCard> {
               : SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
-                  child: CustomPaint(
-                    key: ValueKey(widget.weather.hourlyWeather?.hashCode),
-                    size: Size(
-                        60.w * (widget.weather.hourlyWeather?.length ?? 0),
-                        160.w),
-                    painter: _LinePainter(
-                        scrollX: scrollX,
-                        data: widget.weather.hourlyWeather ?? [],
-                        themeColor: widget.weather.todayWeather?.iconId
-                                ?.getWeatherColor() ??
-                            Colors.blue[500]!),
-                  ),
+                  child: AnimatedBuilder(
+                      animation: _progressAnimation,
+                      builder: (c, w) => CustomPaint(
+                            size: Size(
+                                60.w *
+                                    (widget.weather.hourlyWeather?.length ?? 0),
+                                160.w),
+                            painter: _LinePainter(
+                                progress: enterProgress,
+                                scrollX: scrollX,
+                                data: widget.weather.hourlyWeather ?? [],
+                                themeColor: widget.weather.todayWeather?.iconId
+                                        ?.getWeatherColor() ??
+                                    Colors.blue[500]!),
+                          )),
                 )
         ],
       ),
@@ -102,6 +125,9 @@ class _LinePainter extends CustomPainter {
 
   Path path2 = Path();
 
+  // 动画进度
+  double progress = 0.0;
+
   // 锚点X轴承位置
   List<double> xPoints = [];
 
@@ -122,7 +148,10 @@ class _LinePainter extends CustomPainter {
   double scrollX = 0.0;
 
   _LinePainter(
-      {required this.data, required this.themeColor, required this.scrollX})
+      {required this.data,
+      required this.themeColor,
+      required this.scrollX,
+      required this.progress})
       : super() {
     if (data.isNotEmpty) {
       minTemp = data.first.temp!;
@@ -139,8 +168,9 @@ class _LinePainter extends CustomPainter {
       yPoints.add(topLinePadding +
           lineHeight -
           ((value.temp! - minTemp).toDouble() /
-              (maxTemp - minTemp).toDouble() *
-              lineHeight.toDouble()));
+                  (maxTemp - minTemp).toDouble() *
+                  lineHeight.toDouble()) *
+              progress);
 
       yPoints2.add(lineHeight + bottomLinePadding);
       colors.add(value.iconId?.getWeatherColor() ?? Colors.blue[500]!);
@@ -244,7 +274,7 @@ class _LinePainter extends CustomPainter {
       canvas.drawRRect(
           ui.RRect.fromLTRBR(
               xPoints[i] - itemWidth / 4,
-              yPoints2[i] - ((data[i].pop ?? 0) / 100) * 50.w,
+              yPoints2[i] - ((data[i].pop ?? 0) / 100) * 50.w * progress,
               xPoints[i] + itemWidth / 4,
               yPoints2[i],
               const ui.Radius.circular(4)),
@@ -272,7 +302,7 @@ class _LinePainter extends CustomPainter {
           Offset(
               xPoints[i] - textPaint2.width / 2,
               yPoints2[i] -
-                  ((data[i].pop ?? 0) / 100) * 50.w -
+                  ((data[i].pop ?? 0) / 100) * 50.w * progress -
                   textPaint2.height -
                   4.w));
     }
@@ -337,5 +367,7 @@ class _LinePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant _LinePainter oldDelegate) =>
-      (oldDelegate.data != data) || (scrollX != oldDelegate.scrollX);
+      (oldDelegate.data != data) ||
+      (scrollX != oldDelegate.scrollX) ||
+      (progress != oldDelegate.progress);
 }

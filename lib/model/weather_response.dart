@@ -13,9 +13,9 @@ class WeatherResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['code'] = this.code;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['code'] = code;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -83,67 +83,67 @@ class WeatherResult {
 
   WeatherResult.fromJson(Map<String, dynamic> json) {
     todayWeather = json['todayWeather'] != null
-        ? new TodayWeather.fromJson(json['todayWeather'])
+        ? TodayWeather.fromJson(json['todayWeather'])
         : null;
     if (json['dailyWeather'] != null) {
       dailyWeather = <DailyWeather>[];
       json['dailyWeather'].forEach((v) {
-        dailyWeather!.add(new DailyWeather.fromJson(v));
+        dailyWeather!.add(DailyWeather.fromJson(v));
       });
     }
     if (json['hourlyWeather'] != null) {
       hourlyWeather = <HourlyWeather>[];
       json['hourlyWeather'].forEach((v) {
-        hourlyWeather!.add(new HourlyWeather.fromJson(v));
+        hourlyWeather!.add(HourlyWeather.fromJson(v));
       });
     }
     if (json['lifeIndexes'] != null) {
       lifeIndexes = <LifeIndexes>[];
       json['lifeIndexes'].forEach((v) {
-        lifeIndexes!.add(new LifeIndexes.fromJson(v));
+        lifeIndexes!.add(LifeIndexes.fromJson(v));
       });
     }
     if (json['minutely'] != null) {
       minutely = <Minutely>[];
       json['minutely'].forEach((v) {
-        minutely!.add(new Minutely.fromJson(v));
+        minutely!.add(Minutely.fromJson(v));
       });
     }
     if (json['warnings'] != null) {
       warnings = <Warning>[];
       json['warnings'].forEach((v) {
-        warnings?.add(new Warning.fromJson(v));
+        warnings?.add(Warning.fromJson(v));
       });
     }
-    air = json['air'] != null ? new Air.fromJson(json['air']) : null;
+    air = json['air'] != null ? Air.fromJson(json['air']) : null;
     descriptionForToday = json['descriptionForToday'];
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.todayWeather != null) {
-      data['todayWeather'] = this.todayWeather!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (todayWeather != null) {
+      data['todayWeather'] = todayWeather!.toJson();
     }
-    if (this.dailyWeather != null) {
-      data['dailyWeather'] = this.dailyWeather!.map((v) => v.toJson()).toList();
+    if (dailyWeather != null) {
+      data['dailyWeather'] = dailyWeather!.map((v) => v.toJson()).toList();
     }
-    if (this.hourlyWeather != null) {
+    if (hourlyWeather != null) {
       data['hourlyWeather'] =
-          this.hourlyWeather!.map((v) => v.toJson()).toList();
+          hourlyWeather!.map((v) => v.toJson()).toList();
     }
-    if (this.lifeIndexes != null) {
-      data['lifeIndexes'] = this.lifeIndexes!.map((v) => v.toJson()).toList();
+    if (lifeIndexes != null) {
+      data['lifeIndexes'] = lifeIndexes!.map((v) => v.toJson()).toList();
     }
-    if (this.minutely != null) {
-      data['minutely'] = this.minutely!.map((v) => v.toJson()).toList();
+    if (minutely != null) {
+      data['minutely'] = minutely!.map((v) => v.toJson()).toList();
     }
-    if (this.air != null) {
-      data['air'] = this.air!.toJson();
+    if (air != null) {
+      data['air'] = air!.toJson();
     }
-    if (this.warnings != null) {
-      data['warnings'] = this.warnings!.map((v) => v.toJson()).toList();
+    if (warnings != null) {
+      data['warnings'] = warnings!.map((v) => v.toJson()).toList();
     }
-    data['descriptionForToday'] = this.descriptionForToday;
+    data['descriptionForToday'] = descriptionForToday;
     return data;
   }
 
@@ -169,11 +169,11 @@ class Warning {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['sender'] = this.sender;
-    data['title'] = this.title;
-    data['text'] = this.text;
-    data['startTime'] = this.startTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['sender'] = sender;
+    data['title'] = title;
+    data['text'] = text;
+    data['startTime'] = startTime;
     return data;
   }
 
@@ -216,14 +216,14 @@ class TodayWeather {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['temp'] = this.temp;
-    data['feelTemp'] = this.feelTemp;
-    data['iconId'] = this.iconId;
-    data['windSpeed'] = this.windSpeed;
-    data['water'] = this.water;
-    data['windPa'] = this.windPa;
-    data['weatherName'] = this.weatherName;
-    data['obsTime'] = this.obsTime;
+    data['temp'] = temp;
+    data['feelTemp'] = feelTemp;
+    data['iconId'] = iconId;
+    data['windSpeed'] = windSpeed;
+    data['water'] = water;
+    data['windPa'] = windPa;
+    data['weatherName'] = weatherName;
+    data['obsTime'] = obsTime;
     return data;
   }
 
@@ -304,28 +304,28 @@ class DailyWeather {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['maxTemp'] = this.maxTemp;
-    data['minTemp'] = this.minTemp;
-    data['iconId'] = this.iconId;
-    data['winSpeed'] = this.winSpeed;
-    data['water'] = this.water;
-    data['windPa'] = this.windPa;
-    data['weatherNameDay'] = this.weatherNameDay;
-    data['precip'] = this.precip;
-    data['sunriseDate'] = this.sunriseDate;
-    data['sunsetDate'] = this.sunsetDate;
-    data['moonParse'] = this.moonParse;
-    data['dayWindDir'] = this.dayWindDir;
-    data['dayWindSpeed'] = this.dayWindSpeed;
-    data['nightWindSpeed'] = this.nightWindSpeed;
-    data['nightWindDir'] = this.nightWindDir;
-    data['weatherNameNight'] = this.weatherNameNight;
-    data['pressure'] = this.pressure;
-    data['uv'] = this.uv;
-    data['vis'] = this.vis;
-    data['cloud'] = this.cloud;
-    data['fxTime'] = this.fxTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['maxTemp'] = maxTemp;
+    data['minTemp'] = minTemp;
+    data['iconId'] = iconId;
+    data['winSpeed'] = winSpeed;
+    data['water'] = water;
+    data['windPa'] = windPa;
+    data['weatherNameDay'] = weatherNameDay;
+    data['precip'] = precip;
+    data['sunriseDate'] = sunriseDate;
+    data['sunsetDate'] = sunsetDate;
+    data['moonParse'] = moonParse;
+    data['dayWindDir'] = dayWindDir;
+    data['dayWindSpeed'] = dayWindSpeed;
+    data['nightWindSpeed'] = nightWindSpeed;
+    data['nightWindDir'] = nightWindDir;
+    data['weatherNameNight'] = weatherNameNight;
+    data['pressure'] = pressure;
+    data['uv'] = uv;
+    data['vis'] = vis;
+    data['cloud'] = cloud;
+    data['fxTime'] = fxTime;
     return data;
   }
 }
@@ -367,15 +367,15 @@ class HourlyWeather {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['temp'] = this.temp;
-    data['iconId'] = this.iconId;
-    data['windSpeed'] = this.windSpeed;
-    data['water'] = this.water;
-    data['windPa'] = this.windPa;
-    data['weatherName'] = this.weatherName;
-    data['pop'] = this.pop;
-    data['fxTime'] = this.fxTime;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['temp'] = temp;
+    data['iconId'] = iconId;
+    data['windSpeed'] = windSpeed;
+    data['water'] = water;
+    data['windPa'] = windPa;
+    data['weatherName'] = weatherName;
+    data['pop'] = pop;
+    data['fxTime'] = fxTime;
     return data;
   }
 
@@ -421,11 +421,11 @@ class LifeIndexes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['name'] = this.name;
-    data['category'] = this.category;
-    data['text'] = this.text;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['name'] = name;
+    data['category'] = category;
+    data['text'] = text;
     return data;
   }
 }
@@ -444,10 +444,10 @@ class Minutely {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['fxTime'] = this.fxTime;
-    data['precip'] = this.precip;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['fxTime'] = fxTime;
+    data['precip'] = precip;
+    data['type'] = type;
     return data;
   }
 
@@ -502,17 +502,17 @@ class Air {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['aqi'] = this.aqi;
-    data['category'] = this.category;
-    data['primary'] = this.primary;
-    data['pm10'] = this.pm10;
-    data['pm2p5'] = this.pm2p5;
-    data['no2'] = this.no2;
-    data['so2'] = this.so2;
-    data['co'] = this.co;
-    data['o3'] = this.o3;
-    data['fxLink'] = this.fxLink;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['aqi'] = aqi;
+    data['category'] = category;
+    data['primary'] = primary;
+    data['pm10'] = pm10;
+    data['pm2p5'] = pm2p5;
+    data['no2'] = no2;
+    data['so2'] = so2;
+    data['co'] = co;
+    data['o3'] = o3;
+    data['fxLink'] = fxLink;
     return data;
   }
 }

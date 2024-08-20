@@ -7,7 +7,7 @@ import 'package:spica_weather_flutter/modules/weather/widget/weather_anim_widget
 
 /// 天气动画视图[雪]
 class SnowView extends StatefulWidget {
-  const SnowView({required this.width, required this.height});
+  const SnowView({super.key, required this.width, required this.height});
 
   final double width;
 

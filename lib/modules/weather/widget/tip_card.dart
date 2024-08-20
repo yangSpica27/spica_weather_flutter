@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/fixed_grid_view/fixed_height_grid_view.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 import '../../../model/weather_response.dart';
 
@@ -37,10 +38,15 @@ class TipCard extends StatelessWidget {
                 itemCount: weather.lifeIndexes?.length ?? 0,
                 builder: (context, index) {
                   final item = weather.lifeIndexes![index];
-                  return _TipItemWidget(
-                      title: item.name ?? "", subtitle: item.category ?? "");
-                }
-            ),
+                  return EnterPageAnimWidget(
+                      delay: Duration(milliseconds: 150 * index),
+                      startOpacity: 0,
+                      duration: const Duration(milliseconds: 300),
+                      startOffset: Offset(12.w, 0),
+                      child: _TipItemWidget(
+                          title: item.name ?? "",
+                          subtitle: item.category ?? ""));
+                }),
           ],
         ),
       ),
@@ -50,8 +56,7 @@ class TipCard extends StatelessWidget {
 
 /// 生活指数ItemWidget
 class _TipItemWidget extends StatelessWidget {
-  const _TipItemWidget(
-      {super.key, required this.title, required this.subtitle});
+  const _TipItemWidget({required this.title, required this.subtitle});
 
   final String title;
 
@@ -69,7 +74,10 @@ class _TipItemWidget extends StatelessWidget {
         children: [
           Text(
             title,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Colors.grey[900]),
+            style: Theme.of(context)
+                .textTheme
+                .titleMedium
+                ?.copyWith(color: Colors.grey[900]),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -79,7 +87,10 @@ class _TipItemWidget extends StatelessWidget {
           ),
           Text(
             subtitle,
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context)
+                .textTheme
+                .bodyMedium
+                ?.copyWith(color: Colors.grey[600]),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           )

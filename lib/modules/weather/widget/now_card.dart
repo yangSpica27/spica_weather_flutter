@@ -4,6 +4,7 @@ import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/generated/assets.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/weather_anim_view.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 /// 当前天气卡片
 class NowCard extends StatelessWidget {
@@ -40,11 +41,23 @@ class NowCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                _tempWidget(),
+                EnterPageAnimWidget(
+                    startOffset: Offset(0, -30.w),
+                    endOffset: const Offset(0, 0),
+                    duration: const Duration(milliseconds: 750),
+                    child: _tempWidget()),
                 SizedBox(height: 12.w),
-                _descWidget(),
+                EnterPageAnimWidget(
+                    startOffset: Offset(0, -15.w),
+                    endOffset: const Offset(0, 0),
+                    duration: const Duration(milliseconds: 850),
+                    child: _descWidget()),
                 SizedBox(height: 22.w),
-                _bottomBar()
+                EnterPageAnimWidget(
+                    startOffset: Offset(0, -10.w),
+                    endOffset: const Offset(0, 0),
+                    duration: const Duration(milliseconds: 1050),
+                    child: _bottomBar()),
               ],
             ),
           )

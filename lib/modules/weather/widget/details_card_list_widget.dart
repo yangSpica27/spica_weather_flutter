@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:spica_weather_flutter/model/weather_response.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 /// 补充信息
 class DetailsCardListWidget extends StatelessWidget {
@@ -231,48 +232,60 @@ class ItemWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            Text.rich(TextSpan(children: [
-              WidgetSpan(
-                  child: Icon(
-                    icon,
-                    size: 14.w,
-                    color: Colors.black54,
+            EnterPageAnimWidget(
+              duration: const Duration(milliseconds: 650),
+              startOffset: ui.Offset(12.w, 0.w),
+              child: Text.rich(TextSpan(children: [
+                WidgetSpan(
+                    child: Icon(
+                      icon,
+                      size: 14.w,
+                      color: Colors.black54,
+                    ),
+                    alignment: PlaceholderAlignment.middle),
+                const WidgetSpan(
+                  child: SizedBox(
+                    width: 2,
                   ),
-                  alignment: PlaceholderAlignment.middle),
-              const WidgetSpan(
-                child: SizedBox(
-                  width: 2,
                 ),
-              ),
-              TextSpan(
-                  text: title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Colors.black54,
-                      )),
-            ])),
+                TextSpan(
+                    text: title,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.black54,
+                        )),
+              ])),
+            ),
             SizedBox(
               height: 6.w,
             ),
             value == ""
                 ? const SizedBox()
-                : Text(
-                    value,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: Colors.black87,
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
+                : EnterPageAnimWidget(
+                    delay: const Duration(milliseconds: 550),
+                    duration: const Duration(milliseconds: 550),
+                    startOffset: ui.Offset(0, 2.w),
+                    child: Text(
+                      value,
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            color: Colors.black87,
+                            fontWeight: FontWeight.w500,
+                          ),
+                    )),
             needSpacer ? const Spacer() : const SizedBox(),
             bottomWidget == null ? const SizedBox() : bottomWidget!,
-            Text(
-              value2,
-              maxLines: 4,
-              softWrap: true,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.black54,
-                    overflow: TextOverflow.ellipsis,
-                    fontWeight: FontWeight.normal,
-                  ),
+            EnterPageAnimWidget(
+              duration: const Duration(milliseconds: 950),
+              startOffset: ui.Offset(12.w, 0),
+              child: Text(
+                value2,
+                maxLines: 4,
+                softWrap: true,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.black54,
+                      overflow: TextOverflow.ellipsis,
+                      fontWeight: FontWeight.normal,
+                    ),
+              ),
             )
           ],
         ),

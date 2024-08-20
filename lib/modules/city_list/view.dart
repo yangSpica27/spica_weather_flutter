@@ -95,7 +95,8 @@ class _CityListPageState extends State<CityListPage> {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         decoration: BoxDecoration(
-            color: Colors.grey[200], borderRadius: BorderRadius.circular(8)),
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(8)),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         child: InkWell(
           onTap: onTap,
@@ -229,8 +230,8 @@ class _ItemCity extends StatelessWidget {
                   border: Border.all(
                       color: isSort ? Colors.grey[500]! : Colors.transparent),
                   color:
-                      item.weather?.todayWeather?.iconId?.getWeatherColor() ??
-                          Colors.blue[500],
+                  item.weather?.todayWeather?.iconId?.getWeatherColor() ??
+                      Colors.blue[500],
                   borderRadius: const BorderRadius.all(Radius.circular(8))),
               child: Row(mainAxisSize: MainAxisSize.max, children: [
                 Column(
@@ -240,33 +241,35 @@ class _ItemCity extends StatelessWidget {
                     Text.rich(TextSpan(
                       children: isLocation
                           ? [
-                              WidgetSpan(
-                                  child: Icon(
-                                Icons.location_on,
+                        WidgetSpan(
+                            child: Icon(
+                              Icons.location_on,
+                              color: Colors.white,
+                              size: 20.sp,
+                            )),
+                        WidgetSpan(
+                            child: SizedBox(
+                              width: 8.w,
+                            )),
+                        TextSpan(
+                            text: item.name,
+                            style: context
+                                .theme.textTheme.headlineSmall
+                                ?.copyWith(
                                 color: Colors.white,
-                                size: 20.sp,
-                              )),
-                              WidgetSpan(
-                                  child: SizedBox(
-                                width: 8.w,
-                              )),
-                              TextSpan(
-                                  text: item.name,
-                                  style: context.theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.w500))
-                            ]
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500))
+                      ]
                           : [
-                              TextSpan(
-                                  text: item.name,
-                                  style: context.theme.textTheme.headlineSmall
-                                      ?.copyWith(
-                                          color: Colors.white,
-                                          fontSize: 20.sp,
-                                          fontWeight: FontWeight.w500))
-                            ],
+                        TextSpan(
+                            text: item.name,
+                            style: context
+                                .theme.textTheme.headlineSmall
+                                ?.copyWith(
+                                color: Colors.white,
+                                fontSize: 20.sp,
+                                fontWeight: FontWeight.w500))
+                      ],
                     )),
                     const SizedBox(
                       height: 8,
@@ -289,7 +292,8 @@ class _ItemCity extends StatelessWidget {
                 ),
               ]),
             ),
-          )),
+          )
+      ),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:spica_weather_flutter/modules/weather/widget/precipitation_card.
 import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/warning_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 import 'logic.dart';
 
@@ -122,6 +123,7 @@ class InfoListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final items = [
       NowCard(
+        key: UniqueKey(),
         weather: data.weather!,
       ),
       HourlyCard(weather: data.weather!),
@@ -129,33 +131,37 @@ class InfoListWidget extends StatelessWidget {
       AirDescCard(weather: data.weather!),
       DetailsCardListWidget(weather: data.weather!),
       TipCard(weather: data.weather!),
-      RichText(
-          textAlign: TextAlign.center,
-          text: const TextSpan(
-            children: [
-              TextSpan(text: "数据来源于", style: TextStyle(color: Colors.black87)),
-              WidgetSpan(
-                  child: SizedBox(
-                width: 8,
-              )),
-              WidgetSpan(
-                child: Icon(
-                  Ionicons.cloud_circle,
-                  size: 15,
-                ),
-                alignment: PlaceholderAlignment.middle,
-              ),
-              WidgetSpan(
-                  child: SizedBox(
-                width: 2,
-              )),
-              TextSpan(
-                text: "和风天气",
-                style: TextStyle(
-                    color: Colors.black87, fontWeight: FontWeight.w600),
-              ),
-            ],
-          )),
+      EnterPageAnimWidget(
+          startOffset: Offset(0, -8.w),
+          delay: const Duration(milliseconds: 200),
+          child: RichText(
+              textAlign: TextAlign.center,
+              text: const TextSpan(
+                children: [
+                  TextSpan(
+                      text: "数据来源于", style: TextStyle(color: Colors.black87)),
+                  WidgetSpan(
+                      child: SizedBox(
+                    width: 8,
+                  )),
+                  WidgetSpan(
+                    child: Icon(
+                      Ionicons.cloud_circle,
+                      size: 15,
+                    ),
+                    alignment: PlaceholderAlignment.middle,
+                  ),
+                  WidgetSpan(
+                      child: SizedBox(
+                    width: 2,
+                  )),
+                  TextSpan(
+                    text: "和风天气",
+                    style: TextStyle(
+                        color: Colors.black87, fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ))),
     ];
 
     if (data.weather?.warnings != null &&

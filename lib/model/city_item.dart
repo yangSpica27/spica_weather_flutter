@@ -22,12 +22,12 @@ class Province {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['log'] = this.log;
-    data['lat'] = this.lat;
-    if (this.children != null) {
-      data['children'] = this.children!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['log'] = log;
+    data['lat'] = lat;
+    if (children != null) {
+      data['children'] = children!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -53,11 +53,11 @@ class CityItem {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['log'] = this.log;
-    data['lat'] = this.lat;
-    data['weather'] = this.weather;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['name'] = name;
+    data['log'] = log;
+    data['lat'] = lat;
+    data['weather'] = weather;
     return data;
   }
 

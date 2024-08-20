@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// 天气动画视图[雾]
 class FogView extends StatefulWidget {
-  const FogView({required this.width, required this.height});
+  const FogView({super.key, required this.width, required this.height});
 
   final double width;
 
