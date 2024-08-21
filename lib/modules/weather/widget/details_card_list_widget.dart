@@ -16,19 +16,31 @@ class DetailsCardListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = <Widget>[
-      UvCard(
-        uv: double.tryParse(weather.dailyWeather?.first.uv ?? "0xFF"),
-      ),
-      HumidnessCard(
-        humidness: weather.todayWeather?.water,
-      ),
-      FeelCard(
-        feelTemp: weather.todayWeather?.feelTemp,
-      ),
-      SunriseCard(
-        sunrise: weather.dailyWeather?.first.sunriseDate,
-        sunSet: weather.dailyWeather?.first.sunsetDate,
-      )
+      EnterPageAnimWidget(
+          startScale: 0,
+          duration: const Duration(milliseconds: 1200),
+          child: UvCard(
+            uv: double.tryParse(weather.dailyWeather?.first.uv ?? "0xFF"),
+          )),
+      EnterPageAnimWidget(
+          startScale: 0,
+          duration: const Duration(milliseconds: 800),
+          child: HumidnessCard(
+            humidness: weather.todayWeather?.water,
+          )),
+      EnterPageAnimWidget(
+          startScale: 0,
+          duration: const Duration(milliseconds: 650),
+          child: FeelCard(
+            feelTemp: weather.todayWeather?.feelTemp,
+          )),
+      EnterPageAnimWidget(
+          startScale: 0,
+          duration: const Duration(milliseconds: 850),
+          child: SunriseCard(
+            sunrise: weather.dailyWeather?.first.sunriseDate,
+            sunSet: weather.dailyWeather?.first.sunsetDate,
+          ))
     ];
     // return Container();
 
@@ -234,6 +246,7 @@ class ItemWidget extends StatelessWidget {
           children: <Widget>[
             EnterPageAnimWidget(
               duration: const Duration(milliseconds: 650),
+              delay: const Duration(milliseconds: 150),
               startOffset: ui.Offset(12.w, 0.w),
               child: Text.rich(TextSpan(children: [
                 WidgetSpan(
@@ -261,7 +274,7 @@ class ItemWidget extends StatelessWidget {
             value == ""
                 ? const SizedBox()
                 : EnterPageAnimWidget(
-                    delay: const Duration(milliseconds: 550),
+                    delay: const Duration(milliseconds: 250),
                     duration: const Duration(milliseconds: 550),
                     startOffset: ui.Offset(0, 2.w),
                     child: Text(
@@ -275,6 +288,7 @@ class ItemWidget extends StatelessWidget {
             bottomWidget == null ? const SizedBox() : bottomWidget!,
             EnterPageAnimWidget(
               duration: const Duration(milliseconds: 950),
+              delay: const Duration(milliseconds: 550),
               startOffset: ui.Offset(12.w, 0),
               child: Text(
                 value2,

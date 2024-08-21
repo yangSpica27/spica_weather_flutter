@@ -12,7 +12,9 @@ class EnterPageAnimWidget extends StatefulWidget {
       this.startOpacity,
       this.endOpacity,
       this.duration,
-        this.delay});
+      this.startScale = 1.0,
+      this.endScale = 1.0,
+      this.delay});
 
   final Offset? startOffset;
 
@@ -27,6 +29,10 @@ class EnterPageAnimWidget extends StatefulWidget {
   final Widget child;
 
   final Duration? delay;
+
+  final double startScale;
+
+  final double endScale;
 
   @override
   State<EnterPageAnimWidget> createState() => _EnterPageAnimWidgetState();
@@ -60,6 +66,13 @@ class _EnterPageAnimWidgetState extends State<EnterPageAnimWidget>
     ),
   );
 
+  late final _scaleAnimation =
+      Tween<double>(begin: widget.startScale, end: widget.endScale)
+          .animate(CurvedAnimation(
+    parent: _controller,
+    curve: Curves.easeInOutBack,
+  ));
+
   late final Timer _timer;
 
   @override
@@ -82,33 +95,16 @@ class _EnterPageAnimWidgetState extends State<EnterPageAnimWidget>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return Opacity(
-          opacity: _opacityAnimation.value,
-          child: Transform.translate(
-            offset: _offsetAnimation.value,
-            child: widget.child,
-          ),
-        );
+        return Transform.scale(
+            scale: _scaleAnimation.value,
+            child: Opacity(
+              opacity: _opacityAnimation.value,
+              child: Transform.translate(
+                offset: _offsetAnimation.value,
+                child: widget.child,
+              ),
+            ));
       },
-    );
-  }
-}
-
-extension EnterPageAnimWidgetExt on Widget {
-  Widget enterPageAnim({
-    Offset? startOffset,
-    Offset? endOffset,
-    Duration? duration,
-    double? startOpacity,
-    double? endOpacity,
-  }) {
-    return EnterPageAnimWidget(
-      startOffset: startOffset,
-      endOffset: endOffset,
-      duration: duration,
-      startOpacity: startOpacity,
-      endOpacity: endOpacity,
-      child: this,
     );
   }
 }
