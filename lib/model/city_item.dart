@@ -1,4 +1,5 @@
-import 'package:geolocator/geolocator.dart';
+
+
 
 /// json文件对象
 class Province {
@@ -66,9 +67,7 @@ class CityItem {
     return 'CityItem{name: $name, log: $log, lat: $lat, weather: $weather}';
   }
 
-  // 获取到位置的距离
-  double distance(double latitude, double longitude) {
-    return Geolocator.distanceBetween(latitude, longitude,
-        double.tryParse(lat ?? "") ?? 0, double.tryParse(log ?? "") ?? 0);
-  }
+
+
+
 }

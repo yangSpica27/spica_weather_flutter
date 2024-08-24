@@ -12,9 +12,13 @@
         android:name="${applicationName}"
         android:icon="@drawable/app"
         android:label="柠檬天气flutter版">
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="tvXtsjpPUPY0Ow16z27m0vOpJRKdeZzL" />
         <meta-data
             android:name="io.flutter.embedding.android.EnableImpeller"
-            android:value="true" />
+            android:value="false" />
         <activity
             android:name=".MainActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"

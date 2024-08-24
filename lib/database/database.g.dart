@@ -386,61 +386,6 @@ typedef $$CityTableUpdateCompanionBuilder = CityCompanion Function({
   Value<int> rowid,
 });
 
-class $$CityTableTableManager extends RootTableManager<
-    _$AppDatabase,
-    $CityTable,
-    CityData,
-    $$CityTableFilterComposer,
-    $$CityTableOrderingComposer,
-    $$CityTableCreateCompanionBuilder,
-    $$CityTableUpdateCompanionBuilder> {
-  $$CityTableTableManager(_$AppDatabase db, $CityTable table)
-      : super(TableManagerState(
-          db: db,
-          table: table,
-          filteringComposer:
-              $$CityTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$CityTableOrderingComposer(ComposerState(db, table)),
-          updateCompanionCallback: ({
-            Value<String> name = const Value.absent(),
-            Value<String> lat = const Value.absent(),
-            Value<String> lon = const Value.absent(),
-            Value<BigInt> sort = const Value.absent(),
-            Value<bool> isLocation = const Value.absent(),
-            Value<WeatherResult?> weather = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              CityCompanion(
-            name: name,
-            lat: lat,
-            lon: lon,
-            sort: sort,
-            isLocation: isLocation,
-            weather: weather,
-            rowid: rowid,
-          ),
-          createCompanionCallback: ({
-            required String name,
-            required String lat,
-            required String lon,
-            required BigInt sort,
-            required bool isLocation,
-            Value<WeatherResult?> weather = const Value.absent(),
-            Value<int> rowid = const Value.absent(),
-          }) =>
-              CityCompanion.insert(
-            name: name,
-            lat: lat,
-            lon: lon,
-            sort: sort,
-            isLocation: isLocation,
-            weather: weather,
-            rowid: rowid,
-          ),
-        ));
-}
-
 class $$CityTableFilterComposer
     extends FilterComposer<_$AppDatabase, $CityTable> {
   $$CityTableFilterComposer(super.$state);
@@ -510,6 +455,80 @@ class $$CityTableOrderingComposer
       builder: (column, joinBuilders) =>
           ColumnOrderings(column, joinBuilders: joinBuilders));
 }
+
+class $$CityTableTableManager extends RootTableManager<
+    _$AppDatabase,
+    $CityTable,
+    CityData,
+    $$CityTableFilterComposer,
+    $$CityTableOrderingComposer,
+    $$CityTableCreateCompanionBuilder,
+    $$CityTableUpdateCompanionBuilder,
+    (CityData, BaseReferences<_$AppDatabase, $CityTable, CityData>),
+    CityData,
+    PrefetchHooks Function()> {
+  $$CityTableTableManager(_$AppDatabase db, $CityTable table)
+      : super(TableManagerState(
+          db: db,
+          table: table,
+          filteringComposer:
+              $$CityTableFilterComposer(ComposerState(db, table)),
+          orderingComposer:
+              $$CityTableOrderingComposer(ComposerState(db, table)),
+          updateCompanionCallback: ({
+            Value<String> name = const Value.absent(),
+            Value<String> lat = const Value.absent(),
+            Value<String> lon = const Value.absent(),
+            Value<BigInt> sort = const Value.absent(),
+            Value<bool> isLocation = const Value.absent(),
+            Value<WeatherResult?> weather = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CityCompanion(
+            name: name,
+            lat: lat,
+            lon: lon,
+            sort: sort,
+            isLocation: isLocation,
+            weather: weather,
+            rowid: rowid,
+          ),
+          createCompanionCallback: ({
+            required String name,
+            required String lat,
+            required String lon,
+            required BigInt sort,
+            required bool isLocation,
+            Value<WeatherResult?> weather = const Value.absent(),
+            Value<int> rowid = const Value.absent(),
+          }) =>
+              CityCompanion.insert(
+            name: name,
+            lat: lat,
+            lon: lon,
+            sort: sort,
+            isLocation: isLocation,
+            weather: weather,
+            rowid: rowid,
+          ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ));
+}
+
+typedef $$CityTableProcessedTableManager = ProcessedTableManager<
+    _$AppDatabase,
+    $CityTable,
+    CityData,
+    $$CityTableFilterComposer,
+    $$CityTableOrderingComposer,
+    $$CityTableCreateCompanionBuilder,
+    $$CityTableUpdateCompanionBuilder,
+    (CityData, BaseReferences<_$AppDatabase, $CityTable, CityData>),
+    CityData,
+    PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;

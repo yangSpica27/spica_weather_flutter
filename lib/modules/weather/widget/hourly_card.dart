@@ -63,7 +63,7 @@ class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "小时别天气信息",
+            "小时级别天气信息",
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: widget.weather.todayWeather?.iconId?.getWeatherColor() ??
                     Colors.blue[500]),
