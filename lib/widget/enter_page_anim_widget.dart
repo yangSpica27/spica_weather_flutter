@@ -92,19 +92,21 @@ class _EnterPageAnimWidgetState extends State<EnterPageAnimWidget>
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: _controller,
-      builder: (context, child) {
-        return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: Opacity(
-              opacity: _opacityAnimation.value,
-              child: Transform.translate(
-                offset: _offsetAnimation.value,
-                child: widget.child,
-              ),
-            ));
-      },
+    return RepaintBoundary(
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.scale(
+              scale: _scaleAnimation.value,
+              child: Opacity(
+                opacity: _opacityAnimation.value,
+                child: Transform.translate(
+                  offset: _offsetAnimation.value,
+                  child: widget.child,
+                ),
+              ));
+        },
+      ),
     );
   }
 }

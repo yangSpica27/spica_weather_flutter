@@ -26,13 +26,15 @@ class NowCard extends StatelessWidget {
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(8.w),
                   topRight: Radius.circular(8.w)),
-              child: WeatherAnimView(
-                  weather.todayWeather?.iconId
-                          ?.getWeatherType()
-                          .getWeatherAnimType() ??
-                      WeatherAnimType.UNKNOWN,
-                  width: ScreenUtil().screenWidth - 32.w,
-                  height: 310.w),
+              child: RepaintBoundary(
+                child: WeatherAnimView(
+                    weather.todayWeather?.iconId
+                        ?.getWeatherType()
+                        .getWeatherAnimType() ??
+                        WeatherAnimType.UNKNOWN,
+                    width: ScreenUtil().screenWidth - 32.w,
+                    height: 310.w),
+              ),
             ),
           ),
           Padding(

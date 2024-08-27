@@ -49,7 +49,6 @@ dependencies:
   geolocator: ^12.0.0
   workmanager: ^0.5.2
 
-
 dev_dependencies:
   flutter_test:
     sdk: flutter
