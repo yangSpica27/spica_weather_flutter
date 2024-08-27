@@ -29,7 +29,7 @@ void main() {
   //     requiresBatteryNotLow: true,
   //   ),
   // );
-  debugRepaintRainbowEnabled = true;
+  // debugRepaintRainbowEnabled = true;
   runApp(const MyApp());
 }
 
