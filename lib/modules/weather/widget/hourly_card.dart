@@ -72,7 +72,7 @@ class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
             height: 4.w,
           ),
           EnterPageAnimWidget(
-              startOffset: ui.Offset(0, -4.w),
+              startOffset: const ui.Offset(0, -.5),
               delay: const Duration(milliseconds: 350),
               child: Text(
                 "${widget.weather.descriptionForToday}",

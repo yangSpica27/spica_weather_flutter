@@ -247,7 +247,7 @@ class ItemWidget extends StatelessWidget {
             EnterPageAnimWidget(
               duration: const Duration(milliseconds: 650),
               delay: const Duration(milliseconds: 150),
-              startOffset: ui.Offset(12.w, 0.w),
+              startOffset: const ui.Offset(0, .2),
               child: Text.rich(TextSpan(children: [
                 WidgetSpan(
                     child: Icon(
@@ -276,7 +276,7 @@ class ItemWidget extends StatelessWidget {
                 : EnterPageAnimWidget(
                     delay: const Duration(milliseconds: 250),
                     duration: const Duration(milliseconds: 550),
-                    startOffset: ui.Offset(0, 2.w),
+                    startOffset: const ui.Offset(.2, 0),
                     child: Text(
                       value,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -289,7 +289,7 @@ class ItemWidget extends StatelessWidget {
             EnterPageAnimWidget(
               duration: const Duration(milliseconds: 950),
               delay: const Duration(milliseconds: 550),
-              startOffset: ui.Offset(12.w, 0),
+              startOffset: const ui.Offset(.1, 0),
               child: Text(
                 value2,
                 maxLines: 4,

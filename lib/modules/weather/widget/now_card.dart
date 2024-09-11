@@ -44,19 +44,19 @@ class NowCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 EnterPageAnimWidget(
-                    startOffset: Offset(0, -30.w),
+                    startOffset: const Offset(0, -.4),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 750),
                     child: _tempWidget()),
                 SizedBox(height: 12.w),
                 EnterPageAnimWidget(
-                    startOffset: Offset(0, -15.w),
+                    startOffset: const Offset(0, -.5),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 850),
                     child: _descWidget()),
                 SizedBox(height: 22.w),
                 EnterPageAnimWidget(
-                    startOffset: Offset(0, -10.w),
+                    startOffset: const Offset(0, -.25),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 1050),
                     child: _bottomBar()),

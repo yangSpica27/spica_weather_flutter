@@ -132,7 +132,7 @@ class InfoListWidget extends StatelessWidget {
       DetailsCardListWidget(weather: data.weather!),
       TipCard(weather: data.weather!),
       EnterPageAnimWidget(
-          startOffset: Offset(0, -8.w),
+          startOffset: const Offset(0, -0.5),
           delay: const Duration(milliseconds: 200),
           child: RichText(
               textAlign: TextAlign.center,

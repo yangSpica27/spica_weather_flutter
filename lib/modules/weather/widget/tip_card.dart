@@ -42,7 +42,7 @@ class TipCard extends StatelessWidget {
                       delay: Duration(milliseconds: 150 * index),
                       startOpacity: 0,
                       duration: const Duration(milliseconds: 300),
-                      startOffset: Offset(12.w, 0),
+                      startOffset: const Offset(.5, 0),
                       child: _TipItemWidget(
                           title: item.name ?? "",
                           subtitle: item.category ?? ""));
