@@ -1,6 +1,8 @@
+import 'package:background_fetch/background_fetch.dart';
 import 'package:drift/drift.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -23,6 +25,40 @@ class SplashLogic extends GetxController {
     await _loadData();
   }
 
+  // 初始化自动更新天气任务
+  _initScheduleTask() async {
+    // Step 1:  Configure BackgroundFetch as usual.
+    await BackgroundFetch.configure(
+        BackgroundFetchConfig(minimumFetchInterval: 60), (String taskId) async {
+      // <-- Event callback.
+      try {
+        EasyLoading.show(status: "更新天气信息...");
+        await ApiRepository.fetchWeather();
+        EasyLoading.dismiss(animation: true);
+        if (kDebugMode) {
+          print("后台任务请求成功");
+        }
+      } catch (e) {
+        if (kDebugMode) {
+          print("后台任务请求失败$e");
+        }
+      }
+      // Finish, providing received taskId.
+      BackgroundFetch.finish(taskId);
+    }, (String taskId) async {
+      // <-- Event timeout callback
+
+      BackgroundFetch.finish(taskId);
+    });
+
+    BackgroundFetch.scheduleTask(TaskConfig(
+      taskId: "auto_update_weather",
+      delay: 5000,
+      periodic: true,
+      requiredNetworkType: NetworkType.ANY,
+    ));
+  }
+
   _loadData() async {
     state.update((val) {
       val?.appendTip("正在加载城市数据");
@@ -31,6 +67,15 @@ class SplashLogic extends GetxController {
     final currentCity = await (AppDatabase.getInstance().city.select()
           ..where((tbl) => tbl.isLocation.equals(true)))
         .getSingleOrNull();
+
+    if (currentCity != null) {
+      state.update((val) {
+        val?.appendTip("正在初始化自动化任务..");
+      });
+      await _fetchWeatherInfo();
+      await Get.offAndToNamed(Routes.WEATHER);
+      return;
+    }
 
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
@@ -221,5 +266,6 @@ class SplashLogic extends GetxController {
       val?.isLoading = false;
       val?.appendTip("请求成功，进入应用中..");
     });
+    await _initScheduleTask();
   }
 }

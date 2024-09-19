@@ -16,6 +16,10 @@ class WeatherLogic extends GetxController {
         .watch());
   }
 
+
+
+
+
   loadData() {
     ApiRepository.fetchWeather();
   }
