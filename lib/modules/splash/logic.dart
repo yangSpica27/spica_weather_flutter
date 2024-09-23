@@ -34,7 +34,7 @@ class SplashLogic extends GetxController {
       try {
         EasyLoading.show(status: "更新天气信息...");
         await ApiRepository.fetchWeather();
-        EasyLoading.dismiss(animation: true);
+        // EasyLoading.dismiss(animation: true);
         if (kDebugMode) {
           print("后台任务请求成功");
         }
@@ -43,6 +43,7 @@ class SplashLogic extends GetxController {
           print("后台任务请求失败$e");
         }
       }
+      EasyLoading.dismiss(animation: true);
       // Finish, providing received taskId.
       BackgroundFetch.finish(taskId);
     }, (String taskId) async {
