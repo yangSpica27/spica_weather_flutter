@@ -62,7 +62,7 @@ class SplashLogic extends GetxController {
 
   _loadData() async {
     state.update((val) {
-      val?.appendTip("正在加载城市数据");
+      val?.updateTipString("正在加载城市数据");
     });
 
     final currentCity = await (AppDatabase.getInstance().city.select()
@@ -71,7 +71,7 @@ class SplashLogic extends GetxController {
 
     if (currentCity != null) {
       state.update((val) {
-        val?.appendTip("正在初始化自动化任务..");
+        val?.updateTipString("正在初始化自动化任务..");
       });
       await _fetchWeatherInfo();
       await Get.offAndToNamed(Routes.WEATHER);
@@ -82,7 +82,7 @@ class SplashLogic extends GetxController {
     if (permission == LocationPermission.denied) {
       // 权限被拒绝，申请定位权限
       state.update((val) {
-        val?.appendTip("尝试申请权限");
+        val?.updateTipString("尝试申请权限");
       });
       showCupertinoDialog(
           context: Get.context!,
@@ -131,7 +131,7 @@ class SplashLogic extends GetxController {
     if (permission == LocationPermission.deniedForever) {
       // 权限被永久拒绝
       state.update((val) {
-        val?.appendTip("权限被拒绝");
+        val?.updateTipString("权限被拒绝");
       });
       if (currentCity != null) {
         await _loadDefaultCity();
@@ -141,7 +141,7 @@ class SplashLogic extends GetxController {
     if (permission == LocationPermission.denied) {
       // 申请权限被拒绝
       state.update((val) {
-        val?.appendTip("权限被拒绝");
+        val?.updateTipString("权限被拒绝");
       });
       if (currentCity != null) {
         await _loadDefaultCity();
@@ -157,7 +157,7 @@ class SplashLogic extends GetxController {
 
     try {
       state.update((val) {
-        val?.appendTip("正在获取定位,请稍后..");
+        val?.updateTipString("正在获取定位,请稍后..");
       });
 
       // 获取到当前定位
@@ -165,7 +165,7 @@ class SplashLogic extends GetxController {
           timeLimit: const Duration(seconds: 5));
 
       state.update((val) {
-        val?.appendTip("获取定位成功");
+        val?.updateTipString("获取定位成功");
       });
 
       // 转换成火星坐标
@@ -189,7 +189,8 @@ class SplashLogic extends GetxController {
       }
 
       state.update((val) {
-        val?.appendTip("请求到当前的定位数据${position.latitude},${position.longitude}");
+        val?.updateTipString(
+            "请求到当前的定位数据${position.latitude},${position.longitude}");
       });
 
       final city = await CityUtils.getCurrentCityItem(
@@ -197,7 +198,7 @@ class SplashLogic extends GetxController {
 
       if (currentCity == null || city.name != currentCity.name) {
         state.update((val) {
-          val?.appendTip("地理逆编码获取当前位置所在城市");
+          val?.updateTipString("地理逆编码获取当前位置所在城市");
         });
         // 删除过期的所在城市
         await AppDatabase.getInstance()
@@ -217,7 +218,7 @@ class SplashLogic extends GetxController {
             .getSingleOrNull();
       } else {
         state.update((val) {
-          val?.appendTip("城市没有变化...");
+          val?.updateTipString("城市没有变化...");
         });
       }
     } catch (e) {
@@ -234,8 +235,8 @@ class SplashLogic extends GetxController {
   // 加载默认城市
   _loadDefaultCity() async {
     state.update((val) {
-      val?.appendTip("获取定位数据失败");
-      val?.appendTip("载入默认带入城市");
+      val?.updateTipString("获取定位数据失败");
+      val?.updateTipString("载入默认带入城市");
     });
     AppDatabase.getInstance().city.insertOne(
         CityCompanion.insert(
@@ -246,26 +247,26 @@ class SplashLogic extends GetxController {
             sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt())),
         mode: InsertMode.insertOrReplace);
     state.update((val) {
-      val?.appendTip("请求城市数据中..");
+      val?.updateTipString("请求城市数据中..");
     });
   }
 
   _fetchWeatherInfo() async {
     try {
       state.update((val) {
-        val?.appendTip("请求天气接口");
+        val?.updateTipString("请求天气接口");
       });
       await ApiRepository.fetchWeather();
     } catch (e) {
       state.update((val) {
-        val?.appendTip("请求失败");
+        val?.updateTipString("请求失败");
       });
       await Get.offAndToNamed(Routes.WEATHER);
       return;
     }
     state.update((val) {
       val?.isLoading = false;
-      val?.appendTip("请求成功，进入应用中..");
+      val?.updateTipString("请求成功，进入应用中..");
     });
     await _initScheduleTask();
   }

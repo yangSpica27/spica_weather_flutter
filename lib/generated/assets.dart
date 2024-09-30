@@ -3,6 +3,7 @@ class Assets {
   Assets._();
 
   static const String assetsCity = 'assets/city.json';
+  static const String assetsIcApp = 'assets/ic_app.png';
   static const String assetsIcBike = 'assets/ic_bike.png';
   static const String assetsIcCar = 'assets/ic_car.png';
   static const String assetsIcCloud = 'assets/ic_cloud.png';

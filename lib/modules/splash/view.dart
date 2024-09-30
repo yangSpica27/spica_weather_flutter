@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:spica_weather_flutter/generated/assets.dart';
 
 import 'logic.dart';
 
@@ -22,15 +23,41 @@ class _SplashPageState extends State<SplashPage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             SizedBox(height: 20.w),
-            Obx(() => Container(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w),
-                  child: Text(logic.state.value.tip,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w400)),
-                )),
-            const Spacer(),
-            Obx(() => LinearProgressIndicator(
-                  value: logic.state.value.isLoading ? null : 1,
-                )),
+            Expanded(
+                child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Image.asset(Assets.assetsIcApp, width: 150.w),
+                  SizedBox(height: 20.w),
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                          text: '柠檬天气',
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                        WidgetSpan(child: SizedBox(width: 10.w)),
+                        TextSpan(
+                          text: 'Flutter版',
+                          style: TextStyle(
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )),
+            Obx(() => Text(logic.state.value.tip,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 14.sp, color: Colors.grey[700]))),
             SizedBox(height: 20.w),
           ],
         ),
