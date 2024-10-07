@@ -95,7 +95,7 @@ class _CityListPageState extends State<CityListPage> {
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         decoration: BoxDecoration(
-            color: Colors.grey[200],
+            color: Theme.of(context).colorScheme.surfaceContainer,
             borderRadius: BorderRadius.circular(8)),
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.w),
         child: InkWell(
@@ -104,14 +104,14 @@ class _CityListPageState extends State<CityListPage> {
             children: [
               Icon(
                 Icons.search,
-                color: Colors.grey[500],
+                color: Theme.of(context).colorScheme.onSurface,
               ),
               SizedBox(
                 width: 8.w,
               ),
               Text("添加城市",
                   style: context.theme.textTheme.bodyLarge?.copyWith(
-                    color: Colors.grey[500],
+                    color: Theme.of(context).colorScheme.onSurface,
                   ))
             ],
           ),
@@ -230,8 +230,8 @@ class _ItemCity extends StatelessWidget {
                   border: Border.all(
                       color: isSort ? Colors.grey[500]! : Colors.transparent),
                   color:
-                  item.weather?.todayWeather?.iconId?.getWeatherColor() ??
-                      Colors.blue[500],
+                      item.weather?.todayWeather?.iconId?.getWeatherColor() ??
+                          Colors.blue[500],
                   borderRadius: const BorderRadius.all(Radius.circular(8))),
               child: Row(mainAxisSize: MainAxisSize.max, children: [
                 Column(
@@ -241,35 +241,37 @@ class _ItemCity extends StatelessWidget {
                     Text.rich(TextSpan(
                       children: isLocation
                           ? [
-                        WidgetSpan(
-                            child: Icon(
-                              Icons.location_on,
-                              color: Colors.white,
-                              size: 20.sp,
-                            )),
-                        WidgetSpan(
-                            child: SizedBox(
-                              width: 8.w,
-                            )),
-                        TextSpan(
-                            text: item.name,
-                            style: context
-                                .theme.textTheme.headlineSmall
-                                ?.copyWith(
-                                color: Colors.white,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500))
-                      ]
+                              WidgetSpan(
+                                  child: Icon(
+                                Icons.location_on,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                size: 20.sp,
+                              )),
+                              WidgetSpan(
+                                  child: SizedBox(
+                                width: 8.w,
+                              )),
+                              TextSpan(
+                                  text: item.name,
+                                  style: context.theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500))
+                            ]
                           : [
-                        TextSpan(
-                            text: item.name,
-                            style: context
-                                .theme.textTheme.headlineSmall
-                                ?.copyWith(
-                                color: Colors.white,
-                                fontSize: 20.sp,
-                                fontWeight: FontWeight.w500))
-                      ],
+                              TextSpan(
+                                  text: item.name,
+                                  style: context.theme.textTheme.headlineSmall
+                                      ?.copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onPrimary,
+                                          fontSize: 20.sp,
+                                          fontWeight: FontWeight.w500))
+                            ],
                     )),
                     const SizedBox(
                       height: 8,
@@ -277,7 +279,7 @@ class _ItemCity extends StatelessWidget {
                     Text(
                         "${item.weather?.todayWeather?.weatherName ?? "/"} 体感${item.weather?.todayWeather?.feelTemp ?? "NA"}℃",
                         style: context.theme.textTheme.headlineSmall?.copyWith(
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.onPrimary,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w400)),
                   ],
@@ -286,14 +288,13 @@ class _ItemCity extends StatelessWidget {
                 Text(
                   "${item.weather?.todayWeather?.temp.toString() ?? "--"}℃",
                   style: context.theme.textTheme.headlineLarge?.copyWith(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimary,
                       fontWeight: FontWeight.w900,
                       fontSize: 38.sp),
                 ),
               ]),
             ),
-          )
-      ),
+          )),
     );
   }
 }

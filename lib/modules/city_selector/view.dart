@@ -40,7 +40,6 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
                   decoration: InputDecoration(
                     hintText: '请输入城市名称',
                     filled: true,
-                    fillColor: Colors.grey[200],
                     border: OutlineInputBorder(
                       borderSide: BorderSide.none,
                       borderRadius: BorderRadius.circular(8.w),
@@ -78,8 +77,8 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
         padding: EdgeInsets.only(bottom: 20.w),
         controller: _scrollerController,
         itemBuilder: (context, index) => _cityItemWidget(items[index]),
-        separatorBuilder: (context, index) =>
-            Divider(color: Colors.grey[200], height: 1.w),
+        separatorBuilder: (context, index) => Divider(
+            color: Theme.of(context).dividerColor.withOpacity(.2), height: 1.w),
         itemCount: items.length);
   }
 

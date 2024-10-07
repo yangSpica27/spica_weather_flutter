@@ -77,7 +77,7 @@ class _TipItemWidget extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
-                ?.copyWith(color: Colors.grey[900]),
+                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
@@ -87,10 +87,8 @@ class _TipItemWidget extends StatelessWidget {
           ),
           Text(
             subtitle,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.grey[600]),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5)),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           )

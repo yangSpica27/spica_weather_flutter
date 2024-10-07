@@ -87,9 +87,10 @@ class DailyCard extends StatelessWidget {
           Text(
               "白天 ${dailyWeather.weatherNameDay ?? "--"} / 夜间 ${dailyWeather.weatherNameNight ?? "--"}",
               style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontWeight: FontWeight.w400,
-                  fontSize: 13.sp,
-                  color: Colors.grey[600])),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 13.sp,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  )),
           SizedBox(
             height: 8.w,
           ),
@@ -130,7 +131,7 @@ class DailyCard extends StatelessWidget {
             Image.asset(
               assets,
               width: 24.w,
-              color: Colors.black87,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(.9),
             ),
             SizedBox(
               width: 12.w,
@@ -150,7 +151,12 @@ class DailyCard extends StatelessWidget {
                   Text(
                     value,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w400, color: Colors.grey[600]),
+                          fontWeight: FontWeight.w400,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(.5),
+                        ),
                   )
                 ],
               ),
@@ -181,6 +187,8 @@ class _LinePainter extends CustomPainter {
   // 渐变色
   ui.Gradient? gradient;
 
+  ui.Color backgroundColor;
+
   // 动画的进度
   double progress;
 
@@ -189,6 +197,7 @@ class _LinePainter extends CustomPainter {
       required this.upperLimit,
       this.currentTemp,
       this.progress = 1,
+      this.backgroundColor = Colors.grey,
       required this.maxTemp,
       required this.minTemp});
 
@@ -238,8 +247,10 @@ class _LinePainter extends CustomPainter {
     }
 
     _paint.shader = null;
+    _paint.color = backgroundColor;
     canvas.drawLine(Offset(0, size.height / 2),
         Offset(size.width, size.height / 2), _paint);
+    _paint.color = Colors.grey[300]!;
     _paint.shader = gradient;
     canvas.drawLine(
         Offset(0 + (minTemp - lowerLimit) / diff * size.width, size.height / 2),
@@ -349,7 +360,7 @@ class _TitleWidgetState extends State<_TitleWidget>
               color: widget.isHeader
                   ? widget.dailyWeather.iconId?.getWeatherColor() ??
                       Colors.blue[500]
-                  : Colors.black,
+                  : Theme.of(context).colorScheme.onSurface.withOpacity(.9),
               fontWeight: FontWeight.w500),
         ),
         SizedBox(
@@ -379,6 +390,10 @@ class _TitleWidgetState extends State<_TitleWidget>
                       animation: animation!,
                       builder: (c, w) => CustomPaint(
                             painter: _LinePainter(
+                              backgroundColor: Theme.of(context)
+                                  .colorScheme
+                                  .outline
+                                  .withOpacity(.1),
                               maxTemp: widget.dailyWeather.maxTemp ?? 0,
                               minTemp: widget.dailyWeather.minTemp ?? 0,
                               currentTemp: widget.isHeader ? widget.temp : null,
@@ -389,6 +404,10 @@ class _TitleWidgetState extends State<_TitleWidget>
                           ))
                   : CustomPaint(
                       painter: _LinePainter(
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(.1),
                         maxTemp: widget.dailyWeather.maxTemp ?? 0,
                         minTemp: widget.dailyWeather.minTemp ?? 0,
                         currentTemp: widget.isHeader ? widget.temp : null,

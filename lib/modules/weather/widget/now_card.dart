@@ -29,8 +29,8 @@ class NowCard extends StatelessWidget {
               child: RepaintBoundary(
                 child: WeatherAnimView(
                     weather.todayWeather?.iconId
-                        ?.getWeatherType()
-                        .getWeatherAnimType() ??
+                            ?.getWeatherType()
+                            .getWeatherAnimType() ??
                         WeatherAnimType.UNKNOWN,
                     width: ScreenUtil().screenWidth - 32.w,
                     height: 310.w),
@@ -47,19 +47,21 @@ class NowCard extends StatelessWidget {
                     startOffset: const Offset(0, -.4),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 750),
-                    child: _tempWidget()),
+                    child: _TempWidget(weather: weather)),
                 SizedBox(height: 12.w),
                 EnterPageAnimWidget(
                     startOffset: const Offset(0, -.5),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 850),
-                    child: _descWidget()),
+                    child: _DescTextWidget(weather: weather)),
                 SizedBox(height: 22.w),
                 EnterPageAnimWidget(
                     startOffset: const Offset(0, -.25),
                     endOffset: const Offset(0, 0),
                     duration: const Duration(milliseconds: 1050),
-                    child: _bottomBar()),
+                    child: _BottomTextWidget(
+                      weather: weather,
+                    )),
               ],
             ),
           )
@@ -67,156 +69,190 @@ class NowCard extends StatelessWidget {
       ),
     );
   }
+}
 
-  // 左边文本区
-  _tempWidget() => RichText(
-          text: TextSpan(children: [
-        TextSpan(
-            text: "${weather.todayWeather?.temp ?? 0}",
-            style: TextStyle(
-                fontSize: 100.sp,
-                color: Colors.white.withOpacity(.9),
-                fontWeight: FontWeight.w500)),
-        TextSpan(
-            text: "℃",
-            style: TextStyle(
-                fontSize: 50.sp,
-                color: Colors.white.withOpacity(.89),
-                fontWeight: FontWeight.w400)),
-      ]));
+// 温度数据Text
+class _TempWidget extends StatelessWidget {
+  final WeatherResult weather;
 
-  _descWidget() => RichText(
-          text: TextSpan(children: [
-        TextSpan(
-            text: ' ',
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w500)),
-        TextSpan(
-            text: weather.todayWeather?.weatherName ?? '',
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w500)),
-        TextSpan(
-            text: " ",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w400)),
-        TextSpan(
-            text: "体感：",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w400)),
-        TextSpan(
-            text: "${weather.todayWeather?.feelTemp ?? 0}",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w500)),
-        TextSpan(
-            text: "℃",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w400)),
-        TextSpan(
-            text: " ",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w500)),
-        TextSpan(
-            text: "空气质量：",
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w400)),
-        TextSpan(
-            text: weather.air?.category ?? '--',
-            style: TextStyle(
-                fontSize: 16.sp,
-                color: Colors.white,
-                fontWeight: FontWeight.w500))
-      ]));
+  const _TempWidget({super.key, required this.weather});
 
-  // 底栏
-  _bottomBar() => Container(
-        padding: EdgeInsets.all(12.w),
-        decoration: BoxDecoration(
-            color: const Color(0x1f4a4a4a),
-            borderRadius: BorderRadius.circular(10.w)),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  RichText(
-                      text: TextSpan(children: [
-                    WidgetSpan(
-                        child: Image.asset(
-                      Assets.assetsIcWater,
-                      width: 16.w,
-                      height: 16.w,
-                      color: Colors.white,
-                    )),
-                    WidgetSpan(
-                        child: SizedBox(
-                      width: 4.w,
-                    )),
-                    TextSpan(
-                        text: "${weather.todayWeather?.water ?? ''}%",
-                        style: TextStyle(fontSize: 14.sp, color: Colors.white)),
-                  ])),
-                ],
-              ),
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: "${weather.todayWeather?.temp ?? 0}",
+          style: TextStyle(
+              fontSize: 100.sp,
+              color: Theme.of(context).colorScheme.surface.withOpacity(.9),
+              fontWeight: FontWeight.w500)),
+      TextSpan(
+          text: "℃",
+          style: TextStyle(
+              fontSize: 50.sp,
+              color: Theme.of(context).colorScheme.surface.withOpacity(.89),
+              fontWeight: FontWeight.w400)),
+    ]));
+  }
+}
+
+// 描述信息Text
+class _DescTextWidget extends StatelessWidget {
+  final WeatherResult weather;
+
+  const _DescTextWidget({super.key, required this.weather});
+
+  @override
+  Widget build(BuildContext context) {
+    return RichText(
+        text: TextSpan(children: [
+      TextSpan(
+          text: ' ',
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w500)),
+      TextSpan(
+          text: weather.todayWeather?.weatherName ?? '',
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w500)),
+      TextSpan(
+          text: " ",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w400)),
+      TextSpan(
+          text: "体感：",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w400)),
+      TextSpan(
+          text: "${weather.todayWeather?.feelTemp ?? 0}",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w500)),
+      TextSpan(
+          text: "℃",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w400)),
+      TextSpan(
+          text: " ",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w500)),
+      TextSpan(
+          text: "空气质量：",
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w400)),
+      TextSpan(
+          text: weather.air?.category ?? '--',
+          style: TextStyle(
+              fontSize: 16.sp,
+              color: Theme.of(context).colorScheme.surface,
+              fontWeight: FontWeight.w500))
+    ]));
+  }
+}
+
+// 底部信息
+class _BottomTextWidget extends StatelessWidget {
+  final WeatherResult weather;
+
+  const _BottomTextWidget({super.key, required this.weather});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+          color: const Color(0x1f4a4a4a),
+          borderRadius: BorderRadius.circular(10.w)),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RichText(
+                    text: TextSpan(children: [
+                  WidgetSpan(
+                      child: Image.asset(
+                    Assets.assetsIcWater,
+                    width: 16.w,
+                    height: 16.w,
+                    color: Theme.of(context).colorScheme.surface,
+                  )),
+                  WidgetSpan(
+                      child: SizedBox(
+                    width: 4.w,
+                  )),
+                  TextSpan(
+                      text: "${weather.todayWeather?.water ?? ''}%",
+                      style: TextStyle(
+                          fontSize: 14.sp,
+                          color: Theme.of(context).colorScheme.surface)),
+                ])),
+              ],
             ),
-            Align(
-              alignment: Alignment.center,
-              child: RichText(
-                  text: TextSpan(children: [
-                WidgetSpan(
-                    child: Image.asset(
-                  Assets.assetsIcWindmill,
-                  width: 16.w,
-                  height: 16.w,
-                  color: Colors.white,
-                )),
-                WidgetSpan(
-                    child: SizedBox(
-                  width: 4.w,
-                )),
-                TextSpan(
-                    text: "${weather.todayWeather?.windSpeed ?? ''}km/h",
-                    style: TextStyle(fontSize: 14.sp, color: Colors.white)),
-              ])),
-            ),
-            Align(
-              alignment: Alignment.centerRight,
-              child: RichText(
-                  text: TextSpan(children: [
-                WidgetSpan(
-                    child: Image.asset(
-                  Assets.assetsIcDashboard,
-                  width: 16.w,
-                  height: 16.w,
-                  color: Colors.white,
-                )),
-                WidgetSpan(
-                    child: SizedBox(
-                  width: 4.w,
-                )),
-                TextSpan(
-                    text: "${weather.todayWeather?.windPa ?? ''}hpa",
-                    style: TextStyle(fontSize: 14.sp, color: Colors.white)),
-              ])),
-            ),
-          ],
-        ),
-      );
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: RichText(
+                text: TextSpan(children: [
+              WidgetSpan(
+                  child: Image.asset(
+                Assets.assetsIcWindmill,
+                width: 16.w,
+                height: 16.w,
+                color: Theme.of(context).colorScheme.surface,
+              )),
+              WidgetSpan(
+                  child: SizedBox(
+                width: 4.w,
+              )),
+              TextSpan(
+                  text: "${weather.todayWeather?.windSpeed ?? ''}km/h",
+                  style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Theme.of(context).colorScheme.surface)),
+            ])),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: RichText(
+                text: TextSpan(children: [
+              WidgetSpan(
+                  child: Image.asset(
+                Assets.assetsIcDashboard,
+                width: 16.w,
+                height: 16.w,
+                color: Theme.of(context).colorScheme.surface,
+              )),
+              WidgetSpan(
+                  child: SizedBox(
+                width: 4.w,
+              )),
+              TextSpan(
+                  text: "${weather.todayWeather?.windPa ?? ''}hpa",
+                  style: TextStyle(
+                      fontSize: 14.sp,
+                      color: Theme.of(context).colorScheme.surface)),
+            ])),
+          ),
+        ],
+      ),
+    );
+  }
 }

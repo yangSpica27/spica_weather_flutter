@@ -1,11 +1,11 @@
 import 'dart:math';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/material.dart' as material;
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:spica_weather_flutter/model/weather_response.dart';
-import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart' as material;
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:spica_weather_flutter/base/weather_type.dart';
+import 'package:spica_weather_flutter/model/weather_response.dart';
 
 /// 降水量信息卡片
 class PrecipitationCard extends StatefulWidget {
@@ -25,7 +25,8 @@ class _PrecipitationCardState extends State<PrecipitationCard>
   );
 
   late final enterAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animController, curve: Curves.fastEaseInToSlowEaseOut));
+      CurvedAnimation(
+          parent: _animController, curve: Curves.fastEaseInToSlowEaseOut));
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,9 @@ class _PrecipitationCardState extends State<PrecipitationCard>
               builder: (context, w) => CustomPaint(
                     size: Size(0, 150.w),
                     painter: _PrecipitationLinePainter(
-                        widget.weather.minutely ?? [], enterAnim.value),
+                        widget.weather.minutely ?? [],
+                        enterAnim.value,
+                        material.Theme.of(context).colorScheme.onSurface),
                   )),
           SizedBox(
             height: 12.w,
@@ -80,7 +83,9 @@ class _PrecipitationLinePainter extends CustomPainter {
 
   double lineWidth = 2.0.w;
 
-  _PrecipitationLinePainter(this.minutelyList, this.progress);
+  Color textColor = Colors.black87;
+
+  _PrecipitationLinePainter(this.minutelyList, this.progress, this.textColor);
 
   final Paint _linePaint = Paint()
     ..color = Colors.grey[300]!
@@ -130,7 +135,8 @@ class _PrecipitationLinePainter extends CustomPainter {
       double y = size.height -
           2.w -
           min((double.tryParse(minutely.precip ?? "") ?? 0) / 2.5, 1.0) *
-              size.height*progress;
+              size.height *
+              progress;
       canvas.drawLine(Offset(x, y), Offset(x, size.height - 2.w), _linePaint);
     });
 
@@ -142,7 +148,7 @@ class _PrecipitationLinePainter extends CustomPainter {
         text: TextSpan(
             text: "1小时后",
             style: TextStyle(
-                color: Colors.black87,
+                color: textColor,
                 fontSize: 12.w,
                 letterSpacing: 1.2,
                 fontWeight: FontWeight.w500)),
@@ -159,7 +165,7 @@ class _PrecipitationLinePainter extends CustomPainter {
         text: TextSpan(
             text: text,
             style: TextStyle(
-                color: Colors.black87,
+                color: textColor,
                 fontSize: 12.w,
                 letterSpacing: 1.2,
                 fontWeight: FontWeight.w500)),

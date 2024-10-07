@@ -94,6 +94,8 @@ class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
                                     (widget.weather.hourlyWeather?.length ?? 0),
                                 160.w),
                             painter: _LinePainter(
+                                textColor:
+                                    Theme.of(context).colorScheme.onSurface,
                                 progress: enterProgress,
                                 scrollX: scrollX,
                                 data: widget.weather.hourlyWeather ?? [],
@@ -147,10 +149,13 @@ class _LinePainter extends CustomPainter {
 
   double scrollX = 0.0;
 
+  final ui.Color textColor;
+
   _LinePainter(
       {required this.data,
       required this.themeColor,
       required this.scrollX,
+      required this.textColor,
       required this.progress})
       : super() {
     if (data.isNotEmpty) {
@@ -255,7 +260,7 @@ class _LinePainter extends CustomPainter {
           text: TextSpan(
               text: data[i].fxTime?.substring(11, 16) ?? "",
               style: TextStyle(
-                  color: Colors.black45,
+                  color: textColor.withOpacity(.5),
                   fontSize: 14.w,
                   fontWeight: FontWeight.w600)),
           textDirection: TextDirection.ltr)
@@ -287,7 +292,7 @@ class _LinePainter extends CustomPainter {
               text: "${data[i].pop?.toString() ?? "7"}%",
               style: TextStyle(
                   color: (data[i].pop ?? 0) < 10
-                      ? Colors.black87
+                      ? textColor.withOpacity(.8)
                       : Colors.blueAccent,
                   fontSize: 13.w,
                   fontWeight: (data[i].pop ?? 0) < 10
@@ -332,7 +337,7 @@ class _LinePainter extends CustomPainter {
         text: TextSpan(
             text: "${data[index].temp?.toString()}℃",
             style: TextStyle(
-                color: Colors.black87,
+                color: textColor.withOpacity(.8),
                 fontSize: 14.w,
                 fontWeight: FontWeight.w600)),
         textDirection: TextDirection.ltr)

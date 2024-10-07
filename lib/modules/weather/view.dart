@@ -73,8 +73,8 @@ class _WeatherPageState extends State<WeatherPage>
               Center(
                   child: TabPageSelector(
                 controller: tabController,
-                color: const Color(0x21000000),
-                selectedColor: Colors.black87,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(.25),
+                selectedColor: Theme.of(context).colorScheme.onSurface,
               )),
 
               /// 内容区
@@ -131,37 +131,7 @@ class InfoListWidget extends StatelessWidget {
       AirDescCard(weather: data.weather!),
       DetailsCardListWidget(weather: data.weather!),
       TipCard(weather: data.weather!),
-      EnterPageAnimWidget(
-          startOffset: const Offset(0, -0.5),
-          delay: const Duration(milliseconds: 200),
-          child: RichText(
-              textAlign: TextAlign.center,
-              text: const TextSpan(
-                children: [
-                  TextSpan(
-                      text: "数据来源于", style: TextStyle(color: Colors.black87)),
-                  WidgetSpan(
-                      child: SizedBox(
-                    width: 8,
-                  )),
-                  WidgetSpan(
-                    child: Icon(
-                      Ionicons.cloud_circle,
-                      size: 15,
-                    ),
-                    alignment: PlaceholderAlignment.middle,
-                  ),
-                  WidgetSpan(
-                      child: SizedBox(
-                    width: 2,
-                  )),
-                  TextSpan(
-                    text: "和风天气",
-                    style: TextStyle(
-                        color: Colors.black87, fontWeight: FontWeight.w600),
-                  ),
-                ],
-              ))),
+      const _FooterWidget(),
     ];
 
     if (data.weather?.warnings != null &&
@@ -186,5 +156,47 @@ class InfoListWidget extends StatelessWidget {
               color: Colors.transparent,
             ),
         itemCount: items.length);
+  }
+}
+
+class _FooterWidget extends StatelessWidget {
+  const _FooterWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return EnterPageAnimWidget(
+        startOffset: const Offset(0, -0.5),
+        delay: const Duration(milliseconds: 200),
+        child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              children: [
+                TextSpan(
+                    text: "数据来源于",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onSurface)),
+                const WidgetSpan(
+                    child: SizedBox(
+                  width: 8,
+                )),
+                const WidgetSpan(
+                  child: Icon(
+                    Ionicons.cloud_circle,
+                    size: 15,
+                  ),
+                  alignment: PlaceholderAlignment.middle,
+                ),
+                const WidgetSpan(
+                    child: SizedBox(
+                  width: 2,
+                )),
+                TextSpan(
+                  text: "和风天气",
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.w600),
+                ),
+              ],
+            )));
   }
 }

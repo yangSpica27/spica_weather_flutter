@@ -253,7 +253,10 @@ class ItemWidget extends StatelessWidget {
                     child: Icon(
                       icon,
                       size: 14.w,
-                      color: Colors.black54,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(.5),
                     ),
                     alignment: PlaceholderAlignment.middle),
                 const WidgetSpan(
@@ -264,7 +267,10 @@ class ItemWidget extends StatelessWidget {
                 TextSpan(
                     text: title,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.black54,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(.5),
                         )),
               ])),
             ),
@@ -280,7 +286,7 @@ class ItemWidget extends StatelessWidget {
                     child: Text(
                       value,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.black87,
+                            color: Theme.of(context).colorScheme.onSurface,
                             fontWeight: FontWeight.w500,
                           ),
                     )),
@@ -295,7 +301,10 @@ class ItemWidget extends StatelessWidget {
                 maxLines: 4,
                 softWrap: true,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Colors.black54,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(.5),
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),

@@ -67,6 +67,12 @@ class _AirDescCardState extends State<AirDescCard>
                         size: Size(110.w, 110.w),
                         painter: _AirProgressPainter(
                             centerText: "污染指数",
+                            arcBackgroundColor: Theme.of(context)
+                                .colorScheme
+                                .outline
+                                .withOpacity(.2),
+                            extraTextColor:
+                                Theme.of(context).colorScheme.onSurface,
                             air: (widget.weather.air?.aqi?.toDouble() ?? 0) *
                                 enterProgressAnim.value),
                       )),
@@ -118,16 +124,16 @@ class _RightDescWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       children: <Widget>[
         Text(title,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(fontWeight: FontWeight.w500, color: Colors.black87)),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(.8),
+                )),
         const Spacer(),
         Text(value,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: Colors.black54, fontWeight: FontWeight.normal))
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+                fontWeight: FontWeight.normal))
       ],
     );
   }
@@ -137,6 +143,8 @@ class _AirProgressPainter extends CustomPainter {
   var centerText = "空气质量";
 
   final double air;
+
+  final ui.Color extraTextColor;
 
   final gradient = ui.Gradient.sweep(
     Offset(50.w, 50.w),
@@ -153,8 +161,13 @@ class _AirProgressPainter extends CustomPainter {
     pi / 180 * 45,
     pi / 180 * (45 + 270),
   );
+  final ui.Color arcBackgroundColor;
 
-  _AirProgressPainter({required this.centerText, required this.air}) {
+  _AirProgressPainter(
+      {required this.centerText,
+      required this.air,
+      required this.arcBackgroundColor,
+      this.extraTextColor = Colors.blue}) {
     if (air < 50) {
       _textPaint.color = Colors.green[400]!;
     } else if (air < 100) {
@@ -193,10 +206,11 @@ class _AirProgressPainter extends CustomPainter {
     canvas.rotate(pi / 180 * 90);
     canvas.translate(-size.width / 2, -size.height / 2);
     _paint.shader = null;
-    _paint.color = Colors.grey[300]!;
+    _paint.color = arcBackgroundColor;
     canvas.drawArc(Rect.fromLTRB(0, 0, size.width, size.height),
         pi / 180 * startAngle, pi / 180 * sweepAngle, false, _paint);
     _paint.shader = gradient;
+    _paint.color = Colors.grey[300]!;
     canvas.drawArc(
         Rect.fromLTRB(0, 0, size.width, size.height),
         pi / 180 * startAngle,
@@ -210,7 +224,7 @@ class _AirProgressPainter extends CustomPainter {
         text: TextSpan(
             text: centerText,
             style: TextStyle(
-                color: Colors.black,
+                color: extraTextColor,
                 fontSize: 12.w,
                 letterSpacing: 1.2,
                 fontWeight: FontWeight.w500)),

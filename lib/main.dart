@@ -36,6 +36,7 @@ class MyApp extends StatelessWidget {
           },
           builder: EasyLoading.init(),
           theme: const MaterialTheme(TextTheme()).light(),
+          darkTheme: const MaterialTheme(TextTheme()).dark(),
           initialRoute: AppPages.INITIAL,
           getPages: AppPages.routes,
         );
