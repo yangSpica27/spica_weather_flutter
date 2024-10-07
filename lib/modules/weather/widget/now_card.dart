@@ -75,7 +75,7 @@ class NowCard extends StatelessWidget {
 class _TempWidget extends StatelessWidget {
   final WeatherResult weather;
 
-  const _TempWidget({super.key, required this.weather});
+  const _TempWidget({required this.weather});
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +101,7 @@ class _TempWidget extends StatelessWidget {
 class _DescTextWidget extends StatelessWidget {
   final WeatherResult weather;
 
-  const _DescTextWidget({super.key, required this.weather});
+  const _DescTextWidget({required this.weather});
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +169,7 @@ class _DescTextWidget extends StatelessWidget {
 class _BottomTextWidget extends StatelessWidget {
   final WeatherResult weather;
 
-  const _BottomTextWidget({super.key, required this.weather});
+  const _BottomTextWidget({required this.weather});
 
   @override
   Widget build(BuildContext context) {
