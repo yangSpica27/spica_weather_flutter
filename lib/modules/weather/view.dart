@@ -160,7 +160,7 @@ class InfoListWidget extends StatelessWidget {
 }
 
 class _FooterWidget extends StatelessWidget {
-  const _FooterWidget({super.key});
+  const _FooterWidget();
 
   @override
   Widget build(BuildContext context) {
