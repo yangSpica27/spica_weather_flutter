@@ -8,6 +8,14 @@
 <img src="https://s3.bmp.ovh/imgs/2024/08/06/eb46d15fe13145b2.png" width="20%"/>
 </div>
 
+## 暗色模式
+
+<div style="display: flex;justify-content: flex-start">
+<img src="https://s3.bmp.ovh/imgs/2024/10/14/06c20c276a958aba.jpg" width="20%"/>
+<img src="https://s3.bmp.ovh/imgs/2024/10/14/9f8b17f35aa98009.jpg" width="20%"/>
+<img src="https://s3.bmp.ovh/imgs/2024/10/14/8065da6cfdd00246.jpg" width="20%"/>
+</div>
+
 ## 技术栈及其使用的开源库
 
 - Drift 持久化库
