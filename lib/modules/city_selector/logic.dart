@@ -27,6 +27,7 @@ class CitySelectorLogic extends GetxController {
     isLoadingState(false);
   }
 
+  /// 搜索城市
   void onSearch(String value) async {
     isLoadingState(true);
     if (value.isEmpty) {
@@ -47,6 +48,7 @@ class CitySelectorLogic extends GetxController {
     isLoadingState(false);
   }
 
+  /// 选择城市
   onSelectItem(CityItem showItem) async {
     await EasyLoading.show(status: 'loading...');
     try {

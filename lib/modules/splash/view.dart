@@ -5,6 +5,7 @@ import 'package:spica_weather_flutter/generated/assets.dart';
 
 import 'logic.dart';
 
+/// 闪屏页
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 

@@ -3,9 +3,13 @@
 
 /// json文件对象
 class Province {
+  // 省份名称
   String? name;
+  // 经度
   String? log;
+  // 纬度
   String? lat;
+  // 城市列表
   List<CityItem>? children;
 
   Province({this.name, this.log, this.lat, this.children});
@@ -35,9 +39,13 @@ class Province {
 }
 
 class CityItem {
+  // 城市名称
   String? name;
+  // 经度
   String? log;
+  // 纬度
   String? lat;
+  // 天气
   String? weather;
 
   CityItem(

@@ -16,28 +16,38 @@ class EnterPageAnimWidget extends StatefulWidget {
       this.endScale = 1.0,
       this.delay});
 
+  /// 开始的偏移量
   final Offset? startOffset;
 
+  /// 结束的偏移量
   final Offset? endOffset;
 
+  /// 动画持续时间
   final Duration? duration;
 
+  /// 开始的透明度
   final double? startOpacity;
 
+  /// 结束的透明度
   final double? endOpacity;
 
+  /// 子组件
   final Widget child;
 
+  /// 延迟时间
   final Duration? delay;
 
+  /// 开始的缩放比例
   final double startScale;
 
+  /// 结束的缩放比例
   final double endScale;
 
   @override
   State<EnterPageAnimWidget> createState() => _EnterPageAnimWidgetState();
 }
 
+/// 实现组件入场效果的State
 class _EnterPageAnimWidgetState extends State<EnterPageAnimWidget>
     with SingleTickerProviderStateMixin {
   late final Tween<double> _opacityTween = Tween<double>(
@@ -92,6 +102,7 @@ class _EnterPageAnimWidgetState extends State<EnterPageAnimWidget>
 
   @override
   Widget build(BuildContext context) {
+    /// 使用RepaintBoundary包裹，避免动画过程中的重绘
     return RepaintBoundary(
       child: ScaleTransition(
           scale: _scaleAnimation,

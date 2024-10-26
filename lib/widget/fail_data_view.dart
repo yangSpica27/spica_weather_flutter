@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 数据加载失败视图
 class FailDataView extends StatelessWidget {
   final String message;
   final VoidCallback onRetry;

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../model/city_item.dart';
 import 'logic.dart';
 
+/// 城市选择页
 class CitySelectorPage extends StatefulWidget {
   const CitySelectorPage({super.key});
 

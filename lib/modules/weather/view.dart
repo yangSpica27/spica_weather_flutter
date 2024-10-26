@@ -18,6 +18,7 @@ import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 import 'logic.dart';
 
+/// 天气页
 class WeatherPage extends StatefulWidget {
   const WeatherPage({super.key});
 
@@ -134,11 +135,12 @@ class InfoListWidget extends StatelessWidget {
       const _FooterWidget(),
     ];
 
+    /// 如果有预警信息则插入
     if (data.weather?.warnings != null &&
         data.weather?.warnings?.isNotEmpty == true) {
       items.insert(1, WarningCard(weather: data.weather!));
     }
-
+    /// 如果是雨天则插入降水卡片
     if (data.weather?.todayWeather?.iconId
                 ?.getWeatherType()
                 .getWeatherAnimType() ==
@@ -159,6 +161,7 @@ class InfoListWidget extends StatelessWidget {
   }
 }
 
+/// 页脚
 class _FooterWidget extends StatelessWidget {
   const _FooterWidget();
 

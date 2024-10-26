@@ -13,6 +13,7 @@ void main() {
   runApp(const MyApp());
 }
 
+// 应用入口
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -27,17 +28,24 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: 'SPICaWeather',
           onInit: () {
+            // 初始化数据库
             AppDatabase.getInstance();
+            // 初始化EasyRefresh
             EasyRefresh.defaultHeaderBuilder = () => const MaterialHeader();
             EasyRefresh.defaultFooterBuilder = () => const MaterialFooter();
           },
           onDispose: () {
+            // 关闭数据库
             AppDatabase.getInstance().close();
           },
           builder: EasyLoading.init(),
+          // 主题
           theme: const MaterialTheme(TextTheme()).light(),
+          // 暗黑模式
           darkTheme: const MaterialTheme(TextTheme()).dark(),
+          // 入口
           initialRoute: AppPages.INITIAL,
+          // 路由
           getPages: AppPages.routes,
         );
       },

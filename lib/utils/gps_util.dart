@@ -1,11 +1,13 @@
 import 'dart:math';
 
 class GpsUtil {
+
   static const num pi = 3.1415926535897932384626;
   static const num xPi = 3.14159265358979324 * 3000.0 / 180.0;
   static const num a = 6378245.0;
   static const num ee = 0.00669342162296594323;
 
+  /// WGS84转GCj02(火星坐标系)
   static num transformLat(num x, num y) {
     num ret = -100.0 +
         2.0 * x +
@@ -19,6 +21,7 @@ class GpsUtil {
     return ret;
   }
 
+  /// WGS84转GCj02(火星坐标系)
   static num transformLon(num x, num y) {
     num ret =
         300.0 + x + 2.0 * y + 0.1 * x * x + 0.1 * x * y + 0.1 * sqrt(x.abs());
@@ -29,6 +32,7 @@ class GpsUtil {
     return ret;
   }
 
+  /// WGS84转GCj02(火星坐标系)
   static List<num> transform(num lat, num lon) {
     if (outOfChina(lat, lon)) {
       return [lat, lon];

@@ -89,6 +89,7 @@ class _CityListPageState extends State<CityListPage> {
     );
   }
 
+  /// 添加城市按钮
   _addCityButton({GestureTapCallback? onTap}) => Hero(
       tag: "search_bar",
       transitionOnUserGestures: true,
@@ -125,6 +126,7 @@ class _CityListPageState extends State<CityListPage> {
   }
 }
 
+/// 摇晃效果的容器
 class _ShakeContent extends StatefulWidget {
   const _ShakeContent({required this.needShake, required this.child});
 
@@ -182,6 +184,7 @@ class _ShakeContentState extends State<_ShakeContent>
   }
 }
 
+/// 城市列表项
 class _ItemCity extends StatelessWidget {
   const _ItemCity(
       {super.key,

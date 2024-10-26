@@ -8,6 +8,7 @@ import '../network/api_provider.dart';
 class ApiRepository {
   static final apiProvider = ApiProvider();
 
+  /// 获取天气数据
   static fetchWeather() async {
     final List<CityData> cities =
         await AppDatabase.getInstance().city.select().get();

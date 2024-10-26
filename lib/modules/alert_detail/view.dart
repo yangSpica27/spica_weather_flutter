@@ -4,6 +4,7 @@ import 'package:spica_weather_flutter/model/weather_response.dart';
 
 import 'logic.dart';
 
+/// 预警信息详情
 class AlertDetailPage extends StatelessWidget {
   AlertDetailPage({super.key});
 

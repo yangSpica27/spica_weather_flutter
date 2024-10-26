@@ -21,10 +21,11 @@ class ApiProvider {
       ));
   }
 
+  /// 获取天气数据
   Future<Response> fetchWeather(String lonlat) {
     return dio.get(Api.weatherUrl, queryParameters: {'location': lonlat});
   }
-
+  /// 获取城市信息
   Future<Response> fetchCity(String lonlat) {
     return dio.get(Api.reGeoUrl, queryParameters: {
       'key': "2a83c54e436dbb1702e9b1b2718c110b",
