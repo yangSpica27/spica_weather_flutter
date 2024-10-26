@@ -386,74 +386,88 @@ typedef $$CityTableUpdateCompanionBuilder = CityCompanion Function({
   Value<int> rowid,
 });
 
-class $$CityTableFilterComposer
-    extends FilterComposer<_$AppDatabase, $CityTable> {
-  $$CityTableFilterComposer(super.$state);
-  ColumnFilters<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+class $$CityTableFilterComposer extends Composer<_$AppDatabase, $CityTable> {
+  $$CityTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get lat => $state.composableBuilder(
-      column: $state.table.lat,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<String> get lat => $composableBuilder(
+      column: $table.lat, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<String> get lon => $state.composableBuilder(
-      column: $state.table.lon,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<String> get lon => $composableBuilder(
+      column: $table.lon, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<BigInt> get sort => $state.composableBuilder(
-      column: $state.table.sort,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<BigInt> get sort => $composableBuilder(
+      column: $table.sort, builder: (column) => ColumnFilters(column));
 
-  ColumnFilters<bool> get isLocation => $state.composableBuilder(
-      column: $state.table.isLocation,
-      builder: (column, joinBuilders) =>
-          ColumnFilters(column, joinBuilders: joinBuilders));
+  ColumnFilters<bool> get isLocation => $composableBuilder(
+      column: $table.isLocation, builder: (column) => ColumnFilters(column));
 
   ColumnWithTypeConverterFilters<WeatherResult?, WeatherResult, String>
-      get weather => $state.composableBuilder(
-          column: $state.table.weather,
-          builder: (column, joinBuilders) => ColumnWithTypeConverterFilters(
-              column,
-              joinBuilders: joinBuilders));
+      get weather => $composableBuilder(
+          column: $table.weather,
+          builder: (column) => ColumnWithTypeConverterFilters(column));
 }
 
-class $$CityTableOrderingComposer
-    extends OrderingComposer<_$AppDatabase, $CityTable> {
-  $$CityTableOrderingComposer(super.$state);
-  ColumnOrderings<String> get name => $state.composableBuilder(
-      column: $state.table.name,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+class $$CityTableOrderingComposer extends Composer<_$AppDatabase, $CityTable> {
+  $$CityTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get name => $composableBuilder(
+      column: $table.name, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get lat => $state.composableBuilder(
-      column: $state.table.lat,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get lat => $composableBuilder(
+      column: $table.lat, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get lon => $state.composableBuilder(
-      column: $state.table.lon,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get lon => $composableBuilder(
+      column: $table.lon, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<BigInt> get sort => $state.composableBuilder(
-      column: $state.table.sort,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<BigInt> get sort => $composableBuilder(
+      column: $table.sort, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<bool> get isLocation => $state.composableBuilder(
-      column: $state.table.isLocation,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<bool> get isLocation => $composableBuilder(
+      column: $table.isLocation, builder: (column) => ColumnOrderings(column));
 
-  ColumnOrderings<String> get weather => $state.composableBuilder(
-      column: $state.table.weather,
-      builder: (column, joinBuilders) =>
-          ColumnOrderings(column, joinBuilders: joinBuilders));
+  ColumnOrderings<String> get weather => $composableBuilder(
+      column: $table.weather, builder: (column) => ColumnOrderings(column));
+}
+
+class $$CityTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CityTable> {
+  $$CityTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<String> get lat =>
+      $composableBuilder(column: $table.lat, builder: (column) => column);
+
+  GeneratedColumn<String> get lon =>
+      $composableBuilder(column: $table.lon, builder: (column) => column);
+
+  GeneratedColumn<BigInt> get sort =>
+      $composableBuilder(column: $table.sort, builder: (column) => column);
+
+  GeneratedColumn<bool> get isLocation => $composableBuilder(
+      column: $table.isLocation, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<WeatherResult?, String> get weather =>
+      $composableBuilder(column: $table.weather, builder: (column) => column);
 }
 
 class $$CityTableTableManager extends RootTableManager<
@@ -462,6 +476,7 @@ class $$CityTableTableManager extends RootTableManager<
     CityData,
     $$CityTableFilterComposer,
     $$CityTableOrderingComposer,
+    $$CityTableAnnotationComposer,
     $$CityTableCreateCompanionBuilder,
     $$CityTableUpdateCompanionBuilder,
     (CityData, BaseReferences<_$AppDatabase, $CityTable, CityData>),
@@ -471,10 +486,12 @@ class $$CityTableTableManager extends RootTableManager<
       : super(TableManagerState(
           db: db,
           table: table,
-          filteringComposer:
-              $$CityTableFilterComposer(ComposerState(db, table)),
-          orderingComposer:
-              $$CityTableOrderingComposer(ComposerState(db, table)),
+          createFilteringComposer: () =>
+              $$CityTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CityTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CityTableAnnotationComposer($db: db, $table: table),
           updateCompanionCallback: ({
             Value<String> name = const Value.absent(),
             Value<String> lat = const Value.absent(),
@@ -524,6 +541,7 @@ typedef $$CityTableProcessedTableManager = ProcessedTableManager<
     CityData,
     $$CityTableFilterComposer,
     $$CityTableOrderingComposer,
+    $$CityTableAnnotationComposer,
     $$CityTableCreateCompanionBuilder,
     $$CityTableUpdateCompanionBuilder,
     (CityData, BaseReferences<_$AppDatabase, $CityTable, CityData>),

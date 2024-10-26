@@ -26,6 +26,7 @@ android {
     namespace "me.spica.spica_weather_flutter"
     compileSdk 34
     ndkVersion flutter.ndkVersion
+    ndkVersion = "26.1.10909125"
 
 //    configurations.all {
 //        resolutionStrategy {
