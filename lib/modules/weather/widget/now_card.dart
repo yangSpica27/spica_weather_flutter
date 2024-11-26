@@ -107,26 +107,16 @@ class _DescTextWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return RichText(
         text: TextSpan(children: [
-      TextSpan(
-          text: ' ',
-          style: TextStyle(
-              fontSize: 16.sp,
-              color: Theme.of(context).colorScheme.surface,
-              fontWeight: FontWeight.w500)),
+      WidgetSpan(child: SizedBox(width: 8.w)),
       TextSpan(
           text: weather.todayWeather?.weatherName ?? '',
           style: TextStyle(
               fontSize: 16.sp,
               color: Theme.of(context).colorScheme.surface,
               fontWeight: FontWeight.w500)),
+      WidgetSpan(child: SizedBox(width: 8.w)),
       TextSpan(
-          text: " ",
-          style: TextStyle(
-              fontSize: 16.sp,
-              color: Theme.of(context).colorScheme.surface,
-              fontWeight: FontWeight.w400)),
-      TextSpan(
-          text: "体感：",
+          text: "体感",
           style: TextStyle(
               fontSize: 16.sp,
               color: Theme.of(context).colorScheme.surface,
@@ -140,17 +130,12 @@ class _DescTextWidget extends StatelessWidget {
       TextSpan(
           text: "℃",
           style: TextStyle(
-              fontSize: 16.sp,
+              fontSize: 12.sp,
               color: Theme.of(context).colorScheme.surface,
               fontWeight: FontWeight.w400)),
+      WidgetSpan(child: SizedBox(width: 8.w)),
       TextSpan(
-          text: " ",
-          style: TextStyle(
-              fontSize: 16.sp,
-              color: Theme.of(context).colorScheme.surface,
-              fontWeight: FontWeight.w500)),
-      TextSpan(
-          text: "空气质量：",
+          text: "空气质量:",
           style: TextStyle(
               fontSize: 16.sp,
               color: Theme.of(context).colorScheme.surface,

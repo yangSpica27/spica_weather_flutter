@@ -77,7 +77,6 @@ class _WeatherPageState extends State<WeatherPage>
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(.25),
                 selectedColor: Theme.of(context).colorScheme.onSurface,
               )),
-
               /// 内容区
               Expanded(
                 flex: 1,

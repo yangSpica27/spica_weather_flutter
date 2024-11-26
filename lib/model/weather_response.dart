@@ -128,8 +128,7 @@ class WeatherResult {
       data['dailyWeather'] = dailyWeather!.map((v) => v.toJson()).toList();
     }
     if (hourlyWeather != null) {
-      data['hourlyWeather'] =
-          hourlyWeather!.map((v) => v.toJson()).toList();
+      data['hourlyWeather'] = hourlyWeather!.map((v) => v.toJson()).toList();
     }
     if (lifeIndexes != null) {
       data['lifeIndexes'] = lifeIndexes!.map((v) => v.toJson()).toList();
@@ -160,6 +159,14 @@ class Warning {
   String? startTime;
 
   Warning({this.sender, this.title, this.text, this.startTime});
+
+  static final RegExp regExp = RegExp('^[^发布\n]+发布');
+
+  String getShortTitle() {
+    return title?.replaceAll(regExp.firstMatch(title!)?.group(0) ?? "", '') ??
+        title ??
+        "";
+  }
 
   Warning.fromJson(Map<String, dynamic> json) {
     sender = json['sender'];

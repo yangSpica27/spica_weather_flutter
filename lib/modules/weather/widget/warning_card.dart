@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../../model/weather_response.dart';
 
-class WarningCard extends StatelessWidget {
+class WarningCard extends StatefulWidget {
   const WarningCard({super.key, required this.weather});
 
   final WeatherResult weather;
 
   @override
+  State<WarningCard> createState() => _WarningCardState();
+}
+
+class _WarningCardState extends State<WarningCard> {
+  late final PageController pageController = PageController();
+
+  @override
   Widget build(BuildContext context) {
-    if (weather.warnings == null || weather.warnings!.isEmpty) {
+    if (widget.weather.warnings == null || widget.weather.warnings!.isEmpty) {
       return Card(
           child: Padding(
         padding: EdgeInsets.all(15.w),
@@ -22,69 +30,74 @@ class WarningCard extends StatelessWidget {
         ),
       ));
     }
+    final list = widget.weather.warnings!.map((e) => WarnItem(e)).toList();
     return Card(
         child: Padding(
       padding: EdgeInsets.all(15.w),
       child: Column(
-        children:
-            weather.warnings?.map((e) => _warnItem(e, context)).toList() ?? [],
+        children: [
+          SizedBox(
+            height: 102.w,
+            child: PageView(
+              controller: pageController,
+              children: list,
+            ),
+          ),
+          Visibility(
+              visible: list.length > 1,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 10.w),
+                  child: SmoothPageIndicator(
+                      controller: pageController,
+                      count: list.length,
+                      effect: WormEffect(
+                        dotHeight: 2.w,
+                        dotWidth: 12.w,
+                        radius: 2.w,
+                        activeDotColor: Theme.of(context).colorScheme.onSurface,
+                        dotColor: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(.3),
+                      ))))
+        ],
       ),
     ));
   }
+}
 
-  Widget _warnItem(Warning warning, BuildContext context) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-          hoverColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          dividerColor: Colors.transparent,
-          splashColor: Colors.transparent),
-      child: ExpansionTile(
-        title: Text(
-          warning.title ?? "",
-          style: Theme.of(context).textTheme.titleMedium,
+class WarnItem extends StatelessWidget {
+  final Warning e;
+
+  const WarnItem(this.e, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          e.getShortTitle(),
+          maxLines: 1,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(),
         ),
-        tilePadding: EdgeInsets.zero,
-        expandedCrossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 12.w,
-          ),
-          Text(
-            "开始时间 ${warning.startTime}",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          SizedBox(
-            height: 12.w,
-          ),
-          Text(
-            warning.text ?? "",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          SizedBox(
-            height: 12.w,
-          ),
-          Text(
-            "来源:${warning.sender}",
-            style: Theme.of(context).textTheme.bodyMedium,
-          ),
-          SizedBox(
-            height: 12.w,
-          )
-        ],
-      ),
+        Text(
+          e.startTime ?? "",
+          maxLines: 1,
+          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(.4),
+              ),
+        ),
+        const Spacer(),
+        Text(
+          e.text ?? '',
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+              ),
+        )
+      ],
     );
   }
-//
-// String formatMinutesAgo(DateTime pastTime) {
-//   final now = DateTime.now();
-//   final minutesAgo = now.difference(pastTime).inMinutes;
-//   if (minutesAgo < 1) {
-//     return '几秒前';
-//   } else if (minutesAgo < 60) {
-//     return '$minutesAgo分钟前';
-//   } else {
-//     return '${minutesAgo ~/ 60}小时前';
-//   }
-// }
 }
