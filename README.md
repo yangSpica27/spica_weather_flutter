@@ -3,6 +3,7 @@
 ## 预览图
 
 <div style="display: flex;justify-content: flex-start">
+<img src="pic/f761b8ba0547bda96671edd603221da7.jpeg" width="20%"/>
 <img src="https://s3.bmp.ovh/imgs/2024/08/06/f2c28574f7846702.png" width="20%"/>
 <img src="https://s3.bmp.ovh/imgs/2024/08/15/d1ddd36eab60aa42.png" width="20%"/>
 <img src="https://s3.bmp.ovh/imgs/2024/08/06/eb46d15fe13145b2.png" width="20%"/>
