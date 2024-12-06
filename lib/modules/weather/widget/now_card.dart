@@ -161,7 +161,7 @@ class _BottomTextWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-          color: const Color(0x1f4a4a4a),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(.1),
           borderRadius: BorderRadius.circular(10.w)),
       child: Stack(
         children: [

@@ -20,7 +20,7 @@ class WeatherAnimView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return CloudyView(width: width, height: height);
+    // return RainView(width: width, height: height);
     switch (_weatherAnimType) {
       case WeatherAnimType.SUNNY:
         return SunnyView(width, height);

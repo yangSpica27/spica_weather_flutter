@@ -82,7 +82,7 @@ class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
             height: 12.w,
           ),
           widget.weather.hourlyWeather == null
-              ? _emptyWidget(context)
+              ? const EmptyDataPlaceHolder()
               : SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   controller: _scrollController,
@@ -108,14 +108,21 @@ class _HourlyCardState extends State<HourlyCard> with TickerProviderStateMixin {
       ),
     ));
   }
+}
 
-  _emptyWidget(BuildContext context) => Container(
-        padding: EdgeInsets.symmetric(vertical: 10.w),
-        child: Text(
-          "暂无数据",
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-      );
+class EmptyDataPlaceHolder extends StatelessWidget {
+  const EmptyDataPlaceHolder({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.w),
+      child: Text(
+        "暂无数据",
+        style: Theme.of(context).textTheme.titleMedium,
+      ),
+    );
+  }
 }
 
 class _LinePainter extends CustomPainter {
@@ -173,22 +180,24 @@ class _LinePainter extends CustomPainter {
       yPoints.add(topLinePadding +
           lineHeight -
           ((value.temp! - minTemp).toDouble() /
-                  (maxTemp - minTemp).toDouble() *
+                  max((maxTemp - minTemp).toDouble(), 1) *
                   lineHeight.toDouble()) *
               progress);
-
       yPoints2.add(lineHeight + bottomLinePadding);
+
       colors.add(value.iconId?.getWeatherColor() ?? Colors.blue[500]!);
     });
 
-    // 设定初始点
-    path.moveTo(xPoints.firstOrNull ?? 0, yPoints.firstOrNull ?? 0);
-    path2.moveTo(xPoints.firstOrNull ?? 0, yPoints.firstOrNull ?? 0);
-
     // 画线
     data.asMap().forEach((index, value) {
-      path.lineTo(xPoints[index], yPoints[index]);
-      path2.lineTo(xPoints[index], yPoints[index]);
+      if (index == 0) {
+        // 设定初始点
+        path.moveTo(xPoints[index], yPoints[index]);
+        path2.moveTo(xPoints[index], yPoints[index]);
+      } else {
+        path.lineTo(xPoints[index], yPoints[index]);
+        path2.lineTo(xPoints[index], yPoints[index]);
+      }
     });
     path2 = _createSmoothPath(path2);
 
@@ -222,6 +231,7 @@ class _LinePainter extends CustomPainter {
   final Paint _paint = Paint()
     ..color = Colors.blue
     ..strokeWidth = 2.w
+    ..strokeJoin = StrokeJoin.round
     ..style = PaintingStyle.fill
     ..strokeCap = StrokeCap.round;
 
@@ -354,17 +364,36 @@ class _LinePainter extends CustomPainter {
   Path _createSmoothPath(Path originalPath) {
     final PathMetric pathMetric = originalPath.computeMetrics().first;
     final Path smoothPath = Path();
+    // 分段平滑的数量
     const int divisions = 100;
+    List<Tangent> tangents = [];
     for (int i = 0; i <= divisions; i++) {
       final double x = i / divisions * pathMetric.length;
       final Tangent? tangent = pathMetric.getTangentForOffset(x);
       if (tangent != null) {
-        if (i == 0) {
-          smoothPath.moveTo(tangent.position.dx, tangent.position.dy);
-        } else {
-          smoothPath.lineTo(tangent.position.dx, tangent.position.dy);
-        }
+        tangents.add(tangent);
       }
+    }
+
+    for (int index = 0; index <= tangents.length; index += 4) {
+      if (index == 0) {
+        smoothPath.moveTo(
+            tangents.first.position.dx, tangents.first.position.dy);
+      }
+      if (index + 3 >= tangents.length) {
+        smoothPath.lineTo(tangents.last.position.dx, tangents.last.position.dy);
+        break;
+      }
+      final Tangent t2 = tangents[index + 1];
+      final Tangent t3 = tangents[index + 2];
+      final Tangent t4 = tangents[index + 3];
+      final double x2 = t2.position.dx;
+      final double y2 = t2.position.dy;
+      final double x3 = t3.position.dx;
+      final double y3 = t3.position.dy;
+      final double x4 = t4.position.dx;
+      final double y4 = t4.position.dy;
+      smoothPath.cubicTo(x2, y2, x3, y3, x4, y4);
     }
 
     return smoothPath;
