@@ -254,12 +254,14 @@ class _LinePainter extends CustomPainter {
     for (int i = 0; i < colors.length; i++) {
       _paint.color = colors[i].withOpacity(.3);
       canvas.drawRRect(
-          ui.RRect.fromLTRBR(
-              xPoints[i] - itemWidth / 2 + 2.w,
-              yPoints2[i] + 2.w,
-              xPoints[i] + itemWidth / 2 - 2.w,
-              yPoints2[i] + rectHeight,
-              const ui.Radius.circular(4)),
+          ui.RRect.fromRectAndCorners(
+              Rect.fromLTRB(xPoints[i] - itemWidth / 2 + 2.w,
+                  yPoints2[i] + 2.w,
+                  xPoints[i] + itemWidth / 2 - 2.w,
+                  yPoints2[i] + rectHeight),
+              topLeft:ui.Radius.circular(4.w),
+              topRight: ui.Radius.circular(4.w),
+          ),
           _paint);
     }
 

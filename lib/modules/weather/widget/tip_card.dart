@@ -67,7 +67,7 @@ class _TipItemWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
-          color: const Color(0x1a4a4a4a),
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(25),
           borderRadius: BorderRadius.circular(8.w)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,7 +77,10 @@ class _TipItemWidget extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .titleMedium
-                ?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                ?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
+            ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

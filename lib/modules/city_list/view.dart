@@ -231,7 +231,8 @@ class _ItemCity extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
               decoration: BoxDecoration(
                   border: Border.all(
-                      color: isSort ? Colors.grey[500]! : Colors.transparent),
+                    width: 2.w,
+                      color: isSort ? Colors.white.withAlpha(125) : Colors.transparent),
                   color:
                       item.weather?.todayWeather?.iconId?.getWeatherColor() ??
                           Colors.blue[500],

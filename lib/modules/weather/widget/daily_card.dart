@@ -99,7 +99,7 @@ class DailyCard extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  childAspectRatio: 2.5,
+                  childAspectRatio: 2.2,
                   crossAxisSpacing: 10.w,
                   mainAxisSpacing: 10.w),
               children: [
@@ -123,10 +123,12 @@ class DailyCard extends StatelessWidget {
           String assets, String title, String value, BuildContext context) =>
       Container(
         padding: EdgeInsets.all(8.w),
+        alignment: Alignment.centerLeft,
         decoration: BoxDecoration(
-            color: const Color(0x1a4a4a4a),
+            color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(25),
             borderRadius: BorderRadius.circular(8.w)),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
               assets,
@@ -140,6 +142,7 @@ class DailyCard extends StatelessWidget {
               flex: 1,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     title,
@@ -151,11 +154,11 @@ class DailyCard extends StatelessWidget {
                   Text(
                     value,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w400,
+                          fontWeight: FontWeight.normal,
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(.5),
+                              .withAlpha(125),
                         ),
                   )
                 ],
