@@ -34,13 +34,21 @@ class _WeatherPageState extends State<WeatherPage>
 
   late TabController tabController = TabController(length: 1, vsync: this);
 
+  // page切换前的index
+  int lastIndex = 0;
+
   @override
-  Widget build(BuildContext context) {
+  void initState() {
     logic.data.listen((p0) {
       tabController = TabController(length: p0.length, vsync: this);
+      lastIndex = 0;
       pageController.jumpToPage(0);
     });
+    super.initState();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
@@ -74,9 +82,10 @@ class _WeatherPageState extends State<WeatherPage>
               Center(
                   child: TabPageSelector(
                 controller: tabController,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.25),
+                color: Theme.of(context).colorScheme.onSurface.withAlpha((.25*255).round()),
                 selectedColor: Theme.of(context).colorScheme.onSurface,
               )),
+
               /// 内容区
               Expanded(
                 flex: 1,
@@ -85,15 +94,23 @@ class _WeatherPageState extends State<WeatherPage>
                     if (index < tabController.length) {
                       tabController.animateTo(index);
                     }
+                    lastIndex = logic.pageIndex.value;
                     logic.pageIndex.value = index;
                   },
                   controller: pageController,
                   children: logic.data
-                      .map((element) => element.weather == null
+                      .asMap()
+                      .entries
+                      .map((element) => element.value.weather == null
                           ? const Center(
                               child: CircularProgressIndicator(),
                             )
-                          : InfoListWidget(data: element, physics: physics))
+                          : InfoListWidget(
+                              needFromExtraAnim: false,
+                              // needFromExtraAnim: lastIndex != element.key,
+                              fromLeft: lastIndex < element.key,
+                              data: element.value,
+                              physics: physics))
                       .toList(),
                 ),
               )
@@ -113,15 +130,26 @@ class _WeatherPageState extends State<WeatherPage>
 }
 
 class InfoListWidget extends StatelessWidget {
-  const InfoListWidget({super.key, required this.data, this.physics});
+  const InfoListWidget(
+      {super.key,
+      required this.data,
+      this.physics,
+      this.fromLeft = true,
+      this.needFromExtraAnim = false});
 
   final CityData data;
 
   final ScrollPhysics? physics;
 
+  // 动画的方向
+  final bool fromLeft;
+
+  // 是否执行额外的入场动画
+  final bool needFromExtraAnim;
+
   @override
   Widget build(BuildContext context) {
-    final items = [
+    var items = [
       NowCard(
         key: UniqueKey(),
         weather: data.weather!,
@@ -139,6 +167,7 @@ class InfoListWidget extends StatelessWidget {
         data.weather?.warnings?.isNotEmpty == true) {
       items.insert(1, WarningCard(weather: data.weather!));
     }
+
     /// 如果是雨天则插入降水卡片
     if (data.weather?.todayWeather?.iconId
                 ?.getWeatherType()
@@ -151,7 +180,15 @@ class InfoListWidget extends StatelessWidget {
     return ListView.separated(
         physics: physics,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
-        itemBuilder: (context, index) => items[index],
+        itemBuilder: (context, index) =>
+            // 根据条件是否引入额外的动画
+            needFromExtraAnim
+                ? EnterPageAnimWidget(
+                    startOffset: Offset(fromLeft ? -1 : 1, 0),
+                    delay: Duration(milliseconds: 150 * index),
+                    duration: Duration(milliseconds: 100 * index + 450),
+                    child: items[index])
+                : items[index],
         separatorBuilder: (context, index) => Divider(
               height: 8.w,
               color: Colors.transparent,
