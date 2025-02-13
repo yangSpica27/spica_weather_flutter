@@ -29,7 +29,7 @@ class AlertDetailPage extends StatelessWidget {
       ),
       body: ListView(
         children:
-            Get.arguments.map((e) => _AlertItemWidget(warning: e)).toList(),
+        (Get.arguments as List<Warning>).map((e) => _AlertItemWidget(warning: e)).toList(),
       ),
     );
   }
