@@ -49,76 +49,162 @@ class _WeatherPageState extends State<WeatherPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Obx(() {
-          return Text((logic.data.isNotEmpty &&
-                  logic.pageIndex.value < logic.data.length)
-              ? logic.data[logic.pageIndex.value].name
-              : '');
-        }),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            Get.toNamed(Routes.CITY_LIST);
-          },
-        ),
-      ),
-      body: EasyRefresh.builder(
-        onRefresh: () async {
-          await logic.loadData();
-        },
-        onLoad: () async {
-          await logic.loadData();
-        },
-        childBuilder: (context, physics) => Obx(() {
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              /// TabPageSelector指示器
-              Center(
-                  child: TabPageSelector(
-                controller: tabController,
-                color: Theme.of(context).colorScheme.onSurface.withAlpha((.25*255).round()),
-                selectedColor: Theme.of(context).colorScheme.onSurface,
-              )),
-
-              /// 内容区
-              Expanded(
-                flex: 1,
-                child: PageView(
-                  onPageChanged: (index) {
-                    if (index < tabController.length) {
-                      tabController.animateTo(index);
-                    }
-                    lastIndex = logic.pageIndex.value;
-                    logic.pageIndex.value = index;
-                  },
-                  controller: pageController,
-                  children: logic.data
-                      .asMap()
-                      .entries
-                      .map((element) => element.value.weather == null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : InfoListWidget(
-                              needFromExtraAnim: false,
-                              // needFromExtraAnim: lastIndex != element.key,
-                              fromLeft: lastIndex < element.key,
-                              data: element.value,
-                              physics: physics))
-                      .toList(),
+    return NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                bottom: PreferredSize(
+                  preferredSize: Size(ScreenUtil().screenWidth, 20),
+                  child: Center(
+                      child: Obx(() => TabPageSelector(
+                            controller: TabController(
+                                initialIndex: logic.pageIndex.value,
+                                length: logic.data.length,
+                                vsync: this),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withAlpha((.25 * 255).round()),
+                            selectedColor:
+                                Theme.of(context).colorScheme.onSurface,
+                          ))),
                 ),
-              )
-            ],
-          );
-        }),
-      ),
-    );
+                centerTitle: true,
+                title: Obx(() {
+                  return Text((logic.data.isNotEmpty &&
+                          logic.pageIndex.value < logic.data.length)
+                      ? logic.data[logic.pageIndex.value].name
+                      : '');
+                }),
+                leading: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Get.toNamed(Routes.CITY_LIST);
+                  },
+                ),
+              ),
+            )
+          ];
+        },
+        body: EasyRefresh.builder(
+          onRefresh: () async {
+            await logic.loadData();
+          },
+          onLoad: () async {
+            await logic.loadData();
+          },
+          childBuilder: (context, physics) => Obx(() {
+            return Column(
+              mainAxisSize: MainAxisSize.max,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                /// 内容区
+                Expanded(
+                  flex: 1,
+                  child: PageView(
+                    onPageChanged: (index) {
+                      if (index < tabController.length) {
+                        tabController.animateTo(index);
+                      }
+                      lastIndex = logic.pageIndex.value;
+                      logic.pageIndex.value = index;
+                    },
+                    controller: pageController,
+                    children: logic.data
+                        .asMap()
+                        .entries
+                        .map((element) => element.value.weather == null
+                            ? const Center(
+                                child: CircularProgressIndicator(),
+                              )
+                            : InfoListWidget(
+                                needFromExtraAnim: false,
+                                // needFromExtraAnim: lastIndex != element.key,
+                                fromLeft: lastIndex < element.key,
+                                data: element.value,
+                                physics: physics))
+                        .toList(),
+                  ),
+                )
+              ],
+            );
+          }),
+        ));
+    // return Scaffold(
+    //   backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+    //   appBar: AppBar(
+    //     centerTitle: true,
+    //     title: Obx(() {
+    //       return Text((logic.data.isNotEmpty &&
+    //               logic.pageIndex.value < logic.data.length)
+    //           ? logic.data[logic.pageIndex.value].name
+    //           : '');
+    //     }),
+    //     leading: IconButton(
+    //       icon: const Icon(Icons.menu),
+    //       onPressed: () {
+    //         Get.toNamed(Routes.CITY_LIST);
+    //       },
+    //     ),
+    //   ),
+    //   body: EasyRefresh.builder(
+    //     onRefresh: () async {
+    //       await logic.loadData();
+    //     },
+    //     onLoad: () async {
+    //       await logic.loadData();
+    //     },
+    //     childBuilder: (context, physics) => Obx(() {
+    //       return Column(
+    //         mainAxisSize: MainAxisSize.max,
+    //         crossAxisAlignment: CrossAxisAlignment.stretch,
+    //         children: [
+    //           /// TabPageSelector指示器
+    //           Center(
+    //               child: TabPageSelector(
+    //             controller: tabController,
+    //             color: Theme.of(context)
+    //                 .colorScheme
+    //                 .onSurface
+    //                 .withAlpha((.25 * 255).round()),
+    //             selectedColor: Theme.of(context).colorScheme.onSurface,
+    //           )),
+    //
+    //           /// 内容区
+    //           Expanded(
+    //             flex: 1,
+    //             child: PageView(
+    //               onPageChanged: (index) {
+    //                 if (index < tabController.length) {
+    //                   tabController.animateTo(index);
+    //                 }
+    //                 lastIndex = logic.pageIndex.value;
+    //                 logic.pageIndex.value = index;
+    //               },
+    //               controller: pageController,
+    //               children: logic.data
+    //                   .asMap()
+    //                   .entries
+    //                   .map((element) => element.value.weather == null
+    //                       ? const Center(
+    //                           child: CircularProgressIndicator(),
+    //                         )
+    //                       : InfoListWidget(
+    //                           needFromExtraAnim: false,
+    //                           // needFromExtraAnim: lastIndex != element.key,
+    //                           fromLeft: lastIndex < element.key,
+    //                           data: element.value,
+    //                           physics: physics))
+    //                   .toList(),
+    //             ),
+    //           )
+    //         ],
+    //       );
+    //     }),
+    //   ),
+    // );
   }
 
   @override

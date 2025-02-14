@@ -80,7 +80,7 @@ class _AirDescCardState extends State<AirDescCard>
               Container(
                   alignment: Alignment.center,
                   height: 110.w,
-                  width: ScreenUtil().screenWidth / 2 - 40.w,
+                  width: ScreenUtil().screenWidth / 2 - 38.w,
                   child: _RightDescWidget(weather: widget.weather)),
             ],
           ),
