@@ -7,13 +7,16 @@ import 'logic.dart';
 /// 预警信息详情
 class AlertDetailPage extends StatelessWidget {
   AlertDetailPage({super.key});
-
+  // 获取逻辑层
   final logic = Get.find<AlertDetailLogic>();
+  // 获取状态
   final state = Get.find<AlertDetailLogic>().state;
 
   @override
   Widget build(BuildContext context) {
+    // 判断是否传递了参数
     if (Get.arguments == null) {
+      // 没有参数时展示提示页面
       return Scaffold(
         appBar: AppBar(
           title: const Text('预警信息'),
@@ -23,6 +26,7 @@ class AlertDetailPage extends StatelessWidget {
         ),
       );
     }
+    // 展示预警信息列表
     return Scaffold(
       appBar: AppBar(
         title: const Text('预警信息'),
@@ -42,9 +46,12 @@ class _AlertItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 展示容器
     return Container(
+      // 设置内边距
       padding: const EdgeInsets.all(10),
       child: Column(
+        // 子组件左对齐
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisSize: MainAxisSize.min,
         children: [

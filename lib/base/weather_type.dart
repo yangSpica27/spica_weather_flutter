@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:spica_weather_flutter/generated/assets.dart';
 
+/// 天气枚举
 enum WeatherType {
   WEATHER_SUNNY,
   WEATHER_CLOUDY,
@@ -19,6 +20,7 @@ enum WeatherType {
   WEATHER_SANDSTORM,
 }
 
+/// 根据天气类型获取颜色
 extension WeatherTypeOnIntExtension on int {
   Color getWeatherColor() {
     switch (getWeatherType()) {
@@ -49,6 +51,7 @@ extension WeatherTypeOnIntExtension on int {
     }
   }
 
+  /// 根据天气编码获取天气类型
   WeatherType getWeatherType() {
     switch (this) {
       case 302:
@@ -139,6 +142,7 @@ extension WeatherTypeOnIntExtension on int {
   }
 }
 
+/// 根据天气类型获取icon
 extension WeatherTypeExtension on WeatherType {
   String getIconAssetString() {
     switch (this) {
@@ -169,6 +173,7 @@ extension WeatherTypeExtension on WeatherType {
     }
   }
 
+  /// 根据天气类型获取天气动画类型
   WeatherAnimType getWeatherAnimType() {
     switch (this) {
       case WeatherType.WEATHER_SUNNY:
@@ -199,6 +204,7 @@ extension WeatherTypeExtension on WeatherType {
   }
 }
 
+/// 天气动画类型
 enum WeatherAnimType {
   SUNNY, // 晴朗
   CLOUDY, // 多云

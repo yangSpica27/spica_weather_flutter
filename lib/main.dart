@@ -1,4 +1,3 @@
-
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +10,7 @@ import 'base/theme.dart';
 import 'routes/app_pages.dart';
 
 // 佛祖保佑，永无BUG
+//
 void main() {
   runApp(const MyApp());
 }
@@ -18,7 +18,6 @@ void main() {
 // 应用入口
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -43,26 +42,26 @@ class MyApp extends StatelessWidget {
           builder: EasyLoading.init(),
           // 主题
           theme: const MaterialTheme(TextTheme()).light().copyWith(
-            appBarTheme: const AppBarTheme(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.dark,
-                systemNavigationBarColor: Colors.white,
-                systemNavigationBarIconBrightness: Brightness.dark,
+                appBarTheme: const AppBarTheme(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarIconBrightness: Brightness.dark,
+                    systemNavigationBarColor: Colors.white,
+                    systemNavigationBarIconBrightness: Brightness.dark,
+                  ),
+                ),
               ),
-            ),
-          ),
           // 暗黑模式
           darkTheme: const MaterialTheme(TextTheme()).dark().copyWith(
-            appBarTheme: const AppBarTheme(
-              systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: Colors.transparent,
-                statusBarIconBrightness: Brightness.light,
-                systemNavigationBarColor: Colors.black,
-                systemNavigationBarIconBrightness: Brightness.light,
+                appBarTheme: const AppBarTheme(
+                  systemOverlayStyle: SystemUiOverlayStyle(
+                    statusBarColor: Colors.transparent,
+                    statusBarIconBrightness: Brightness.light,
+                    systemNavigationBarColor: Colors.black,
+                    systemNavigationBarIconBrightness: Brightness.light,
+                  ),
+                ),
               ),
-            ),
-          ),
           // 入口
           initialRoute: AppPages.INITIAL,
           // 路由

@@ -13,7 +13,6 @@ import '../model/weather_response.dart';
 part 'database.g.dart';
 
 /// 城市表
-
 class City extends Table {
   TextColumn get name => text()();
 
