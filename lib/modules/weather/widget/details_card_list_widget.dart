@@ -44,19 +44,76 @@ class DetailsCardListWidget extends StatelessWidget {
     ];
     // return Container();
 
-    return GridView.count(
-      shrinkWrap: true,
-      crossAxisSpacing: 8.w,
-      childAspectRatio: 0.95,
-      mainAxisSpacing: 8.w,
-      crossAxisCount: 2,
-      physics: const NeverScrollableScrollPhysics(),
-      children: items,
-      // itemCount: items.length,
-      // builder: (context, index) {
-      //   return items[index];
-      // },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 1,
+              child: AspectRatio(
+                aspectRatio: 0.95,
+                child: items[0],
+              ),
+            ),
+            SizedBox(
+              width: 8.w,
+            ),
+            Expanded(
+              flex: 1,
+              child: AspectRatio(
+                aspectRatio: 0.95,
+                child: items[1],
+              ),
+            ),
+          ],
+        ),
+        SizedBox(
+          height: 8.w,
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: 1,
+              child: AspectRatio(
+                aspectRatio: 0.95,
+                child: items[2],
+              ),
+            ),
+            SizedBox(
+              width: 8.w,
+            ),
+            Expanded(
+              flex: 1,
+              child: AspectRatio(
+                aspectRatio: 0.95,
+                child: items[3],
+              ),
+            ),
+          ],
+        ),
+      ],
     );
+
+    // 如下实现会有bug 导致外层高度测量错误暂时舍弃
+    // return Container(
+    //   color: Colors.amberAccent,
+    //   child: GridView.count(
+    //     shrinkWrap: true,
+    //     crossAxisSpacing: 8.w,
+    //     childAspectRatio: 0.95,
+    //     mainAxisSpacing: 8.w,
+    //     addRepaintBoundaries: false,
+    //     crossAxisCount: 2,
+    //     physics: const NeverScrollableScrollPhysics(),
+    //     children: items,
+    //   ),
+    // );
   }
 }
 
@@ -256,7 +313,7 @@ class ItemWidget extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(.5),
+                          .withAlpha(125),
                     ),
                     alignment: PlaceholderAlignment.middle),
                 const WidgetSpan(
@@ -270,7 +327,7 @@ class ItemWidget extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(.5),
+                              .withAlpha(125),
                         )),
               ])),
             ),
@@ -304,7 +361,7 @@ class ItemWidget extends StatelessWidget {
                       color: Theme.of(context)
                           .colorScheme
                           .onSurface
-                          .withOpacity(.5),
+                          .withAlpha(125),
                       overflow: TextOverflow.ellipsis,
                       fontWeight: FontWeight.normal,
                     ),

@@ -29,14 +29,13 @@ class DailyCard extends StatelessWidget {
                       Colors.blue[500]),
             ),
             (weather.dailyWeather != null)
-                ? ListView.separated(
-                    itemBuilder: (context, index) =>
-                        _itemBuilder(context, index),
-                    separatorBuilder: (context, index) => const SizedBox(),
-                    itemCount: weather.dailyWeather?.length ?? 0,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                  )
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: weather.dailyWeather!
+                        .asMap()
+                        .entries
+                        .map((e) => _itemBuilder(context, e.key))
+                        .toList())
                 : _emptyWidget(context),
           ],
         ),
@@ -54,7 +53,7 @@ class DailyCard extends StatelessWidget {
       );
 
   /// 列表项构建
-  _itemBuilder(BuildContext context, int index) {
+  Widget _itemBuilder(BuildContext context, int index) {
     return Theme(
         data: Theme.of(context).copyWith(
             hoverColor: Colors.transparent,

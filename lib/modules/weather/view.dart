@@ -37,6 +37,8 @@ class _WeatherPageState extends State<WeatherPage>
   // page切换前的index
   int lastIndex = 0;
 
+  final ScrollController scrollController = ScrollController();
+
   @override
   void initState() {
     logic.data.listen((p0) {
@@ -49,82 +51,90 @@ class _WeatherPageState extends State<WeatherPage>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Obx(() {
-          return Text((logic.data.isNotEmpty &&
-                  logic.pageIndex.value < logic.data.length)
-              ? logic.data[logic.pageIndex.value].name
-              : '');
-        }),
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () {
-            Get.toNamed(Routes.CITY_LIST);
-          },
-        ),
-      ),
-      body: EasyRefresh.builder(
-        onRefresh: () async {
-          await logic.loadData();
-        },
-        onLoad: () async {
-          await logic.loadData();
-        },
-        childBuilder: (context, physics) => Obx(() {
-          return Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              /// TabPageSelector指示器
-              Center(
-                  child: TabPageSelector(
-                controller: tabController,
-                color: Theme.of(context).colorScheme.onSurface.withAlpha((.25*255).round()),
-                selectedColor: Theme.of(context).colorScheme.onSurface,
-              )),
-
-              /// 内容区
-              Expanded(
-                flex: 1,
-                child: PageView(
-                  onPageChanged: (index) {
-                    if (index < tabController.length) {
-                      tabController.animateTo(index);
-                    }
-                    lastIndex = logic.pageIndex.value;
-                    logic.pageIndex.value = index;
-                  },
-                  controller: pageController,
-                  children: logic.data
-                      .asMap()
-                      .entries
-                      .map((element) => element.value.weather == null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
+    return NestedScrollView(
+        controller: scrollController,
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                bottom: PreferredSize(
+                  preferredSize: Size(ScreenUtil().screenWidth, 30),
+                  child: Container(
+                      height: 30,
+                      alignment: Alignment.center,
+                      child: Obx(() => logic.data.isNotEmpty
+                          ? TabPageSelector(
+                              controller: TabController(
+                                  initialIndex: logic.pageIndex.value,
+                                  length: logic.data.length,
+                                  vsync: this),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withAlpha((.25 * 255).round()),
+                              selectedColor:
+                                  Theme.of(context).colorScheme.onSurface,
                             )
-                          : InfoListWidget(
-                              needFromExtraAnim: false,
-                              // needFromExtraAnim: lastIndex != element.key,
-                              fromLeft: lastIndex < element.key,
-                              data: element.value,
-                              physics: physics))
-                      .toList(),
+                          : const SizedBox())),
                 ),
-              )
-            ],
-          );
-        }),
-      ),
-    );
+                centerTitle: true,
+                title: Obx(() {
+                  return Text((logic.data.isNotEmpty &&
+                          logic.pageIndex.value < logic.data.length)
+                      ? logic.data[logic.pageIndex.value].name
+                      : '');
+                }),
+                leading: IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () {
+                    Get.toNamed(Routes.CITY_LIST);
+                  },
+                ),
+              ),
+            )
+          ];
+        },
+        body: EasyRefresh.builder(
+          onRefresh: () async {
+            await logic.loadData();
+          },
+          onLoad: () async {
+            await logic.loadData();
+          },
+          childBuilder: (context, physics) => Obx(() {
+            return PageView(
+              onPageChanged: (index) {
+                logic.pageIndex.value = index;
+                scrollController.animateTo(0,
+                    duration: const Duration(milliseconds: 155),
+                    curve: Curves.easeInCubic);
+              },
+              controller: pageController,
+              children: logic.data
+                  .asMap()
+                  .entries
+                  .map((element) => element.value.weather == null
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : InfoListWidget(
+                          needFromExtraAnim: false,
+                          // needFromExtraAnim: lastIndex != element.key,
+                          fromLeft: lastIndex < element.key,
+                          data: element.value,
+                          physics: physics))
+                  .toList(),
+            );
+          }),
+        ));
   }
 
   @override
   void dispose() {
     Get.delete<WeatherLogic>();
     pageController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 }
@@ -179,6 +189,7 @@ class InfoListWidget extends StatelessWidget {
 
     return ListView.separated(
         physics: physics,
+        addRepaintBoundaries: false,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
         itemBuilder: (context, index) =>
             // 根据条件是否引入额外的动画

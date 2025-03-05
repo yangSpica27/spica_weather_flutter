@@ -8,6 +8,8 @@ class WeatherLogic extends GetxController {
 
   final pageIndex = 0.obs;
 
+  final titleText = "".obs;
+
   @override
   void onReady() {
     super.onReady();
@@ -15,10 +17,6 @@ class WeatherLogic extends GetxController {
           ..orderBy([(t) => OrderingTerm(expression: t.sort)]))
         .watch());
   }
-
-
-
-
 
   loadData() {
     ApiRepository.fetchWeather();
