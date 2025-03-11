@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:spica_weather_flutter/base/weather_type.dart';
 import 'package:spica_weather_flutter/generated/assets.dart';
+import 'package:spica_weather_flutter/modules/weather/widget/fixed_grid_view/fixed_height_grid_view.dart';
 
 import '../../../model/weather_response.dart';
 
@@ -80,92 +81,117 @@ class DailyCard extends StatelessWidget {
   }
 
   /// 详细部分
-  _detailWidget(BuildContext context, DailyWeather dailyWeather) => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-              "白天 ${dailyWeather.weatherNameDay ?? "--"} / 夜间 ${dailyWeather.weatherNameNight ?? "--"}",
-              style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13.sp,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  )),
-          SizedBox(
-            height: 8.w,
-          ),
-          GridView(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 2.2,
-                  crossAxisSpacing: 10.w,
-                  mainAxisSpacing: 10.w),
-              children: [
-                _detailItem(Assets.assetsIcWater, "湿度",
-                    "${dailyWeather.water?.toString()}%", context),
-                _detailItem(Assets.assetsIcLightRain, "降水量",
-                    "${dailyWeather.precip?.toString()}mm", context),
-                _detailItem(Assets.assetsIcWindmill, "风速",
-                    "${dailyWeather.dayWindSpeed?.toString()}km/h", context),
-                _detailItem(Assets.assetsIcSunHat, "紫外线强度",
-                    "${dailyWeather.uv?.toString()}", context),
-                _detailItem(Assets.assetsIcCloudy, "云层覆盖率",
-                    "${dailyWeather.cloud?.toString()}%", context),
-                _detailItem(Assets.assetsIcTelescope, "能见度",
-                    "${dailyWeather.vis?.toString()}m", context),
-              ])
-        ],
-      );
-
-  _detailItem(
-          String assets, String title, String value, BuildContext context) =>
-      Container(
-        padding: EdgeInsets.all(8.w),
-        alignment: Alignment.centerLeft,
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(25),
-            borderRadius: BorderRadius.circular(8.w)),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Image.asset(
-              assets,
-              width: 24.w,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(.9),
-            ),
-            SizedBox(
-              width: 12.w,
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w500),
-                  ),
-                  Text(
-                    value,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.normal,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withAlpha(125),
-                        ),
-                  )
-                ],
-              ),
-            )
-          ],
+  _detailWidget(BuildContext context, DailyWeather dailyWeather) {
+    var items = [
+      _DetailItem(
+        assets: Assets.assetsIcWater,
+        title: "湿度",
+        value: "${dailyWeather.water?.toString()}%",
+      ),
+      _DetailItem(
+          assets: Assets.assetsIcLightRain,
+          title: "降水量",
+          value: "${dailyWeather.precip?.toString()}mm"),
+      _DetailItem(
+          assets: Assets.assetsIcWindmill,
+          title: "风速",
+          value: "${dailyWeather.dayWindSpeed?.toString()}km/h"),
+      _DetailItem(
+          assets: Assets.assetsIcSunHat,
+          title: "紫外线强度",
+          value: "${dailyWeather.uv?.toString()}"),
+      _DetailItem(
+          assets: Assets.assetsIcCloudy,
+          title: "云层覆盖率",
+          value: "${dailyWeather.cloud?.toString()}%"),
+      _DetailItem(
+        assets: Assets.assetsIcTelescope,
+        title: "能见度",
+        value: "${dailyWeather.vis?.toString()}m",
+      ),
+    ];
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+            "白天 ${dailyWeather.weatherNameDay ?? "--"} / 夜间 ${dailyWeather.weatherNameNight ?? "--"}",
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 13.sp,
+                  color: Theme.of(context).colorScheme.onSurface,
+                )),
+        SizedBox(
+          height: 8.w,
         ),
-      );
+        FixedHeightGridView(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: items.length,
+            builder: (_, index) => items[index])
+      ],
+    );
+  }
+}
+
+class _DetailItem extends StatelessWidget {
+  const _DetailItem(
+      {required this.assets,
+      required this.title,
+      required this.value});
+
+  final String assets;
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(8.w),
+      alignment: Alignment.centerLeft,
+      decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.onSurfaceVariant.withAlpha(25),
+          borderRadius: BorderRadius.circular(8.w)),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(
+            assets,
+            width: 24.w,
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(.9),
+          ),
+          SizedBox(
+            width: 12.w,
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(fontWeight: FontWeight.w500),
+                ),
+                Text(
+                  value,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.normal,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withAlpha(125),
+                      ),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
 }
 
 class _LinePainter extends CustomPainter {
