@@ -36,7 +36,8 @@ class DailyCard extends StatelessWidget {
                         .asMap()
                         .entries
                         .map((e) => _itemBuilder(context, e.key))
-                        .toList())
+                        .toList()
+            )
                 : _emptyWidget(context),
           ],
         ),

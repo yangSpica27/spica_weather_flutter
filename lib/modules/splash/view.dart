@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:spica_weather_flutter/generated/assets.dart';
+import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
 
 import 'logic.dart';
 
@@ -32,27 +33,24 @@ class _SplashPageState extends State<SplashPage> {
                 children: <Widget>[
                   Image.asset(Assets.assetsIcApp, width: 150.w),
                   SizedBox(height: 20.w),
-                  Text.rich(
-                    TextSpan(
-                      children: [
-                        TextSpan(
-                          text: '柠檬天气',
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        WidgetSpan(child: SizedBox(width: 10.w)),
-                        TextSpan(
-                          text: 'Flutter版',
-                          style: TextStyle(
-                            fontSize: 24.sp,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: "柠檬天气"
+                          .split("")
+                          .asMap()
+                          .entries
+                          .map((e) => EnterPageAnimWidget(
+                              startOpacity: 0,
+                              startOffset: Offset(0, .5 - .1 * e.key),
+                              delay: Duration(milliseconds: 100 * e.key),
+                              child: Text(
+                                e.value,
+                                style: TextStyle(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.w500),
+                              )))
+                          .toList()
+                  )
                 ],
               ),
             )),
