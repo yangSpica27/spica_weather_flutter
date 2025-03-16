@@ -51,83 +51,79 @@ class _WeatherPageState extends State<WeatherPage>
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-        controller: scrollController,
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: SliverAppBar(
-                bottom: PreferredSize(
-                  preferredSize: Size(ScreenUtil().screenWidth, 30),
-                  child: Container(
-                      height: 30,
-                      alignment: Alignment.center,
-                      child: Obx(() => logic.data.isNotEmpty
-                          ? TabPageSelector(
-                              controller: TabController(
-                                  initialIndex: logic.pageIndex.value,
-                                  length: logic.data.length,
-                                  vsync: this),
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSurface
-                                  .withAlpha((.25 * 255).round()),
-                              selectedColor:
-                                  Theme.of(context).colorScheme.onSurface,
-                            )
-                          : const SizedBox())),
-                ),
-                centerTitle: true,
-                title: Obx(() {
-                  return Text((logic.data.isNotEmpty &&
-                          logic.pageIndex.value < logic.data.length)
-                      ? logic.data[logic.pageIndex.value].name
-                      : '');
-                }),
-                leading: IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () {
-                    Get.toNamed(Routes.CITY_LIST);
-                  },
-                ),
-              ),
-            )
-          ];
+    return Scaffold(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      appBar: AppBar(
+        centerTitle: true,
+        title: Obx(() {
+          return Text((logic.data.isNotEmpty &&
+                  logic.pageIndex.value < logic.data.length)
+              ? logic.data[logic.pageIndex.value].name
+              : '');
+        }),
+        leading: IconButton(
+          icon: const Icon(Icons.menu),
+          onPressed: () {
+            Get.toNamed(Routes.CITY_LIST);
+          },
+        ),
+      ),
+      body: EasyRefresh.builder(
+        onRefresh: () async {
+          await logic.loadData();
         },
-        body: EasyRefresh.builder(
-          onRefresh: () async {
-            await logic.loadData();
-          },
-          onLoad: () async {
-            await logic.loadData();
-          },
-          childBuilder: (context, physics) => Obx(() {
-            return PageView(
-              onPageChanged: (index) {
-                logic.pageIndex.value = index;
-                scrollController.animateTo(0,
-                    duration: const Duration(milliseconds: 155),
-                    curve: Curves.easeInCubic);
-              },
-              controller: pageController,
-              children: logic.data
-                  .asMap()
-                  .entries
-                  .map((element) => element.value.weather == null
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : InfoListWidget(
-                          needFromExtraAnim: false,
-                          // needFromExtraAnim: lastIndex != element.key,
-                          fromLeft: lastIndex < element.key,
-                          data: element.value,
-                          physics: physics))
-                  .toList(),
-            );
-          }),
-        ));
+        onLoad: () async {
+          await logic.loadData();
+        },
+        childBuilder: (context, physics) => Obx(() {
+          return Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              /// TabPageSelector指示器
+              Center(
+                  child: TabPageSelector(
+                controller: tabController,
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withAlpha((.25 * 255).round()),
+                selectedColor: Theme.of(context).colorScheme.onSurface,
+              )),
+
+              /// 内容区
+              Expanded(
+                flex: 1,
+                child: PageView(
+                  onPageChanged: (index) {
+                    if (index < tabController.length) {
+                      tabController.animateTo(index);
+                    }
+                    lastIndex = logic.pageIndex.value;
+                    logic.pageIndex.value = index;
+                  },
+                  controller: pageController,
+                  children: logic.data
+                      .asMap()
+                      .entries
+                      .map((element) => element.value.weather == null
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : InfoListWidget(
+                              needFromExtraAnim: false,
+                              // needFromExtraAnim: lastIndex != element.key,
+                              fromLeft: lastIndex < element.key,
+                              data: element.value,
+                              physics: physics))
+                      .toList(),
+                ),
+              )
+            ],
+          );
+        }),
+      ),
+    );
   }
 
   @override
@@ -200,8 +196,8 @@ class InfoListWidget extends StatelessWidget {
                     duration: Duration(milliseconds: 100 * index + 450),
                     child: items[index])
                 : items[index],
-        separatorBuilder: (context, index) => Divider(
-              height: 8.w,
+        separatorBuilder: (context, index) => const Divider(
+              height: 8,
               color: Colors.transparent,
             ),
         itemCount: items.length);
