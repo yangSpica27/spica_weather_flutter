@@ -1,6 +1,5 @@
 <manifest
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:tools="http://schemas.android.com/tools">
+  xmlns:android="http://schemas.android.com/apk/res/android">
 
   <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   <uses-permission android:name="android.permission.INTERNET" />
@@ -14,16 +13,10 @@
   <application
     android:name="${applicationName}"
     android:icon="@drawable/app"
-    android:label="柠檬天气flutter版"
-    tools:replace="android:label">
-
+    android:label="柠檬天气flutter版">
     <meta-data
       android:name="com.baidu.lbsapi.API_KEY"
       android:value="tvXtsjpPUPY0Ow16z27m0vOpJRKdeZzL" />
-    <meta-data
-      android:name="io.flutter.embedding.android.EnableImpeller"
-      android:value="true" />
-
     <activity
       android:name=".MainActivity"
       android:theme="@style/LaunchTheme"
@@ -31,6 +24,7 @@
       android:exported="true"
       android:hardwareAccelerated="true"
       android:launchMode="singleTop"
+      android:taskAffinity=""
       android:windowSoftInputMode="adjustResize">
       <!-- Specifies an Android theme to apply to this Activity as soon as
            the Android process has started. This theme is visible to the user
@@ -51,7 +45,7 @@
       android:value="2" />
   </application>
   <!-- Required to query activities that can process text, see:
-       https://developer.android.com/training/package-visibility?hl=en and
+       https://developer.android.com/training/package-visibility and
        https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
 
        In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
