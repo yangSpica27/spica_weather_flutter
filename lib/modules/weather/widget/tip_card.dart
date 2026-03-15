@@ -14,6 +14,10 @@ class TipCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 新版 API 不提供生活指数，数据为空时不渲染卡片
+    if (weather.lifeIndexes == null || weather.lifeIndexes!.isEmpty) {
+      return const SizedBox.shrink();
+    }
     return Card(
       child: Padding(
         padding: EdgeInsets.all(15.w),

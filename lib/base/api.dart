@@ -1,5 +1,6 @@
 class Api {
-  static const String weatherUrl = "http://106.54.25.152:4040/api/weather/all";
+  static const String batchWeatherUrl =
+      "http://106.54.25.152:4141/api/weather/batch";
 
   static String reGeoUrl =
       "https://restapi.amap.com/v3/geocode/regeo?parameters";

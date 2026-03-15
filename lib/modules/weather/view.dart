@@ -169,7 +169,7 @@ class InfoListWidget extends StatelessWidget {
       DailyCard(weather: data.weather!),
       AirDescCard(weather: data.weather!),
       DetailsCardListWidget(weather: data.weather!),
-      TipCard(weather: data.weather!),
+      // TipCard(weather: data.weather!),
       const _FooterWidget(),
     ];
 

@@ -95,6 +95,9 @@ class _RightDescWidget extends StatelessWidget {
 
   const _RightDescWidget({required this.weather});
 
+  String _fmt(double? val) =>
+      val != null ? val.toStringAsFixed(1) : '/';
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -102,19 +105,13 @@ class _RightDescWidget extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        _item(context, "二氧化碳", "${weather.air?.co ?? "/"}微克/m³"),
-        SizedBox(
-          height: 5.w,
-        ),
-        _item(context, "二氧化氮", "${weather.air?.no2 ?? "/"}微克/m³"),
-        SizedBox(
-          height: 5.w,
-        ),
-        _item(context, "二氧化硫", "${weather.air?.so2 ?? "/"}微克/m³"),
-        SizedBox(
-          height: 5.w,
-        ),
-        _item(context, "pm2.5", "${weather.air?.pm2p5 ?? "/"}微克/m³"),
+        _item(context, "空气质量", weather.air?.category ?? "/"),
+        SizedBox(height: 5.w),
+        _item(context, "主要污染物", weather.air?.primary ?? "/"),
+        SizedBox(height: 5.w),
+        _item(context, "PM10", "${_fmt(weather.air?.pm10)} μg/m³"),
+        SizedBox(height: 5.w),
+        _item(context, "PM2.5", "${_fmt(weather.air?.pm2p5)} μg/m³"),
       ],
     );
   }
