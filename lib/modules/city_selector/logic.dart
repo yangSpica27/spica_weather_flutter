@@ -27,25 +27,28 @@ class CitySelectorLogic extends GetxController {
     isLoadingState(false);
   }
 
-  /// 搜索城市
-  void onSearch(String value) async {
-    isLoadingState(true);
-    if (value.isEmpty) {
-      showItems.assignAll(_allCityList);
-      isLoadingState(false);
-      return;
-    }
-    final list = await compute((message) {
-      List<CityItem> list = [];
-      for (CityItem item in message) {
-        if (item.name!.contains(value.trim())) {
-          list.add(item);
-        }
+  /// 搜索城市（带 300ms 防抖，避免每次按键都触发 compute）
+  void onSearch(String value) {
+    timer?.cancel();
+    timer = Timer(const Duration(milliseconds: 300), () async {
+      isLoadingState(true);
+      if (value.isEmpty) {
+        showItems.assignAll(_allCityList);
+        isLoadingState(false);
+        return;
       }
-      return list;
-    }, _allCityList);
-    showItems.assignAll(list);
-    isLoadingState(false);
+      final list = await compute((message) {
+        List<CityItem> list = [];
+        for (CityItem item in message) {
+          if (item.name!.contains(value.trim())) {
+            list.add(item);
+          }
+        }
+        return list;
+      }, _allCityList);
+      showItems.assignAll(list);
+      isLoadingState(false);
+    });
   }
 
   /// 选择城市

@@ -1,5 +1,4 @@
 import 'package:drift/drift.dart';
-import 'package:drift/isolate.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:spica_weather_flutter/database/database.dart';

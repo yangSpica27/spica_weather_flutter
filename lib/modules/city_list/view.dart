@@ -65,7 +65,7 @@ class _CityListPageState extends State<CityListPage> {
                       item: logic.data[index],
                       index: index,
                       isLocation: logic.data[index].isLocation,
-                      isSort: logic.isSort.value,
+                      isSort: logic.isSort,
                       onDismissed: (DismissDirection direction) async {
                         await logic.removeCity(logic.data[index]);
                       },
@@ -200,7 +200,9 @@ class _ItemCity extends StatelessWidget {
   final bool isLocation;
 
   final DismissDirectionCallback? onDismissed;
-  final bool isSort;
+
+  /// 接收 RxBool，内部用 Obx 局部监听，避免排序状态变化时重建整个列表
+  final RxBool isSort;
 
   @override
   Widget build(BuildContext context) {
@@ -222,8 +224,9 @@ class _ItemCity extends StatelessWidget {
         ),
       ),
       onDismissed: onDismissed,
-      child: _ShakeContent(
-          needShake: isSort,
+      // Obx 仅包裹 isSort 相关的视觉部分，isSort 变化只重建此处
+      child: Obx(() => _ShakeContent(
+          needShake: isSort.value,
           child: Container(
             margin: EdgeInsets.only(bottom: 12.w),
             width: ScreenUtil().screenWidth - 32.w,
@@ -232,7 +235,7 @@ class _ItemCity extends StatelessWidget {
               decoration: BoxDecoration(
                   border: Border.all(
                     width: 2.w,
-                      color: isSort ? Colors.white.withAlpha(125) : Colors.transparent),
+                      color: isSort.value ? Colors.white.withAlpha(125) : Colors.transparent),
                   color:
                       item.weather?.todayWeather?.iconId?.getWeatherColor() ??
                           Colors.blue[500],
@@ -298,7 +301,7 @@ class _ItemCity extends StatelessWidget {
                 ),
               ]),
             ),
-          )),
+          ))),
     );
   }
 }

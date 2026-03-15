@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -37,16 +39,21 @@ class _WeatherPageState extends State<WeatherPage>
   // page切换前的index
   int lastIndex = 0;
 
-  final ScrollController scrollController = ScrollController();
+  StreamSubscription? _dataSubscription;
 
   @override
   void initState() {
-    logic.data.listen((p0) {
-      tabController = TabController(length: p0.length, vsync: this);
+    super.initState();
+    _dataSubscription = logic.data.listen((p0) {
+      if (!mounted) return;
+      // 仅在 length 变化时才重建 TabController，避免不必要的动画重置
+      if (tabController.length != p0.length) {
+        tabController.dispose();
+        tabController = TabController(length: p0.length, vsync: this);
+      }
       lastIndex = 0;
       pageController.jumpToPage(0);
     });
-    super.initState();
   }
 
   @override
@@ -91,10 +98,10 @@ class _WeatherPageState extends State<WeatherPage>
                 selectedColor: Theme.of(context).colorScheme.onSurface,
               )),
 
-              /// 内容区
+              /// 内容区：PageView.builder 懒加载，仅构建可见页
               Expanded(
                 flex: 1,
-                child: PageView(
+                child: PageView.builder(
                   onPageChanged: (index) {
                     if (index < tabController.length) {
                       tabController.animateTo(index);
@@ -103,20 +110,17 @@ class _WeatherPageState extends State<WeatherPage>
                     logic.pageIndex.value = index;
                   },
                   controller: pageController,
-                  children: logic.data
-                      .asMap()
-                      .entries
-                      .map((element) => element.value.weather == null
-                          ? const Center(
-                              child: CircularProgressIndicator(),
-                            )
-                          : InfoListWidget(
-                              needFromExtraAnim: false,
-                              // needFromExtraAnim: lastIndex != element.key,
-                              fromLeft: lastIndex < element.key,
-                              data: element.value,
-                              physics: physics))
-                      .toList(),
+                  itemCount: logic.data.length,
+                  itemBuilder: (context, index) {
+                    final element = logic.data[index];
+                    return element.weather == null
+                        ? const Center(child: CircularProgressIndicator())
+                        : InfoListWidget(
+                            needFromExtraAnim: false,
+                            fromLeft: lastIndex < index,
+                            data: element,
+                            physics: physics);
+                  },
                 ),
               )
             ],
@@ -128,9 +132,10 @@ class _WeatherPageState extends State<WeatherPage>
 
   @override
   void dispose() {
-    Get.delete<WeatherLogic>();
+    _dataSubscription?.cancel();
+    tabController.dispose();
     pageController.dispose();
-    scrollController.dispose();
+    Get.delete<WeatherLogic>();
     super.dispose();
   }
 }
