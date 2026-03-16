@@ -9,7 +9,7 @@ class ApiRepository {
   static final apiProvider = ApiProvider();
 
   /// 批量获取所有城市天气，单次 POST 替代原来的 N 次串行 GET
-  static fetchWeather() async {
+  static Future<void> fetchWeather() async {
     final List<CityData> cities =
         await AppDatabase.getInstance().city.select().get();
 

@@ -64,7 +64,7 @@ class _WeatherPageState extends State<WeatherPage>
         centerTitle: true,
         title: Obx(() {
           return Text((logic.data.isNotEmpty &&
-                  logic.pageIndex.value < logic.data.length)
+              logic.pageIndex.value < logic.data.length)
               ? logic.data[logic.pageIndex.value].name
               : '');
         }),
@@ -90,13 +90,13 @@ class _WeatherPageState extends State<WeatherPage>
               /// TabPageSelector指示器
               Center(
                   child: TabPageSelector(
-                controller: tabController,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
-                    .withAlpha((.25 * 255).round()),
-                selectedColor: Theme.of(context).colorScheme.onSurface,
-              )),
+                    controller: tabController,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withAlpha((.25 * 255).round()),
+                    selectedColor: Theme.of(context).colorScheme.onSurface,
+                  )),
 
               /// 内容区：PageView.builder 懒加载，仅构建可见页
               Expanded(
@@ -116,10 +116,10 @@ class _WeatherPageState extends State<WeatherPage>
                     return element.weather == null
                         ? const Center(child: CircularProgressIndicator())
                         : InfoListWidget(
-                            needFromExtraAnim: false,
-                            fromLeft: lastIndex < index,
-                            data: element,
-                            physics: physics);
+                        needFromExtraAnim: false,
+                        fromLeft: lastIndex < index,
+                        data: element,
+                        physics: physics);
                   },
                 ),
               )
@@ -143,10 +143,10 @@ class _WeatherPageState extends State<WeatherPage>
 class InfoListWidget extends StatelessWidget {
   const InfoListWidget(
       {super.key,
-      required this.data,
-      this.physics,
-      this.fromLeft = true,
-      this.needFromExtraAnim = false});
+        required this.data,
+        this.physics,
+        this.fromLeft = true,
+        this.needFromExtraAnim = false});
 
   final CityData data;
 
@@ -181,9 +181,9 @@ class InfoListWidget extends StatelessWidget {
 
     /// 如果是雨天则插入降水卡片
     if (data.weather?.todayWeather?.iconId
-                ?.getWeatherType()
-                .getWeatherAnimType() ==
-            WeatherAnimType.RAIN &&
+        ?.getWeatherType()
+        .getWeatherAnimType() ==
+        WeatherAnimType.RAIN &&
         data.weather?.minutely != null) {
       items.insert(1, PrecipitationCard(weather: data.weather!));
     }
@@ -193,18 +193,18 @@ class InfoListWidget extends StatelessWidget {
         addRepaintBoundaries: false,
         padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 20.w),
         itemBuilder: (context, index) =>
-            // 根据条件是否引入额外的动画
-            needFromExtraAnim
-                ? EnterPageAnimWidget(
-                    startOffset: Offset(fromLeft ? -1 : 1, 0),
-                    delay: Duration(milliseconds: 150 * index),
-                    duration: Duration(milliseconds: 100 * index + 450),
-                    child: items[index])
-                : items[index],
+        // 根据条件是否引入额外的动画
+        needFromExtraAnim
+            ? EnterPageAnimWidget(
+            startOffset: Offset(fromLeft ? -1 : 1, 0),
+            delay: Duration(milliseconds: 150 * index),
+            duration: Duration(milliseconds: 100 * index + 450),
+            child: items[index])
+            : items[index],
         separatorBuilder: (context, index) => const Divider(
-              height: 8,
-              color: Colors.transparent,
-            ),
+          height: 8,
+          color: Colors.transparent,
+        ),
         itemCount: items.length);
   }
 }
@@ -228,8 +228,8 @@ class _FooterWidget extends StatelessWidget {
                         color: Theme.of(context).colorScheme.onSurface)),
                 const WidgetSpan(
                     child: SizedBox(
-                  width: 8,
-                )),
+                      width: 8,
+                    )),
                 const WidgetSpan(
                   child: Icon(
                     Ionicons.cloud_circle,
@@ -239,8 +239,8 @@ class _FooterWidget extends StatelessWidget {
                 ),
                 const WidgetSpan(
                     child: SizedBox(
-                  width: 2,
-                )),
+                      width: 2,
+                    )),
                 TextSpan(
                   text: "和风天气",
                   style: TextStyle(

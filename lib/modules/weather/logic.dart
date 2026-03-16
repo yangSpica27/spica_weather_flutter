@@ -16,7 +16,7 @@ class WeatherLogic extends GetxController {
         .watch());
   }
 
-  loadData() {
+  Future<void> loadData() async {
     ApiRepository.fetchWeather();
   }
 }
