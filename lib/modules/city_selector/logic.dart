@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:spica_weather_flutter/database/database.dart';
@@ -11,6 +10,8 @@ import 'package:spica_weather_flutter/utils/city_utils.dart';
 
 class CitySelectorLogic extends GetxController {
   final _allCityList = <CityItem>[];
+
+  String _searchQuery = '';
 
   final showItems = <CityItem>[].obs;
 
@@ -22,33 +23,37 @@ class CitySelectorLogic extends GetxController {
   void onReady() async {
     super.onReady();
     isLoadingState(true);
-    _allCityList.addAll(await CityUtils.getAllCityItem());
-    showItems.assignAll(_allCityList);
-    isLoadingState(false);
+    try {
+      final cities = await CityUtils.getAllCityItem();
+      if (isClosed) return;
+      _allCityList.addAll(cities);
+      _filterCities();
+    } finally {
+      if (!isClosed) isLoadingState(false);
+    }
   }
 
-  /// 搜索城市（带 300ms 防抖，避免每次按键都触发 compute）
+  /// 对缓存的城市列表筛选，保留 300ms 防抖。
   void onSearch(String value) {
+    if (isClosed) return;
+    _searchQuery = value.trim();
     timer?.cancel();
-    timer = Timer(const Duration(milliseconds: 300), () async {
-      isLoadingState(true);
-      if (value.isEmpty) {
-        showItems.assignAll(_allCityList);
-        isLoadingState(false);
-        return;
-      }
-      final list = await compute((message) {
-        List<CityItem> list = [];
-        for (CityItem item in message) {
-          if (item.name!.contains(value.trim())) {
-            list.add(item);
-          }
-        }
-        return list;
-      }, _allCityList);
-      showItems.assignAll(list);
-      isLoadingState(false);
-    });
+    if (_searchQuery.isEmpty) {
+      _filterCities();
+      return;
+    }
+    timer = Timer(const Duration(milliseconds: 300), _filterCities);
+  }
+
+  void _filterCities() {
+    if (isClosed) return;
+    showItems.assignAll(
+      _searchQuery.isEmpty
+          ? _allCityList
+          : _allCityList.where(
+              (city) => city.name?.contains(_searchQuery) ?? false,
+            ),
+    );
   }
 
   /// 选择城市
@@ -56,13 +61,15 @@ class CitySelectorLogic extends GetxController {
     await EasyLoading.show(status: 'loading...');
     try {
       await AppDatabase.getInstance().city.insertOne(
-          CityCompanion.insert(
-              name: showItem.name ?? "/",
-              lat: showItem.lat ?? "",
-              isLocation: false,
-              sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
-              lon: showItem.log ?? ''),
-          mode: InsertMode.insertOrIgnore);
+        CityCompanion.insert(
+          name: showItem.name ?? "/",
+          lat: showItem.lat ?? "",
+          isLocation: false,
+          sort: BigInt.from(DateTime.now().millisecondsSinceEpoch.toInt()),
+          lon: showItem.log ?? '',
+        ),
+        mode: InsertMode.insertOrIgnore,
+      );
       await ApiRepository.fetchWeather();
     } catch (e) {
       await EasyLoading.showError(e.toString());
