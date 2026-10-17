@@ -26,6 +26,20 @@
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>用于获取所在城市并显示当地天气。</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>用于在后台刷新所在城市的天气。</string>
+	<key>BGTaskSchedulerPermittedIdentifiers</key>
+	<array>
+		<string>com.transistorsoft.fetch</string>
+		<string>com.transistorsoft.auto_update_weather</string>
+	</array>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+		<string>processing</string>
+	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

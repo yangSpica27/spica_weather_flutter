@@ -79,7 +79,7 @@ class _CitySelectorPageState extends State<CitySelectorPage> {
         controller: _scrollerController,
         itemBuilder: (context, index) => _cityItemWidget(items[index]),
         separatorBuilder: (context, index) => Divider(
-            color: Theme.of(context).dividerColor.withOpacity(.2), height: 1.w),
+            color: Theme.of(context).dividerColor.withValues(alpha: .2), height: 1.w),
         itemCount: items.length);
   }
 

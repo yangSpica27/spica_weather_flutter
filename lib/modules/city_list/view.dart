@@ -38,7 +38,7 @@ class _CityListPageState extends State<CityListPage> {
             flex: 1,
             child: Obx(() => ReorderableListView.builder(
                 scrollController: scrollerController,
-                onReorder: (oldIndex, newIndex) async {
+                onReorderItem: (oldIndex, newIndex) async {
                   await logic.reorderCity(oldIndex, newIndex);
                 },
                 onReorderStart: (index) {
@@ -90,7 +90,7 @@ class _CityListPageState extends State<CityListPage> {
   }
 
   /// 添加城市按钮
-  _addCityButton({GestureTapCallback? onTap}) => Hero(
+  Widget _addCityButton({GestureTapCallback? onTap}) => Hero(
       tag: "search_bar",
       transitionOnUserGestures: true,
       child: Container(

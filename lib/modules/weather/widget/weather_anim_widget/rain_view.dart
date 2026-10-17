@@ -116,7 +116,7 @@ class RainSnowDrop {
     angle = 7.5 - (dx / maxDx) * 15;
   }
 
-  next() {
+  void next() {
     position = position.translate(
         0, speed / 2 + speed / 2 * (maxDy - position.dy) / maxDy);
     if (position.dy > maxDy) {

@@ -129,7 +129,7 @@ class _PrecipitationLinePainter extends CustomPainter {
 
     // 绘制
     minutelyList.forEachIndexed((index, minutely) {
-      _linePaint.color = Colors.grey.withOpacity(0.2 +
+      _linePaint.color = Colors.grey.withValues(alpha: 0.2 +
           min((double.tryParse(minutely.precip ?? "") ?? 0) / 2.5, 1.0) * 0.5);
       double x = lineWidth * (index);
       double y = size.height -

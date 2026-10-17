@@ -48,7 +48,7 @@ class _StormLine {
     } else if (rd < 0.7) {
       color = Colors.brown;
     } else {
-      color = Colors.white.withOpacity(0.5);
+      color = Colors.white.withValues(alpha: 0.5);
     }
 
     radius = 2.w + random.nextDouble() * 2.w;
@@ -60,14 +60,14 @@ class _StormLine {
     cy = y;
   }
 
-  next() {
+  void next() {
     cx += speed;
     if (cx > width) {
       cx = x;
     }
   }
 
-  draw(Canvas canvas, Paint paint) {
+  void draw(Canvas canvas, Paint paint) {
     paint.color = color;
     paint.strokeWidth = radius;
     final rotate = 3.14 / 180 * angle;

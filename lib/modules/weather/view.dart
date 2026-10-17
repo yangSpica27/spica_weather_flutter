@@ -13,7 +13,6 @@ import 'package:spica_weather_flutter/modules/weather/widget/details_card_list_w
 import 'package:spica_weather_flutter/modules/weather/widget/hourly_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/now_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/precipitation_card.dart';
-import 'package:spica_weather_flutter/modules/weather/widget/tip_card.dart';
 import 'package:spica_weather_flutter/modules/weather/widget/warning_card.dart';
 import 'package:spica_weather_flutter/routes/app_pages.dart';
 import 'package:spica_weather_flutter/widget/enter_page_anim_widget.dart';
@@ -232,7 +231,7 @@ class _FooterWidget extends StatelessWidget {
                     )),
                 const WidgetSpan(
                   child: Icon(
-                    Ionicons.cloud_circle,
+                    Ionicons.cloudCircle,
                     size: 15,
                   ),
                   alignment: PlaceholderAlignment.middle,

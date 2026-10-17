@@ -95,7 +95,7 @@ class _TipItemWidget extends StatelessWidget {
           Text(
             subtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5)),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5)),
             overflow: TextOverflow.ellipsis,
             maxLines: 1,
           )

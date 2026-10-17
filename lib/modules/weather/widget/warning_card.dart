@@ -67,7 +67,7 @@ class _WarningCardState extends State<WarningCard> {
                           dotColor: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(.3),
+                              .withValues(alpha: .3),
                         ))))
           ],
         ),
@@ -95,7 +95,7 @@ class WarnItem extends StatelessWidget {
           e.startTime ?? "",
           maxLines: 1,
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.4),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .4),
               ),
         ),
         const Spacer(),
@@ -104,7 +104,7 @@ class WarnItem extends StatelessWidget {
           overflow: TextOverflow.ellipsis,
           maxLines: 2,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
               ),
         )
       ],

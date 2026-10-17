@@ -26,7 +26,7 @@ class SplashLogic extends GetxController {
   }
 
   // 初始化自动更新天气任务
-  _initScheduleTask() async {
+  Future<void> _initScheduleTask() async {
     // Step 1:  Configure BackgroundFetch as usual.
     await BackgroundFetch.configure(
         BackgroundFetchConfig(minimumFetchInterval: 60), (String taskId) async {
@@ -53,14 +53,14 @@ class SplashLogic extends GetxController {
     });
 
     BackgroundFetch.scheduleTask(TaskConfig(
-      taskId: "auto_update_weather",
+      taskId: "com.transistorsoft.auto_update_weather",
       delay: 5000,
       periodic: true,
       requiredNetworkType: NetworkType.ANY,
     ));
   }
 
-  _loadData() async {
+  Future<void> _loadData() async {
     state.update((val) {
       val?.updateTipString("正在加载城市数据");
     });
@@ -152,7 +152,7 @@ class SplashLogic extends GetxController {
   }
 
   // 加载最近的城市
-  _loadNearestCity(CityData? currentCity) async {
+  Future<void> _loadNearestCity(CityData? currentCity) async {
     // 本地没有城市数据 但是有定位权限
 
     try {
@@ -162,7 +162,8 @@ class SplashLogic extends GetxController {
 
       // 获取到当前定位
       Position position = await Geolocator.getCurrentPosition(
-          timeLimit: const Duration(seconds: 5));
+          locationSettings:
+              const LocationSettings(timeLimit: Duration(seconds: 5)));
 
       state.update((val) {
         val?.updateTipString("获取定位成功");
@@ -233,7 +234,7 @@ class SplashLogic extends GetxController {
   }
 
   // 加载默认城市
-  _loadDefaultCity() async {
+  Future<void> _loadDefaultCity() async {
     state.update((val) {
       val?.updateTipString("获取定位数据失败");
       val?.updateTipString("载入默认带入城市");
@@ -251,7 +252,7 @@ class SplashLogic extends GetxController {
     });
   }
 
-  _fetchWeatherInfo() async {
+  Future<void> _fetchWeatherInfo() async {
     try {
       state.update((val) {
         val?.updateTipString("请求天气接口");

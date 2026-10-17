@@ -52,7 +52,7 @@ class CitySelectorLogic extends GetxController {
   }
 
   /// 选择城市
-  onSelectItem(CityItem showItem) async {
+  Future<void> onSelectItem(CityItem showItem) async {
     await EasyLoading.show(status: 'loading...');
     try {
       await AppDatabase.getInstance().city.insertOne(

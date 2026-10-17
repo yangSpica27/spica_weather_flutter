@@ -19,7 +19,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.11.1
+  sdk: ^3.13.0
+  flutter: '>=3.47.0'
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,20 +32,20 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
+  cupertino_icons: ^1.0.9
   flutter_screenutil: ^5.9.3
-  drift: ^2.32.0
-  drift_flutter: ^0.3.0
-  sqlite3_flutter_libs: ^0.6.0+eol
-  path_provider: ^2.1.5
+  collection: ^1.19.1
+  drift: ^2.35.2
+  sqlite3: ^3.7.1
+  path_provider: ^2.1.6
   path: ^1.9.1
-  ionicons: ^0.2.2
+  ionicons: ^0.2.3
   flutter_easyloading: ^3.0.5
-  dio: ^5.9.2
+  dio: ^5.11.1
   get: ^4.7.3
-  easy_refresh: ^3.4.0
-  geolocator: ^14.0.2
-  background_fetch: ^1.5.0
+  easy_refresh: ^3.5.1
+  geolocator: ^14.1.1
+  background_fetch: ^1.7.0
   smooth_page_indicator: ^2.0.1
   flutter_staggered_grid_view: ^0.7.0
 
@@ -58,8 +59,8 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
-  drift_dev: ^2.32.0
-  build_runner: ^2.12.2
+  drift_dev: ^2.35.1
+  build_runner: ^2.16.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -70,7 +70,7 @@ class _AirDescCardState extends State<AirDescCard>
                             arcBackgroundColor: Theme.of(context)
                                 .colorScheme
                                 .outline
-                                .withOpacity(.2),
+                                .withValues(alpha: .2),
                             extraTextColor:
                                 Theme.of(context).colorScheme.onSurface,
                             air: (widget.weather.air?.aqi?.toDouble() ?? 0) *
@@ -124,12 +124,12 @@ class _RightDescWidget extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   fontWeight: FontWeight.w500,
                   color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(.8),
+                      Theme.of(context).colorScheme.onSurface.withValues(alpha: .8),
                 )),
         const Spacer(),
         Text(value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(.5),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .5),
                 fontWeight: FontWeight.normal))
       ],
     );

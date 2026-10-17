@@ -85,13 +85,13 @@ class _TempWidget extends StatelessWidget {
           text: "${weather.todayWeather?.temp ?? 0}",
           style: TextStyle(
               fontSize: 100.sp,
-              color: Theme.of(context).colorScheme.surface.withOpacity(.9),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: .9),
               fontWeight: FontWeight.w500)),
       TextSpan(
           text: "℃",
           style: TextStyle(
               fontSize: 50.sp,
-              color: Theme.of(context).colorScheme.surface.withOpacity(.89),
+              color: Theme.of(context).colorScheme.surface.withValues(alpha: .89),
               fontWeight: FontWeight.w400)),
     ]));
   }
@@ -161,7 +161,7 @@ class _BottomTextWidget extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(12.w),
       decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(.1),
+          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .1),
           borderRadius: BorderRadius.circular(10.w)),
       child: Stack(
         children: [

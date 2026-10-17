@@ -46,7 +46,7 @@ class DailyCard extends StatelessWidget {
   }
 
   // 空数据
-  _emptyWidget(BuildContext context) => Container(
+  Widget _emptyWidget(BuildContext context) => Container(
         padding: EdgeInsets.all(10.w),
         child: Text(
           "暂无数据",
@@ -82,7 +82,7 @@ class DailyCard extends StatelessWidget {
   }
 
   /// 详细部分
-  _detailWidget(BuildContext context, DailyWeather dailyWeather) {
+  Widget _detailWidget(BuildContext context, DailyWeather dailyWeather) {
     var items = [
       _DetailItem(
         assets: Assets.assetsIcWater,
@@ -158,7 +158,7 @@ class _DetailItem extends StatelessWidget {
           Image.asset(
             assets,
             width: 24.w,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(.9),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: .9),
           ),
           SizedBox(
             width: 12.w,
@@ -389,7 +389,7 @@ class _TitleWidgetState extends State<_TitleWidget>
               color: widget.isHeader
                   ? widget.dailyWeather.iconId?.getWeatherColor() ??
                       Colors.blue[500]
-                  : Theme.of(context).colorScheme.onSurface.withOpacity(.9),
+                  : Theme.of(context).colorScheme.onSurface.withValues(alpha: .9),
               fontWeight: FontWeight.w500),
         ),
         SizedBox(
@@ -422,7 +422,7 @@ class _TitleWidgetState extends State<_TitleWidget>
                               backgroundColor: Theme.of(context)
                                   .colorScheme
                                   .outline
-                                  .withOpacity(.1),
+                                  .withValues(alpha: .1),
                               maxTemp: widget.dailyWeather.maxTemp ?? 0,
                               minTemp: widget.dailyWeather.minTemp ?? 0,
                               currentTemp: widget.isHeader ? widget.temp : null,
@@ -436,7 +436,7 @@ class _TitleWidgetState extends State<_TitleWidget>
                         backgroundColor: Theme.of(context)
                             .colorScheme
                             .outline
-                            .withOpacity(.1),
+                            .withValues(alpha: .1),
                         maxTemp: widget.dailyWeather.maxTemp ?? 0,
                         minTemp: widget.dailyWeather.minTemp ?? 0,
                         currentTemp: widget.isHeader ? widget.temp : null,

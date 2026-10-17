@@ -209,7 +209,7 @@ class _LinePainter extends CustomPainter {
     bgShader = ui.Gradient.linear(
         Offset(0, topLinePadding),
         Offset(0, lineHeight + bottomLinePadding),
-        [themeColor.withOpacity(.4), themeColor.withOpacity(.01)],
+        [themeColor.withValues(alpha: .4), themeColor.withValues(alpha: .01)],
         [0, 1],
         TileMode.clamp);
   }
@@ -252,7 +252,7 @@ class _LinePainter extends CustomPainter {
     // 绘制底部天气类型
     _paint.style = PaintingStyle.fill;
     for (int i = 0; i < colors.length; i++) {
-      _paint.color = colors[i].withOpacity(.3);
+      _paint.color = colors[i].withValues(alpha: .3);
       canvas.drawRRect(
           ui.RRect.fromRectAndCorners(
               Rect.fromLTRB(xPoints[i] - itemWidth / 2 + 2.w,
@@ -272,7 +272,7 @@ class _LinePainter extends CustomPainter {
           text: TextSpan(
               text: data[i].fxTime?.substring(11, 16) ?? "",
               style: TextStyle(
-                  color: textColor.withOpacity(.5),
+                  color: textColor.withValues(alpha: .5),
                   fontSize: 14.w,
                   fontWeight: FontWeight.w600)),
           textDirection: TextDirection.ltr)
@@ -287,7 +287,7 @@ class _LinePainter extends CustomPainter {
       // 绘制降水柱状图
 
       _paint.color =
-          Colors.blueAccent.withOpacity(.5 * (data[i].pop ?? 0) / 100);
+          Colors.blueAccent.withValues(alpha: .5 * (data[i].pop ?? 0) / 100);
       canvas.drawRRect(
           ui.RRect.fromLTRBR(
               xPoints[i] - itemWidth / 4,
@@ -304,7 +304,7 @@ class _LinePainter extends CustomPainter {
               text: "${data[i].pop?.toString() ?? "7"}%",
               style: TextStyle(
                   color: (data[i].pop ?? 0) < 10
-                      ? textColor.withOpacity(.8)
+                      ? textColor.withValues(alpha: .8)
                       : Colors.blueAccent,
                   fontSize: 13.w,
                   fontWeight: (data[i].pop ?? 0) < 10
@@ -334,8 +334,8 @@ class _LinePainter extends CustomPainter {
     final index = min((offsetX / itemWidth).round(), data.length - 1);
 
     // 绘制游标
-    _paint.color = data[index].iconId?.getWeatherColor().withOpacity(.2) ??
-        Colors.blueAccent.withOpacity(.2);
+    _paint.color = data[index].iconId?.getWeatherColor().withValues(alpha: .2) ??
+        Colors.blueAccent.withValues(alpha: .2);
     canvas.drawRRect(
         ui.RRect.fromLTRBR(
             offsetX - itemWidth / 2 - 8.w,
@@ -349,7 +349,7 @@ class _LinePainter extends CustomPainter {
         text: TextSpan(
             text: "${data[index].temp?.toString()}℃",
             style: TextStyle(
-                color: textColor.withOpacity(.8),
+                color: textColor.withValues(alpha: .8),
                 fontSize: 14.w,
                 fontWeight: FontWeight.w600)),
         textDirection: TextDirection.ltr)
